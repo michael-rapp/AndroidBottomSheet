@@ -78,8 +78,9 @@ public class DraggableView extends LinearLayout {
                 top = Math.max(top, 0);
                 top = Math.min(top, bottom);
                 layout(left, top, right, bottom);
-                return true;
             }
+
+            return true;
         }
 
         return false;
