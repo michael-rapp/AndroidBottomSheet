@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+AndroidBottomSheet Copyright 2016 Michael Rapp
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+Lesser General Public License as published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with this program. If
+not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <item name="bottom_sheet_list_padding_top" type="dimen">8dp</item>
+    <item name="bottom_sheet_list_padding_bottom" type="dimen">8dp</item>
+    <item name="bottom_sheet_grid_padding_top" type="dimen">16dp</item>
+    <item name="bottom_sheet_grid_padding_bottom" type="dimen">24dp</item>
+    <item name="bottom_sheet_title_height" type="dimen">56dp</item>
+    <item name="bottom_sheet_item_height" type="dimen">48dp</item>
+    <item name="bottom_sheet_list_item_horizontal_padding" type="dimen">16dp</item>
+    <item name="bottom_sheet_grid_item_horizontal_padding" type="dimen">24dp</item>
+    <item name="bottom_sheet_drawable_padding" type="dimen">32dp</item>
+
+</resources>

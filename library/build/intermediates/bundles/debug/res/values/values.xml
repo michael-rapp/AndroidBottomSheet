@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="bottom_sheet_drawable_padding" type="dimen">32dp</item>
+    <item name="bottom_sheet_grid_item_horizontal_padding" type="dimen">24dp</item>
+    <item name="bottom_sheet_grid_padding_bottom" type="dimen">24dp</item>
+    <item name="bottom_sheet_grid_padding_top" type="dimen">16dp</item>
+    <item name="bottom_sheet_item_height" type="dimen">48dp</item>
+    <item name="bottom_sheet_list_item_horizontal_padding" type="dimen">16dp</item>
+    <item name="bottom_sheet_list_padding_bottom" type="dimen">8dp</item>
+    <item name="bottom_sheet_list_padding_top" type="dimen">8dp</item>
+    <item name="bottom_sheet_title_height" type="dimen">56dp</item>
+    <style name="BottomSheet" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimAmount">0.25</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowAnimationStyle">@style/BottomSheetAnimation</item>
+    </style>
+    <style name="BottomSheetAnimation">
+        <item name="android:windowEnterAnimation">@anim/show_bottom_sheet_animation</item>
+        <item name="android:windowExitAnimation">@anim/hide_bottom_sheet_animation</item>
+    </style>
+</resources>
