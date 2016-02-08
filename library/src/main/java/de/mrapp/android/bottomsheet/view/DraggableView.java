@@ -54,9 +54,9 @@ public class DraggableView extends LinearLayout {
      * Initializes the view.
      */
     private void initialize() {
+        dragHelper = new DragHelper(0);
         initialHeight =
                 Math.round(getResources().getDisplayMetrics().heightPixels * INITIAL_HEIGHT_RATIO);
-        dragHelper = new DragHelper(10);
     }
 
     /**
@@ -174,6 +174,17 @@ public class DraggableView extends LinearLayout {
                          final int defaultStyle, final int defaultStyleResource) {
         super(context, attributeSet, defaultStyle, defaultStyleResource);
         initialize();
+    }
+
+    /**
+     * Sets the distance in pixels, a drag gesture must last until it is recognized.
+     *
+     * @param dragSensitivity
+     *         The distance, which should be set, in pixels as an {@link Integer} value. The value
+     *         must be at least 0
+     */
+    public final void setDragSensitivity(final int dragSensitivity) {
+        this.dragHelper = new DragHelper(dragSensitivity);
     }
 
     @Override

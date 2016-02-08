@@ -49,6 +49,8 @@ import de.mrapp.android.bottomsheet.model.MenuItem;
 import de.mrapp.android.bottomsheet.model.Separator;
 import de.mrapp.android.bottomsheet.view.DraggableView;
 
+import static de.mrapp.android.util.Condition.ensureAtLeast;
+import static de.mrapp.android.util.Condition.ensureAtMaximum;
 import static de.mrapp.android.util.Condition.ensureNotNull;
 
 /**
@@ -155,6 +157,12 @@ public class BottomSheet extends Dialog implements DialogInterface {
          * The custom title view of the bottom sheet, which is created by the builder.
          */
         private View customTitleView;
+
+        /**
+         * The sensitivity, which specifies the distance after which dragging has an effect on the
+         * bottom sheet
+         */
+        private float dragSensitivity = 0.25f;
 
         /**
          * The items of the bottom sheet, which is created by the builder.
@@ -623,6 +631,23 @@ public class BottomSheet extends Dialog implements DialogInterface {
         }
 
         /**
+         * Sets the sensitivity, which specifies the distance after which dragging has an effect on
+         * the bottom sheet, in relation to an internal value range.
+         *
+         * @param dragSensitivity
+         *         The drag sensitivity, which should be set, as a {@link Float} value. The drag
+         *         sensitivity must be at lest 0 and at maximum 1
+         * @return The builder, the method has been called upon, as an instance of the class {@link
+         * Builder}
+         */
+        public final Builder setDragSensitivity(final float dragSensitivity) {
+            ensureAtLeast(dragSensitivity, 0, "The drag sensitivity must be at least 0");
+            ensureAtMaximum(dragSensitivity, 1, "The drag sensitivity must be at maximum 1");
+            this.dragSensitivity = dragSensitivity;
+            return this;
+        }
+
+        /**
          * Adds a new item to the bottom sheet, which is created by the builder.
          *
          * @param title
@@ -758,6 +783,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
             bottomSheet.setOnKeyListener(keyListener);
             bottomSheet.setCancelable(cancelable);
             bottomSheet.setCanceledOnTouchOutside(true);
+            bottomSheet.setDragSensitivity(dragSensitivity);
             return bottomSheet;
         }
 
@@ -794,6 +820,18 @@ public class BottomSheet extends Dialog implements DialogInterface {
     }
 
     /**
+     * The minimum value of the internal value range, which specifies after which distance dragging
+     * has an effect on the bottom sheet.
+     */
+    private static final int MIN_DRAG_SENSITIVITY = 10;
+
+    /**
+     * The maximum value of the internal value range, which specifies after which distance dragging
+     * has an effect on the bottom sheet.
+     */
+    private static final int MAX_DRAG_SENSITIVITY = 260;
+
+    /**
      * The root view of the bottom sheet.
      */
     private DraggableView rootView;
@@ -817,6 +855,12 @@ public class BottomSheet extends Dialog implements DialogInterface {
      * True, if the bottom sheet is canceled, when the decor view is touched, false otherwise.
      */
     private boolean canceledOnTouchOutside;
+
+    /**
+     * The sensitivity, which specifies the distance after which dragging has an effect on the
+     * bottom sheet, in relation to an internal value range.
+     */
+    private float dragSensitivity;
 
     /**
      * Initializes the bottom sheet.
@@ -878,6 +922,19 @@ public class BottomSheet extends Dialog implements DialogInterface {
     }
 
     /**
+     * Calculates and returns the distance after which dragging has an effect on the bottom sheet in
+     * pixels. The distance depends on the current set drag sensitivity, which corresponds to an
+     * internal value range.
+     *
+     * @return The distance after which dragging has an effect on the bottom sheet in pixels as an
+     * {@link Integer} value
+     */
+    private int calculateDragSensitivity() {
+        int range = MAX_DRAG_SENSITIVITY - MIN_DRAG_SENSITIVITY;
+        return Math.round((1 - getDragSensitivity()) * range + MIN_DRAG_SENSITIVITY);
+    }
+
+    /**
      * Creates a bottom sheet, which is designed according to Android 5's Material Design guidelines
      * even on pre-Lollipop devices.
      *
@@ -914,6 +971,35 @@ public class BottomSheet extends Dialog implements DialogInterface {
                           @Nullable final Collection<Parcelable> items) {
         super(context, themeResourceId);
         initialize(items);
+    }
+
+    /**
+     * Returns the sensitivity, which specifies the distance after which dragging has an effect on
+     * the bottom sheet, in relation to an internal value range.
+     *
+     * @return The drag sensitivity as a {@link Float} value. The drag sensitivity must be at lest 0
+     * and at maximum 1
+     */
+    public final float getDragSensitivity() {
+        return dragSensitivity;
+    }
+
+    /**
+     * Sets the sensitivity, which specifies the distance after which dragging has an effect on the
+     * bottom sheet, in relation to an internal value range.
+     *
+     * @param dragSensitivity
+     *         The drag sensitivity, which should be set, as a {@link Float} value. The drag
+     *         sensitivity must be at lest 0 and at maximum 1
+     */
+    public final void setDragSensitivity(final float dragSensitivity) {
+        ensureAtLeast(dragSensitivity, 0, "The drag sensitivity must be at least 0");
+        ensureAtMaximum(dragSensitivity, 1, "The drag sensitivity must be at maximum 1");
+        this.dragSensitivity = dragSensitivity;
+
+        if (rootView != null) {
+            rootView.setDragSensitivity(calculateDragSensitivity());
+        }
     }
 
     /**
@@ -1094,6 +1180,7 @@ public class BottomSheet extends Dialog implements DialogInterface {
         getWindow().setAttributes(createLayoutParams());
         getWindow().getDecorView().setOnTouchListener(createCancelOnTouchListener());
         rootView = (DraggableView) findViewById(R.id.root);
+        rootView.setDragSensitivity(calculateDragSensitivity());
         gridView = (GridView) findViewById(R.id.bottom_sheet_grid_view);
 
         if (gridView != null) {
