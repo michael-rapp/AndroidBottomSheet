@@ -192,7 +192,7 @@ public class DraggableView extends LinearLayout {
     private void handleRelease() {
         float speed = Math.max(dragHelper.getDragSpeed(), animationSpeed);
 
-        if (getTop() > thresholdPosition) {
+        if (getTop() > thresholdPosition || dragHelper.getDragSpeed() > animationSpeed) {
             animateHideView(getHeight(), speed, new DecelerateInterpolator());
         } else {
             animateShowView(-getTop(), speed, new DecelerateInterpolator());
