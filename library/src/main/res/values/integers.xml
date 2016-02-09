@@ -14,10 +14,8 @@ General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along with this program. If
 not, see <http://www.gnu.org/licenses/>.
 -->
-<set xmlns:android="http://schemas.android.com/apk/res/android"
-     android:interpolator="@android:anim/accelerate_decelerate_interpolator">
-    <translate
-        android:duration="@integer/animation_duration"
-        android:fromYDelta="100%"
-        android:toYDelta="0"/>
-</set>
+<resources>
+
+    <integer name="animation_duration">350</integer>
+
+</resources>

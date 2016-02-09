@@ -66,7 +66,7 @@ import static de.mrapp.android.util.Condition.ensureNotNull;
  * @author Michael Rapp
  * @since 1.0.0
  */
-public class BottomSheet extends Dialog implements DialogInterface {
+public class BottomSheet extends Dialog implements DialogInterface, DraggableView.Callback {
 
     /**
      * A builder, which allows to create and show bottom sheets, which are designed according to
@@ -1175,12 +1175,23 @@ public class BottomSheet extends Dialog implements DialogInterface {
     }
 
     @Override
+    public final void onMaximized() {
+
+    }
+
+    @Override
+    public final void onHidden() {
+        dismiss();
+    }
+
+    @Override
     public final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setAttributes(createLayoutParams());
         getWindow().getDecorView().setOnTouchListener(createCancelOnTouchListener());
         rootView = (DraggableView) findViewById(R.id.root);
         rootView.setDragSensitivity(calculateDragSensitivity());
+        rootView.setCallback(this);
         gridView = (GridView) findViewById(R.id.bottom_sheet_grid_view);
 
         if (gridView != null) {
