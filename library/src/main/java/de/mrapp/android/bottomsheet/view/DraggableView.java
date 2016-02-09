@@ -19,8 +19,11 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.DecelerateInterpolator;
@@ -64,6 +67,11 @@ public class DraggableView extends LinearLayout {
      * initial height.
      */
     private static final float INITIAL_HEIGHT_RATIO = 9f / 16f;
+
+    /**
+     * The view group, which contains the view's content.
+     */
+    private ViewGroup contentContainer;
 
     /**
      * An instance of the class {@link DragHelper}, which is used to recognize drag gestures.
@@ -110,16 +118,60 @@ public class DraggableView extends LinearLayout {
     }
 
     /**
+     * Returns, whether a touch event at a specific position targets a view, which can be scrolled
+     * up.
+     *
+     * @param x
+     *         The horizontal position of the touch event in pixels as a {@link Float} value
+     * @param y
+     *         The vertical position of the touch event in pixels as a {@link Float} value
+     * @return True, if the touch event targets a view, which can be scrolled up, false otherwise
+     */
+    private boolean isScrollUpEvent(final float x, final float y) {
+        return isScrollUpEvent(x, y, contentContainer);
+    }
+
+    /**
+     * Returns, whether a touch event at a specific position targets a view, which can be scrolled
+     * up.
+     *
+     * @param x
+     *         The horizontal position of the touch event in pixels as a {@link Float} value
+     * @param y
+     *         The vertical position of the touch event in pixels as a {@link Float} value
+     * @param viewGroup
+     *         The view group, which should be used to search for scrollable child views, as an
+     *         instance of the class {@link ViewGroup}. The view group may not be null
+     * @return True, if the touch event targets a view, which can be scrolled up, false otherwise
+     */
+    private boolean isScrollUpEvent(final float x, final float y,
+                                    @NonNull final ViewGroup viewGroup) {
+        int location[] = new int[2];
+        viewGroup.getLocationOnScreen(location);
+
+        if (x >= location[0] && x <= viewGroup.getWidth() && y >= location[1] &&
+                y <= viewGroup.getHeight()) {
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                View view = viewGroup.getChildAt(i);
+
+                if (ViewCompat.canScrollVertically(view, -1)) {
+                    return true;
+                } else if (view instanceof ViewGroup) {
+                    return isScrollUpEvent(x, y, (ViewGroup) view);
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Handles when a drag gesture is performed by the user.
      *
-     * @param dragPosition
-     *         The current vertical position of the drag gesture as a {@link Float} value
      * @return True, if the view has been moved by the drag gesture, false otherwise
      */
-    private boolean handleDrag(final float dragPosition) {
+    private boolean handleDrag() {
         if (!isAnimationRunning()) {
-            dragHelper.update(dragPosition);
-
             if (dragHelper.hasThresholdBeenReached()) {
                 int top = Math.round(isMaximized() ? dragHelper.getDistance() :
                         thresholdPosition + dragHelper.getDistance());
@@ -138,7 +190,6 @@ public class DraggableView extends LinearLayout {
      * Handles when a drag gesture has been ended by the user.
      */
     private void handleRelease() {
-        dragHelper.reset();
         float speed = Math.max(dragHelper.getDragSpeed(), animationSpeed);
 
         if (getTop() > thresholdPosition) {
@@ -146,13 +197,6 @@ public class DraggableView extends LinearLayout {
         } else {
             animateShowView(-getTop(), speed, new DecelerateInterpolator());
         }
-    }
-
-    /**
-     * Handles when the view is clicked by the user.
-     */
-    private void handleClick() {
-        dragHelper.reset();
     }
 
     /**
@@ -428,13 +472,21 @@ public class DraggableView extends LinearLayout {
             case MotionEvent.ACTION_DOWN:
                 break;
             case MotionEvent.ACTION_MOVE:
-                handled = handleDrag(event.getRawY());
+                dragHelper.update(event.getRawY());
+
+                if (isMaximized() && (event.getRawY() - dragHelper.getStartPosition() < 0 ||
+                        isScrollUpEvent(event.getRawX(), event.getRawY()))) {
+                    dragHelper.reset();
+                    break;
+                }
+
+                handled = handleDrag();
                 break;
             case MotionEvent.ACTION_UP:
+                dragHelper.reset();
+
                 if (dragHelper.hasThresholdBeenReached()) {
                     handleRelease();
-                } else {
-                    handleClick();
                 }
 
                 break;
@@ -451,14 +503,14 @@ public class DraggableView extends LinearLayout {
             case MotionEvent.ACTION_DOWN:
                 return true;
             case MotionEvent.ACTION_MOVE:
-                handleDrag(event.getRawY());
+                dragHelper.update(event.getRawY());
+                handleDrag();
                 return true;
             case MotionEvent.ACTION_UP:
+                dragHelper.reset();
 
                 if (dragHelper.hasThresholdBeenReached()) {
                     handleRelease();
-                } else {
-                    handleClick();
                 }
 
                 performClick();
@@ -477,9 +529,11 @@ public class DraggableView extends LinearLayout {
     }
 
     @Override
-    protected final void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    protected final void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        contentContainer = (ViewGroup) findViewById(R.id.content_container);
         adjustMargin(initialMargin);
+
     }
 
     @Override
