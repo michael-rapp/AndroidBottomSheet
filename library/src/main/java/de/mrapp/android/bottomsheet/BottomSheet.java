@@ -165,6 +165,12 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         private float dragSensitivity = 0.25f;
 
         /**
+         * The dim amount, which is used to darken the area around the bottom sheet, which is
+         * created by the builder.
+         */
+        private float dimAmount = 0.25f;
+
+        /**
          * The items of the bottom sheet, which is created by the builder.
          */
         private Collection<Parcelable> items = new LinkedList<>();
@@ -648,6 +654,23 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         }
 
         /**
+         * Sets the dim amount, which should be used to darken the area outside the bottom sheet,
+         * which is created by the builder.
+         *
+         * @param dimAmount
+         *         The dim amount, which should be set, as a {@link Float} value. The dim amount
+         *         must be at least 0 (fully transparent) and at maximum 1 (fully opaque)
+         * @return The builder, the method has been called upon, as an instance of the class {@link
+         * Builder}
+         */
+        public final Builder setDimAmount(final float dimAmount) {
+            ensureAtLeast(dimAmount, 0, "The dim amount must be at least 0");
+            ensureAtMaximum(dimAmount, 1, "The dim amount must be at least 1");
+            this.dimAmount = dimAmount;
+            return this;
+        }
+
+        /**
          * Adds a new item to the bottom sheet, which is created by the builder.
          *
          * @param title
@@ -784,6 +807,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             bottomSheet.setCancelable(cancelable);
             bottomSheet.setCanceledOnTouchOutside(true);
             bottomSheet.setDragSensitivity(dragSensitivity);
+            bottomSheet.setDimAmount(dimAmount);
             return bottomSheet;
         }
 
@@ -861,6 +885,11 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * bottom sheet, in relation to an internal value range.
      */
     private float dragSensitivity;
+
+    /**
+     * The dim amount, which is used to darken the area outside the bottom sheet.
+     */
+    private float dimAmount;
 
     /**
      * Initializes the bottom sheet.
@@ -1000,6 +1029,30 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         if (rootView != null) {
             rootView.setDragSensitivity(calculateDragSensitivity());
         }
+    }
+
+    /**
+     * Returns the dim amount, which is used to darken the area outside the bottom sheet.
+     *
+     * @return The dim amount, which is used to darken the area outside the bottom sheet, as a
+     * {@link Float} value
+     */
+    public final float getDimAmount() {
+        return dimAmount;
+    }
+
+    /**
+     * Sets the dim amount, which should be used to darken the area outside the bottom sheet.
+     *
+     * @param dimAmount
+     *         The dim amount, which should be set, as a {@link Float} value. The dim amount must be
+     *         at least 0 (fully transparent) and at maximum 1 (fully opaque)
+     */
+    public final void setDimAmount(final float dimAmount) {
+        ensureAtLeast(dimAmount, 0, "The dim amount must be at least 0");
+        ensureAtMaximum(dimAmount, 1, "The dim amount must be at maximum 1");
+        this.dimAmount = dimAmount;
+        getWindow().getAttributes().dimAmount = dimAmount;
     }
 
     /**
