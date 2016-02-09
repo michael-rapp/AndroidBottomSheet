@@ -17,6 +17,7 @@ package de.mrapp.android.bottomsheet.animation;
 import android.support.annotation.NonNull;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.FrameLayout;
 
 import de.mrapp.android.bottomsheet.view.DraggableView;
 
@@ -77,8 +78,9 @@ public class DraggableViewAnimation extends Animation {
     protected final void applyTransformation(final float interpolatedTime,
                                              final Transformation transformation) {
         super.applyTransformation(interpolatedTime, transformation);
-        view.layout(view.getLeft(), Math.round(startTop + interpolatedTime * diff), view.getRight(),
-                view.getBottom());
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
+        layoutParams.topMargin = Math.round(startTop + interpolatedTime * diff);
+        view.setLayoutParams(layoutParams);
     }
 
 }

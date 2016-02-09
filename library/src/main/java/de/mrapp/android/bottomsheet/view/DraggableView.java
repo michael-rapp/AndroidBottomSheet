@@ -25,6 +25,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import de.mrapp.android.bottomsheet.BottomSheet;
@@ -70,9 +71,9 @@ public class DraggableView extends LinearLayout {
     private DragHelper dragHelper;
 
     /**
-     * The view's maximum initial height in pixels.
+     * The view's initial top margin in pixels.
      */
-    private int initialHeight;
+    private int initialMargin;
 
     /**
      * The speed of the animation, which is used to show or hide the sidebar, in pixels per
@@ -100,10 +101,11 @@ public class DraggableView extends LinearLayout {
      */
     private void initialize() {
         dragHelper = new DragHelper(0);
-        initialHeight =
-                Math.round(getResources().getDisplayMetrics().heightPixels * INITIAL_HEIGHT_RATIO);
+        int displayHeight = getResources().getDisplayMetrics().heightPixels;
+        float initialHeight = displayHeight * INITIAL_HEIGHT_RATIO;
+        initialMargin = Math.round(displayHeight - initialHeight);
         int animationDuration = getResources().getInteger(R.integer.animation_duration);
-        animationSpeed = (float) initialHeight / (float) animationDuration;
+        animationSpeed = initialHeight / (float) animationDuration;
         maximized = false;
     }
 
@@ -119,14 +121,11 @@ public class DraggableView extends LinearLayout {
             dragHelper.update(dragPosition);
 
             if (dragHelper.hasThresholdBeenReached()) {
-                int left = getLeft();
-                int right = getRight();
-                int bottom = getBottom();
                 int top = Math.round(isMaximized() ? dragHelper.getDistance() :
                         thresholdPosition + dragHelper.getDistance());
                 top = Math.max(top, 0);
-                top = Math.min(top, bottom);
-                layout(left, top, right, bottom);
+                top = Math.min(top, getBottom());
+                adjustMargin(top);
             }
 
             return true;
@@ -154,6 +153,18 @@ public class DraggableView extends LinearLayout {
      */
     private void handleClick() {
         dragHelper.reset();
+    }
+
+    /**
+     * Adjusts the top margin of the view.
+     *
+     * @param margin
+     *         The top margin, which should be set, in pixels as an {@link Integer} value
+     */
+    private void adjustMargin(final int margin) {
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) getLayoutParams();
+        layoutParams.topMargin = margin;
+        setLayoutParams(layoutParams);
     }
 
     /**
@@ -467,14 +478,8 @@ public class DraggableView extends LinearLayout {
 
     @Override
     protected final void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
-        int measuredHeight = heightMeasureSpec;
-
-        if (initialHeight < MeasureSpec.getSize(measuredHeight)) {
-            int measureMode = MeasureSpec.getMode(measuredHeight);
-            measuredHeight = MeasureSpec.makeMeasureSpec(initialHeight, measureMode);
-        }
-
-        super.onMeasure(widthMeasureSpec, measuredHeight);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        adjustMargin(initialMargin);
     }
 
     @Override

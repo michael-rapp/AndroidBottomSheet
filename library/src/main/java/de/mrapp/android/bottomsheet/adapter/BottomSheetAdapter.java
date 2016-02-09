@@ -154,6 +154,21 @@ public class BottomSheetAdapter extends BaseAdapter {
         items.add(new MenuItem("Item 13"));
         items.add(new MenuItem("Item 14"));
         items.add(new MenuItem("Item 15"));
+        items.add(new MenuItem("Item 16"));
+        items.add(new MenuItem("Item 17"));
+        items.add(new MenuItem("Item 18"));
+        items.add(new MenuItem("Item 19"));
+        items.add(new MenuItem("Item 20"));
+        items.add(new MenuItem("Item 21"));
+        items.add(new MenuItem("Item 22"));
+        items.add(new MenuItem("Item 23"));
+        items.add(new MenuItem("Item 24"));
+        items.add(new MenuItem("Item 25"));
+        items.add(new MenuItem("Item 26"));
+        items.add(new MenuItem("Item 27"));
+        items.add(new MenuItem("Item 28"));
+        items.add(new MenuItem("Item 29"));
+        items.add(new MenuItem("Item 30"));
     }
 
     /**
