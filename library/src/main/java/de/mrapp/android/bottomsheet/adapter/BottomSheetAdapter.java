@@ -16,6 +16,7 @@ package de.mrapp.android.bottomsheet.adapter;
 
 import android.content.Context;
 import android.os.Parcelable;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -43,6 +44,18 @@ import static de.mrapp.android.util.Condition.ensureNotNull;
 public class BottomSheetAdapter extends BaseAdapter {
 
     /**
+     * The view holder, which is used to visualize menu items.
+     */
+    private static class MenuItemViewHolder {
+
+        /**
+         * The text view, which is used to show a menu item's title.
+         */
+        private TextView titleTextView;
+
+    }
+
+    /**
      * The view type, which is used to visualize placeholders.
      */
     private static final int PLACEHOLDER_VIEW_TYPE = 0;
@@ -56,18 +69,6 @@ public class BottomSheetAdapter extends BaseAdapter {
      * The view type, which is used to visualize separators.
      */
     private static final int SEPARATOR_VIEW_TYPE = 2;
-
-    /**
-     * The view holder, which is used to visualize menu items.
-     */
-    private static class MenuItemViewHolder {
-
-        /**
-         * The text view, which is used to show a menu item's title.
-         */
-        private TextView titleTextView;
-
-    }
 
     /**
      * The context, which is used by the adapter.
@@ -84,6 +85,11 @@ public class BottomSheetAdapter extends BaseAdapter {
      * adapter's items are changed, false otherwise.
      */
     private boolean notifyOnChange;
+
+    /**
+     * The text color of the adapter's items.
+     */
+    private int itemColor;
 
     /**
      * Notifies, that the adapter's items have been changed.
@@ -125,6 +131,10 @@ public class BottomSheetAdapter extends BaseAdapter {
     private void visualizeMenuItem(@NonNull final MenuItem menuItem,
                                    @NonNull final MenuItemViewHolder viewHolder) {
         viewHolder.titleTextView.setText(menuItem.getTitle());
+
+        if (getItemColor() != -1) {
+            viewHolder.titleTextView.setTextColor(getItemColor());
+        }
     }
 
     /**
@@ -139,6 +149,7 @@ public class BottomSheetAdapter extends BaseAdapter {
         this.context = context;
         this.items = new ArrayList<>();
         this.notifyOnChange = true;
+        this.itemColor = -1;
         items.add(new MenuItem("Item 1"));
         items.add(new MenuItem("Item 2"));
         items.add(new MenuItem("Item 3"));
@@ -169,6 +180,27 @@ public class BottomSheetAdapter extends BaseAdapter {
         items.add(new MenuItem("Item 28"));
         items.add(new MenuItem("Item 29"));
         items.add(new MenuItem("Item 30"));
+    }
+
+    /**
+     * Returns the text color of the adapter's items.
+     *
+     * @return The text color of the adapter's items as an {@link Integer} value or -1, if no custom
+     * color has been set
+     */
+    public final int getItemColor() {
+        return itemColor;
+    }
+
+    /**
+     * Sets the text color of the adapter's items.
+     *
+     * @param color
+     *         The text color, which should be set, as an {@link Integer} value or -1, if no custom
+     *         color should be set
+     */
+    public final void setItemColor(@ColorInt final int color) {
+        this.itemColor = color;
     }
 
     /**
