@@ -90,11 +90,6 @@ public class DraggableView extends LinearLayout {
     private float animationSpeed;
 
     /**
-     * The vertical position, where the drag threshold is reached.
-     */
-    private float thresholdPosition = -1;
-
-    /**
      * True, if the view is currently maximized, false otherwise.
      */
     private boolean maximized;
@@ -174,7 +169,7 @@ public class DraggableView extends LinearLayout {
         if (!isAnimationRunning()) {
             if (dragHelper.hasThresholdBeenReached()) {
                 int margin = Math.round(isMaximized() ? dragHelper.getDistance() :
-                        thresholdPosition + dragHelper.getDistance());
+                        initialMargin + dragHelper.getDistance());
                 margin = Math.max(margin, 0);
                 adjustMargin(margin);
             }
@@ -191,7 +186,7 @@ public class DraggableView extends LinearLayout {
     private void handleRelease() {
         float speed = Math.max(dragHelper.getDragSpeed(), animationSpeed);
 
-        if (getTop() > thresholdPosition || dragHelper.getDragSpeed() > animationSpeed) {
+        if (getTop() > initialMargin || dragHelper.getDragSpeed() > animationSpeed) {
             animateHideView(getHeight(), speed, new DecelerateInterpolator());
         } else {
             animateShowView(-getTop(), speed, new DecelerateInterpolator());
@@ -533,16 +528,6 @@ public class DraggableView extends LinearLayout {
         contentContainer = (ViewGroup) findViewById(R.id.content_container);
         adjustMargin(initialMargin);
 
-    }
-
-    @Override
-    protected final void onLayout(final boolean changed, final int l, final int t, final int r,
-                                  final int b) {
-        super.onLayout(changed, l, t, r, b);
-
-        if (thresholdPosition == -1) {
-            thresholdPosition = t;
-        }
     }
 
 }
