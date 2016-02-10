@@ -37,6 +37,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -100,6 +102,12 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * The style of the bottom sheet, which is created by the builder.
          */
         private Style style = Style.LIST;
+
+        /**
+         * The listener, which should be notified, when an item of the bottom sheet, which is
+         * created by the builder, has been clicked.
+         */
+        private OnItemClickListener itemClickListener;
 
         /**
          * The listener, which should be notified, when the bottom sheet, which is created by the
@@ -401,6 +409,21 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         public final Builder setStyle(@NonNull final Style style) {
             ensureNotNull(style, "The style may not be null");
             this.style = style;
+            return this;
+        }
+
+        /**
+         * Sets the listener, which should be notified, when an item of the bottom sheet has been
+         * clicked.
+         *
+         * @param listener
+         *         The listener, which should be set, as an instance of the type {@link
+         *         OnItemClickListener} or null, if no listener should be notified
+         * @return The builder, the method has been called upon, as an instance of the class {@link
+         * Builder}
+         */
+        public final Builder setOnItemClickListener(@Nullable final OnItemClickListener listener) {
+            this.itemClickListener = listener;
             return this;
         }
 
@@ -822,6 +845,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
                             FrameLayout.LayoutParams.MATCH_PARENT);
             layoutParams.gravity = Gravity.BOTTOM;
             bottomSheet.setContentView(root, layoutParams);
+            bottomSheet.setOnItemClickListener(itemClickListener);
             bottomSheet.setOnMaximizeListener(maximizeListener);
             bottomSheet.setOnCancelListener(cancelListener);
             bottomSheet.setOnDismissListener(dismissListener);
@@ -877,6 +901,11 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * has an effect on the bottom sheet.
      */
     private static final int MAX_DRAG_SENSITIVITY = 260;
+
+    /**
+     * The listener, which is notified, when an item of the bottom sheet has been clicked.
+     */
+    private OnItemClickListener itemClickListener;
 
     /**
      * The listener, which is notified, when the bottom sheet is maximized.
@@ -1007,6 +1036,31 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     }
 
     /**
+     * Creates and returns a listener, which allows to observe when the items of a bottom sheet have
+     * been clicked.
+     *
+     * @return The listener, which has been created, as an instance of the type {@link
+     * OnItemClickListener}
+     */
+    private OnItemClickListener createItemClickListener() {
+        return new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(final AdapterView<?> parent, final View view,
+                                    final int position, final long id) {
+                if (!rootView.isDragging() && !rootView.isAnimationRunning()) {
+                    if (itemClickListener != null) {
+                        itemClickListener.onItemClick(parent, view, position, id);
+                    }
+
+                    dismiss();
+                }
+            }
+
+        };
+    }
+
+    /**
      * Notifies, the listener, which has been registered to be notified, when the bottom sheet has
      * been maximized, about the bottom sheet being maximized.
      */
@@ -1053,6 +1107,18 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
                           @Nullable final Collection<Parcelable> items) {
         super(context, themeResourceId);
         initialize(items);
+    }
+
+    /**
+     * Sets the listener, which should be notified, when an item of the bottom sheet has been
+     * clicked.
+     *
+     * @param listener
+     *         The listener, which should be set, as an instance of the type {@link
+     *         OnItemClickListener} or null, if no listener should be notified
+     */
+    public final void setOnItemClickListener(@Nullable final OnItemClickListener listener) {
+        this.itemClickListener = listener;
     }
 
     /**
@@ -1595,6 +1661,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         gridView = (GridView) findViewById(R.id.bottom_sheet_grid_view);
 
         if (gridView != null) {
+            gridView.setOnItemClickListener(createItemClickListener());
             gridView.setAdapter(adapter);
         }
     }
