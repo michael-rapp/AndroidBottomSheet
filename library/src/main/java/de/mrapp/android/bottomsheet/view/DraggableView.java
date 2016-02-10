@@ -70,6 +70,11 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     private static final float INITIAL_HEIGHT_RATIO = 9f / 16f;
 
     /**
+     * The view group, which contains the view's title.
+     */
+    private ViewGroup titleContainer;
+
+    /**
      * The view group, which contains the view's content.
      */
     private ViewGroup contentContainer;
@@ -93,6 +98,16 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
      * The view's initial top margin in pixels.
      */
     private int initialMargin = -1;
+
+    /**
+     * The view's minimum top margin in pixels.
+     */
+    private int minMargin = -1;
+
+    /**
+     * The height of the view's parent in pixels.
+     */
+    private int parentHeight = -1;
 
     /**
      * The speed of the animation, which is used to show or hide the sidebar, in pixels per
@@ -167,8 +182,8 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
             if (dragHelper.hasThresholdBeenReached()) {
                 int margin = Math.round(isMaximized() ? dragHelper.getDistance() :
                         initialMargin + dragHelper.getDistance());
-                margin = Math.max(margin, 0);
-                adjustMargin(margin);
+                margin = Math.max(Math.max(margin, minMargin), 0);
+                setTopMargin(margin);
             }
 
             return true;
@@ -183,20 +198,30 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     private void handleRelease() {
         float speed = Math.max(dragHelper.getDragSpeed(), animationSpeed);
 
-        if (getTop() > initialMargin || dragHelper.getDragSpeed() > animationSpeed) {
-            animateHideView(getHeight(), speed, new DecelerateInterpolator());
+        if (getTopMargin() > initialMargin || dragHelper.getDragSpeed() > animationSpeed) {
+            animateHideView(parentHeight - getTopMargin(), speed, new DecelerateInterpolator());
         } else {
-            animateShowView(-getTop(), speed, new DecelerateInterpolator());
+            animateShowView(-(getTopMargin() - minMargin), speed, new DecelerateInterpolator());
         }
     }
 
     /**
-     * Adjusts the top margin of the view.
+     * Returns the top margin of the view.
+     *
+     * @return The top margin of the view in pixels as an {@link Integer} value
+     */
+    public final int getTopMargin() {
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) getLayoutParams();
+        return layoutParams.topMargin;
+    }
+
+    /**
+     * Set the top margin of the view.
      *
      * @param margin
      *         The top margin, which should be set, in pixels as an {@link Integer} value
      */
-    private void adjustMargin(final int margin) {
+    private void setTopMargin(final int margin) {
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) getLayoutParams();
         layoutParams.topMargin = margin;
         setLayoutParams(layoutParams);
@@ -522,18 +547,24 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     @Override
     protected final void onAttachedToWindow() {
         super.onAttachedToWindow();
+        titleContainer = (ViewGroup) findViewById(R.id.title_container);
         contentContainer = (ViewGroup) findViewById(R.id.content_container);
     }
 
     @Override
     public final void onGlobalLayout() {
-        if (initialMargin == -1 || animationSpeed == -1) {
-            int displayHeight = getResources().getDisplayMetrics().heightPixels;
-            float initialHeight = displayHeight * INITIAL_HEIGHT_RATIO;
-            initialMargin = Math.round(displayHeight - initialHeight);
+        if (parentHeight == -1) {
+            parentHeight = ((View) getParent()).getHeight();
+            float initialHeight = parentHeight * INITIAL_HEIGHT_RATIO;
+            int titleContainerHeight =
+                    titleContainer.getVisibility() == View.VISIBLE ? titleContainer.getHeight() : 0;
+            int contentContainerHeight = contentContainer.getVisibility() == View.VISIBLE ?
+                    contentContainer.getHeight() : 0;
+            minMargin = parentHeight - (titleContainerHeight + contentContainerHeight);
+            initialMargin = Math.max(Math.round(parentHeight - initialHeight), minMargin);
             int animationDuration = getResources().getInteger(R.integer.animation_duration);
             animationSpeed = initialHeight / (float) animationDuration;
-            adjustMargin(initialMargin);
+            setTopMargin(initialMargin);
         }
     }
 
