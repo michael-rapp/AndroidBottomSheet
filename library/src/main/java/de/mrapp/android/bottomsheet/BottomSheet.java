@@ -103,6 +103,12 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
 
         /**
          * The listener, which should be notified, when the bottom sheet, which is created by the
+         * builder, has been maximized.
+         */
+        private OnMaximizeListener maximizeListener;
+
+        /**
+         * The listener, which should be notified, when the bottom sheet, which is created by the
          * builder, is canceled.
          */
         private OnCancelListener cancelListener;
@@ -395,6 +401,21 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         public final Builder setStyle(@NonNull final Style style) {
             ensureNotNull(style, "The style may not be null");
             this.style = style;
+            return this;
+        }
+
+        /**
+         * Sets the listener, which should be notified, when the bottom sheet, which is created by
+         * the builder, has been maximized.
+         *
+         * @param listener
+         *         The listener, which should be set, as an instance of the type {@link
+         *         OnMaximizeListener} or null, if no listener should be notified
+         * @return The builder, the method has been called upon, as an instance of the class {@link
+         * Builder}
+         */
+        public final Builder setOnMaximizeListener(@Nullable final OnMaximizeListener listener) {
+            this.maximizeListener = listener;
             return this;
         }
 
@@ -801,6 +822,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
                             FrameLayout.LayoutParams.MATCH_PARENT);
             layoutParams.gravity = Gravity.BOTTOM;
             bottomSheet.setContentView(root, layoutParams);
+            bottomSheet.setOnMaximizeListener(maximizeListener);
             bottomSheet.setOnCancelListener(cancelListener);
             bottomSheet.setOnDismissListener(dismissListener);
             bottomSheet.setOnKeyListener(keyListener);
@@ -855,6 +877,11 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * has an effect on the bottom sheet.
      */
     private static final int MAX_DRAG_SENSITIVITY = 260;
+
+    /**
+     * The listener, which is notified, when the bottom sheet is maximized.
+     */
+    private OnMaximizeListener maximizeListener;
 
     /**
      * The root view of the bottom sheet.
@@ -980,6 +1007,16 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     }
 
     /**
+     * Notifies, the listener, which has been registered to be notified, when the bottom sheet has
+     * been maximized, about the bottom sheet being maximized.
+     */
+    private void notifyOnMaximize() {
+        if (maximizeListener != null) {
+            maximizeListener.onMaximize(this);
+        }
+    }
+
+    /**
      * Creates a bottom sheet, which is designed according to Android 5's Material Design guidelines
      * even on pre-Lollipop devices.
      *
@@ -1016,6 +1053,17 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
                           @Nullable final Collection<Parcelable> items) {
         super(context, themeResourceId);
         initialize(items);
+    }
+
+    /**
+     * Sets the listener, which should be notified, when the bottom sheet has been maximized.
+     *
+     * @param listener
+     *         The listener, which should be set, as an instance of the type {@link
+     *         OnMaximizeListener} or null, if no listener should be notified
+     */
+    public final void setOnMaximizeListener(@Nullable final OnMaximizeListener listener) {
+        this.maximizeListener = listener;
     }
 
     /**
@@ -1523,7 +1571,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
 
     @Override
     public final void onMaximized() {
-
+        notifyOnMaximize();
     }
 
     @Override
