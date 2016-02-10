@@ -24,6 +24,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.DecelerateInterpolator;
@@ -42,7 +43,7 @@ import de.mrapp.android.util.gesture.DragHelper;
  * @author Michael Rapp
  * @since 1.0.0
  */
-public class DraggableView extends LinearLayout {
+public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGlobalLayoutListener {
 
     /**
      * Defines the interface, a class, which should be notified about the view's state, must
@@ -74,20 +75,14 @@ public class DraggableView extends LinearLayout {
     private ViewGroup contentContainer;
 
     /**
+     * The callback, which should be notified about the view's state.
+     */
+    private Callback callback;
+
+    /**
      * An instance of the class {@link DragHelper}, which is used to recognize drag gestures.
      */
     private DragHelper dragHelper;
-
-    /**
-     * The view's initial top margin in pixels.
-     */
-    private int initialMargin;
-
-    /**
-     * The speed of the animation, which is used to show or hide the sidebar, in pixels per
-     * millisecond.
-     */
-    private float animationSpeed;
 
     /**
      * True, if the view is currently maximized, false otherwise.
@@ -95,20 +90,22 @@ public class DraggableView extends LinearLayout {
     private boolean maximized;
 
     /**
-     * The callback, which should be notified about the view's state.
+     * The view's initial top margin in pixels.
      */
-    private Callback callback;
+    private int initialMargin = -1;
+
+    /**
+     * The speed of the animation, which is used to show or hide the sidebar, in pixels per
+     * millisecond.
+     */
+    private float animationSpeed = -1;
 
     /**
      * Initializes the view.
      */
     private void initialize() {
+        getViewTreeObserver().addOnGlobalLayoutListener(this);
         dragHelper = new DragHelper(0);
-        int displayHeight = getResources().getDisplayMetrics().heightPixels;
-        float initialHeight = displayHeight * INITIAL_HEIGHT_RATIO;
-        initialMargin = Math.round(displayHeight - initialHeight);
-        int animationDuration = getResources().getInteger(R.integer.animation_duration);
-        animationSpeed = initialHeight / (float) animationDuration;
         maximized = false;
     }
 
@@ -526,8 +523,18 @@ public class DraggableView extends LinearLayout {
     protected final void onAttachedToWindow() {
         super.onAttachedToWindow();
         contentContainer = (ViewGroup) findViewById(R.id.content_container);
-        adjustMargin(initialMargin);
+    }
 
+    @Override
+    public final void onGlobalLayout() {
+        if (initialMargin == -1 || animationSpeed == -1) {
+            int displayHeight = getResources().getDisplayMetrics().heightPixels;
+            float initialHeight = displayHeight * INITIAL_HEIGHT_RATIO;
+            initialMargin = Math.round(displayHeight - initialHeight);
+            int animationDuration = getResources().getInteger(R.integer.animation_duration);
+            animationSpeed = initialHeight / (float) animationDuration;
+            adjustMargin(initialMargin);
+        }
     }
 
 }
