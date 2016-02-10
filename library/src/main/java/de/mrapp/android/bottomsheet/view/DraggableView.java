@@ -173,11 +173,10 @@ public class DraggableView extends LinearLayout {
     private boolean handleDrag() {
         if (!isAnimationRunning()) {
             if (dragHelper.hasThresholdBeenReached()) {
-                int top = Math.round(isMaximized() ? dragHelper.getDistance() :
+                int margin = Math.round(isMaximized() ? dragHelper.getDistance() :
                         thresholdPosition + dragHelper.getDistance());
-                top = Math.max(top, 0);
-                top = Math.min(top, getBottom());
-                adjustMargin(top);
+                margin = Math.max(margin, 0);
+                adjustMargin(margin);
             }
 
             return true;
