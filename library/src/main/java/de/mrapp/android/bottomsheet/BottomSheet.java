@@ -52,10 +52,12 @@ import de.mrapp.android.bottomsheet.adapter.BottomSheetAdapter;
 import de.mrapp.android.bottomsheet.model.MenuItem;
 import de.mrapp.android.bottomsheet.model.Separator;
 import de.mrapp.android.bottomsheet.view.DraggableView;
+import de.mrapp.android.util.DisplayUtil.DeviceType;
 
 import static de.mrapp.android.util.Condition.ensureAtLeast;
 import static de.mrapp.android.util.Condition.ensureAtMaximum;
 import static de.mrapp.android.util.Condition.ensureNotNull;
+import static de.mrapp.android.util.DisplayUtil.getDeviceType;
 
 /**
  * A bottom sheet, which is designed according to the Android 5's Material Design guidelines even on
@@ -185,6 +187,22 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * created by the builder.
          */
         private float dimAmount = 0.25f;
+
+        /**
+         * The width of the bottom sheet, which is created by the builder, in relation to the
+         * display width.
+         */
+        private float relativeWidth = 0.5f;
+
+        /**
+         * The minimum width of the bottom sheet, which is created by the builder.
+         */
+        private int minWidth = -1;
+
+        /**
+         * The maximum width of the bottom sheet, which is created by the builder.
+         */
+        private int maxWidth = -1;
 
         /**
          * The items of the bottom sheet, which is created by the builder.
@@ -370,6 +388,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             ensureNotNull(context, "The context may not be null");
             this.context = context;
             this.themeResourceId = themeResourceId;
+            this.minWidth =
+                    getContext().getResources().getDimensionPixelSize(R.dimen.default_min_width);
         }
 
         /**
@@ -715,6 +735,59 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         }
 
         /**
+         * Sets the relative width of the bottom sheet, which is created by the builder, in relation
+         * to the display width.
+         *
+         * @param relativeWidth
+         *         The relative width, which should be set, as a {@link Float} value. The relative
+         *         must be at least 0 and at maximum 1
+         * @return The builder, the method has been called upon, as an instance of the class {@link
+         * Builder}
+         */
+        public final Builder setRelativeWidth(final float relativeWidth) {
+            ensureAtLeast(relativeWidth, 0, "The relative width must be at least 0");
+            ensureAtMaximum(relativeWidth, 1, "The relative width must be at maximum 1");
+            this.relativeWidth = relativeWidth;
+            return this;
+        }
+
+        /**
+         * Sets the minimum width of the bottom sheet, which is created by the builder.
+         *
+         * @param minWidth
+         *         The minimum width, which should be set, in pixels as an {@link Integer} value or
+         *         -1, if no minimum width should be set
+         * @return The builder, the method has been called upon, as an instance of the class {@link
+         * Builder}
+         */
+        public final Builder setMinWidth(final int minWidth) {
+            if (minWidth != -1) {
+                ensureAtLeast(minWidth, 1, "The minimum width must be at least 1");
+            }
+
+            this.minWidth = minWidth;
+            return this;
+        }
+
+        /**
+         * Sets the maximum width of the bottom sheet, which is created by the builder.
+         *
+         * @param maxWidth
+         *         The maximum width, which should be set, in pixels as an {@link Integer} value or
+         *         -1, if no maximum width should be set
+         * @return The builder, the method has been called upon, as an instance of the class {@link
+         * Builder}
+         */
+        public final Builder setMaxWidth(final int maxWidth) {
+            if (maxWidth != -1) {
+                ensureAtLeast(maxWidth, 1, "The maximum width must be at least 1");
+            }
+
+            this.maxWidth = maxWidth;
+            return this;
+        }
+
+        /**
          * Adds a new item to the bottom sheet, which is created by the builder.
          *
          * @param title
@@ -843,7 +916,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             FrameLayout.LayoutParams layoutParams =
                     new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                             FrameLayout.LayoutParams.MATCH_PARENT);
-            layoutParams.gravity = Gravity.BOTTOM;
+            layoutParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
             bottomSheet.setContentView(root, layoutParams);
             bottomSheet.setOnItemClickListener(itemClickListener);
             bottomSheet.setOnMaximizeListener(maximizeListener);
@@ -855,6 +928,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             bottomSheet.setDragSensitivity(dragSensitivity);
             bottomSheet.setDimAmount(dimAmount);
             bottomSheet.setItemColor(itemColor);
+            bottomSheet.setRelativeWidth(relativeWidth);
+            bottomSheet.setMinWidth(minWidth);
+            bottomSheet.setMaxWidth(maxWidth);
             return bottomSheet;
         }
 
@@ -964,6 +1040,21 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     private float dimAmount;
 
     /**
+     * The width of the bottom sheet in relation to the display width.
+     */
+    private float relativeWidth = 1.0f;
+
+    /**
+     * The minimum width of the bottom sheet.
+     */
+    private int minWidth = -1;
+
+    /**
+     * The maximum width of the bottom sheet.
+     */
+    private int maxWidth = -1;
+
+    /**
      * Initializes the bottom sheet.
      *
      * @param items
@@ -995,7 +1086,6 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-        layoutParams.gravity = Gravity.BOTTOM;
         return layoutParams;
     }
 
@@ -1437,6 +1527,131 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     }
 
     /**
+     * Returns the relative width of the bottom sheet in relation to the display width. The relative
+     * width is only used on tablet devices.
+     *
+     * @return The relative width of the bottom sheet in relation to the display width as a {@link
+     * Float} value or -1, if the device is not a tabled
+     */
+    public final float getRelativeWidth() {
+        if (getDeviceType(getContext()) == DeviceType.TABLET) {
+            return relativeWidth;
+        }
+
+        return -1;
+    }
+
+    /**
+     * Sets the relative width of the bottom sheet in relation to the display width. The relative
+     * width is only used on tablet devices.
+     *
+     * @param relativeWidth
+     *         The relative width, which should be set, as a {@link Float} value. The relative must
+     *         be at least 0 and at maximum 1
+     * @return True, if the relative width has been set, false otherwise
+     */
+    public final boolean setRelativeWidth(final float relativeWidth) {
+        ensureAtLeast(relativeWidth, 0, "The relative width must be at least 0");
+        ensureAtMaximum(relativeWidth, 1, "The relative width must be at maximum 1");
+
+        if (getDeviceType(getContext()) == DeviceType.TABLET) {
+            this.relativeWidth = relativeWidth;
+
+            if (rootView != null) {
+                rootView.setRelativeWidth(relativeWidth);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns the minimum width of the bottom sheet. The minimum width is only used on tablet
+     * devices.
+     *
+     * @return The minimum width of the bottom sheet in pixels as an {@link Integer} value or -1, if
+     * no minimum width has been set or if the device is not a tablet
+     */
+    public final int getMinWidth() {
+        if (getDeviceType(getContext()) == DeviceType.TABLET) {
+            return minWidth;
+        }
+
+        return -1;
+    }
+
+    /**
+     * Sets the minimum width of the bottom sheet. The minimum width is only used on tablet
+     * devices.
+     *
+     * @param minWidth
+     *         The minimum width, which should be set, in pixels as an {@link Integer} value or -1,
+     *         if no minimum width should be set
+     * @return True, if the minimum width has been set, false otherwise
+     */
+    public final boolean setMinWidth(final int minWidth) {
+        if (minWidth != -1) {
+            ensureAtLeast(minWidth, 1, "The minimum width must be at least 1");
+        }
+
+        if (getDeviceType(getContext()) == DeviceType.TABLET) {
+            this.minWidth = minWidth;
+
+            if (rootView != null) {
+                rootView.setMinWidth(minWidth);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns the maximum width of the bottom sheet. The maximum width is only used on tablet
+     * devices.
+     *
+     * @return The maximum width of the bottom sheet in pixels as an {@link Integer} value or -1, if
+     * no maximum width has been set or if the device is not a tablet
+     */
+    public final int getMaxWidth() {
+        if (getDeviceType(getContext()) == DeviceType.TABLET) {
+            return maxWidth;
+        }
+
+        return -1;
+    }
+
+    /**
+     * Sets the maximum width of the bottom sheet. The maximum width is only used on tablet
+     * devices.
+     *
+     * @param maxWidth
+     *         The maximum width, which should be set, in pixels as an {@link Integer} value or -1,
+     *         if no maximum width should be set
+     * @return True, if the maximum width has been set, false otherwise
+     */
+    public final boolean setMaxWidth(final int maxWidth) {
+        if (maxWidth != -1) {
+            ensureAtLeast(maxWidth, 1, "The maximum width must be at least 1");
+        }
+
+        if (getDeviceType(getContext()) == DeviceType.TABLET) {
+            this.maxWidth = maxWidth;
+
+            if (rootView != null) {
+                rootView.setMaxWidth(maxWidth);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Adds a new item to the bottom sheet.
      *
      * @param title
@@ -1652,6 +1867,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         getWindow().getDecorView().setOnTouchListener(createCancelOnTouchListener());
         rootView = (DraggableView) findViewById(R.id.root);
         rootView.setDragSensitivity(calculateDragSensitivity());
+        rootView.setRelativeWidth(relativeWidth);
+        rootView.setMinWidth(minWidth);
+        rootView.setMaxWidth(maxWidth);
         rootView.setCallback(this);
         titleContainer = (ViewGroup) findViewById(R.id.title_container);
         View titleView = findViewById(android.R.id.title);

@@ -26,4 +26,7 @@ not, see <http://www.gnu.org/licenses/>.
     <item name="bottom_sheet_grid_item_horizontal_padding" type="dimen">24dp</item>
     <item name="bottom_sheet_drawable_padding" type="dimen">32dp</item>
 
+    <!-- Default value -->
+    <item name="default_min_width" type="dimen">640dp</item>
+
 </resources>

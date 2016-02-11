@@ -37,6 +37,9 @@ import de.mrapp.android.bottomsheet.R;
 import de.mrapp.android.bottomsheet.animation.DraggableViewAnimation;
 import de.mrapp.android.util.gesture.DragHelper;
 
+import static de.mrapp.android.util.Condition.ensureAtLeast;
+import static de.mrapp.android.util.Condition.ensureAtMaximum;
+
 /**
  * The root view of a {@link BottomSheet}, which can be dragged by the user.
  *
@@ -113,7 +116,22 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
      * The speed of the animation, which is used to show or hide the sidebar, in pixels per
      * millisecond.
      */
-    private float animationSpeed = -1;
+    private float animationSpeed;
+
+    /**
+     * The width of the view in relation to the display width.
+     */
+    private float relativeWidth;
+
+    /**
+     * The minimum width of the view.
+     */
+    private int minWidth;
+
+    /**
+     * The maximum width of the view.
+     */
+    private int maxWidth;
 
     /**
      * Initializes the view.
@@ -453,6 +471,79 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     }
 
     /**
+     * Returns the relative width of the view in relation to the display width.
+     *
+     * @return The relative width of the view in relation to the display width as a {@link Float}
+     * value
+     */
+    public final float getRelativeWidth() {
+        return relativeWidth;
+    }
+
+    /**
+     * Sets the relative width of the view in relation to the display width.
+     *
+     * @param relativeWidth
+     *         The relative width, which should be set, as a {@link Float} value. The relative must
+     *         be at least 0 and at maximum 1
+     */
+    public final void setRelativeWidth(final float relativeWidth) {
+        ensureAtLeast(relativeWidth, 0, "The relative width must be at least 0");
+        ensureAtMaximum(relativeWidth, 1, "The relative width must be at maximum 1");
+        this.relativeWidth = relativeWidth;
+    }
+
+    /**
+     * Returns the minimum width of the view.
+     *
+     * @return The minimum width of the view in pixels as an {@link Integer} value or -1, if no
+     * minimum width has been set
+     */
+    public final int getMinWidth() {
+        return minWidth;
+    }
+
+    /**
+     * Sets the minimum width of the view.
+     *
+     * @param minWidth
+     *         The minimum width, which should be set, in pixels as an {@link Integer} value or -1,
+     *         if no minimum width should be set
+     */
+    public final void setMinWidth(final int minWidth) {
+        if (minWidth != -1) {
+            ensureAtLeast(minWidth, 1, "The minimum width must be at least 1");
+        }
+
+        this.minWidth = minWidth;
+    }
+
+    /**
+     * Returns the maximum width of the view.
+     *
+     * @return The maximum width of the view in pixels as an {@link Integer} value or -1, if no
+     * maximum width has been set
+     */
+    public final int getMaxWidth() {
+        return maxWidth;
+    }
+
+    /**
+     * Sets the maximum width of the view.
+     *
+     * @param maxWidth
+     *         The maximum width, which should be set, in pixels as an {@link Integer} value or -1,
+     *         if no maximum width should be set
+     */
+    public final void setMaxWidth(final int maxWidth) {
+        if (maxWidth != -1) {
+            ensureAtLeast(maxWidth, 1, "The maximum width must be at least 1");
+        }
+
+        this.maxWidth = maxWidth;
+    }
+
+    /**
      * Returns, whether a drag gesture, which moves the view, is currently performed, or not.
      *
      * @return True, if a drag gesture, which moves the view, is currently performed, false
@@ -545,13 +636,6 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     }
 
     @Override
-    protected final void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        titleContainer = (ViewGroup) findViewById(R.id.title_container);
-        contentContainer = (ViewGroup) findViewById(R.id.content_container);
-    }
-
-    @Override
     public final void onGlobalLayout() {
         if (parentHeight == -1) {
             parentHeight = ((View) getParent()).getHeight();
@@ -566,6 +650,31 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
             animationSpeed = initialHeight / (float) animationDuration;
             setTopMargin(initialMargin);
         }
+    }
+
+    @Override
+    protected final void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        titleContainer = (ViewGroup) findViewById(R.id.title_container);
+        contentContainer = (ViewGroup) findViewById(R.id.content_container);
+    }
+
+    @Override
+    protected final void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
+        int displayWidth = getResources().getDisplayMetrics().widthPixels;
+        int width = Math.round(displayWidth * relativeWidth);
+
+        if (minWidth != -1) {
+            width = Math.max(width, minWidth);
+        }
+
+        if (maxWidth != -1) {
+            width = Math.min(width, maxWidth);
+        }
+
+        int measureMode = MeasureSpec.getMode(widthMeasureSpec);
+        width = MeasureSpec.makeMeasureSpec(width, measureMode);
+        super.onMeasure(width, heightMeasureSpec);
     }
 
 }
