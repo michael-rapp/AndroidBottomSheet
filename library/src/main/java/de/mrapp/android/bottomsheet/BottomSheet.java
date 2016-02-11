@@ -14,9 +14,15 @@
  */
 package de.mrapp.android.bottomsheet;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -47,6 +53,7 @@ import android.widget.TextView;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import de.mrapp.android.bottomsheet.adapter.BottomSheetAdapter;
 import de.mrapp.android.bottomsheet.model.MenuItem;
@@ -206,6 +213,18 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * The items of the bottom sheet, which is created by the builder.
          */
         private Collection<Parcelable> items = new LinkedList<>();
+
+        /**
+         * The activity, which should be used to start the apps, which are added as items to the
+         * bottom sheet, which is created by the builder.
+         */
+        private Activity activity;
+
+        /**
+         * The intent, the apps, which are added as items to the bottom sheet, which is created by
+         * the builder, should handle.
+         */
+        private Intent intent;
 
         /**
          * Inflates the bottom sheet's layout.
@@ -800,6 +819,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         public final Builder addItem(@NonNull final CharSequence title) {
             MenuItem item = new MenuItem(title);
             items.add(item);
+            activity = null;
+            intent = null;
             return this;
         }
 
@@ -820,6 +841,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             MenuItem item = new MenuItem(title);
             item.setIcon(icon);
             items.add(item);
+            activity = null;
+            intent = null;
             return this;
         }
 
@@ -835,6 +858,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         public final Builder addItem(@StringRes final int titleId) {
             MenuItem item = new MenuItem(getContext(), titleId);
             items.add(item);
+            activity = null;
+            intent = null;
             return this;
         }
 
@@ -854,6 +879,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             MenuItem item = new MenuItem(getContext(), titleId);
             item.setIcon(getContext(), iconId);
             items.add(item);
+            activity = null;
+            intent = null;
             return this;
         }
 
@@ -865,6 +892,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          */
         public final Builder addSeparator() {
             items.add(new Separator());
+            activity = null;
+            intent = null;
             return this;
         }
 
@@ -879,6 +908,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             Separator separator = new Separator();
             separator.setTitle(title);
             items.add(separator);
+            activity = null;
+            intent = null;
             return this;
         }
 
@@ -895,6 +926,32 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             Separator separator = new Separator();
             separator.setTitle(getContext(), titleId);
             items.add(separator);
+            activity = null;
+            intent = null;
+            return this;
+        }
+
+        /**
+         * Adds the apps, which are able to handle a specific intent, as items to the bottom sheet,
+         * which is created by the builder. This causes all previously added items to be removed.
+         * When an item is clicked, the corresponding app is started.
+         *
+         * @param activity
+         *         The activity, the bottom sheet, which is created by the builder, belongs to, as
+         *         an instance of the class {@link Activity}. The activity may not be null
+         * @param intent
+         *         The intent as an instance of the class {@link Intent}. The intent may not be
+         *         null
+         * @return The builder, the method has been called upon, as an instance of the class {@link
+         * Builder}
+         */
+        public final Builder setIntent(@NonNull final Activity activity,
+                                       @NonNull final Intent intent) {
+            ensureNotNull(activity, "The activity may not be null");
+            ensureNotNull(intent, "The intent may not be null");
+            this.items.clear();
+            this.activity = activity;
+            this.intent = intent;
             return this;
         }
 
@@ -932,6 +989,11 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             bottomSheet.setRelativeWidth(relativeWidth);
             bottomSheet.setMinWidth(minWidth);
             bottomSheet.setMaxWidth(maxWidth);
+
+            if (activity != null && intent != null) {
+                bottomSheet.setIntent(activity, intent);
+            }
+
             return bottomSheet;
         }
 
@@ -1146,6 +1208,44 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
 
                     dismiss();
                 }
+            }
+
+        };
+    }
+
+    /**
+     * Creates and returns a listener, which allows to start an app, when an item of the bottom
+     * sheet has been clicked.
+     *
+     * @param activity
+     *         The activity, the bottom sheet belongs to, as an instance of the class {@link
+     *         Activity}. The activity may not be null
+     * @param intent
+     *         The intent, which should be passed to the started app, as an instance of the class
+     *         {@link Intent}. The intent may not be null
+     * @param resolveInfos
+     *         A list, which contains the resolve infos, which correspond to the apps, which are
+     *         able to handle the intent, as an instance of the type {@link List} or an empty list,
+     *         if no apps are able to handle the intent
+     * @return The listener, which has been created, as an instance of the type {@link
+     * OnItemClickListener}
+     */
+    private OnItemClickListener createIntentClickListener(@NonNull final Activity activity,
+                                                          @NonNull final Intent intent,
+                                                          @NonNull final List<ResolveInfo> resolveInfos) {
+        return new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(final AdapterView<?> parent, final View view,
+                                    final int position, final long id) {
+                ActivityInfo activityInfo = resolveInfos.get(position).activityInfo;
+                ComponentName componentName =
+                        new ComponentName(activityInfo.applicationInfo.packageName,
+                                activityInfo.name);
+                intent.setFlags(
+                        Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                intent.setComponent(componentName);
+                activity.startActivity(intent);
             }
 
         };
@@ -1754,6 +1854,36 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         }
 
         return -1;
+    }
+
+    /**
+     * Adds the apps, which are able to handle a specific intent, as items to the bottom sheet. This
+     * causes all previously added items to be removed. When an item is clicked, the corresponding
+     * app is started.
+     *
+     * @param activity
+     *         The activity, the bottom sheet belongs to, as an instance of the class {@link
+     *         Activity}. The activity may not be null
+     * @param intent
+     *         The intent as an instance of the class {@link Intent}. The intent may not be null
+     */
+    public final void setIntent(@NonNull final Activity activity, @NonNull final Intent intent) {
+        ensureNotNull(activity, "The activity may not be null");
+        ensureNotNull(intent, "The intent may not be null");
+
+        if (adapter != null) {
+            removeAllItems();
+            PackageManager packageManager = activity.getPackageManager();
+            List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent, 0);
+
+            for (ResolveInfo resolveInfo : resolveInfos) {
+                addItem(resolveInfo.loadLabel(packageManager),
+                        resolveInfo.loadIcon(packageManager));
+            }
+
+            setOnItemClickListener(
+                    createIntentClickListener(activity, (Intent) intent.clone(), resolveInfos));
+        }
     }
 
     /**
