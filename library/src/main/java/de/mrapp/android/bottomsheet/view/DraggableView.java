@@ -16,6 +16,7 @@ package de.mrapp.android.bottomsheet.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,10 +36,12 @@ import android.widget.LinearLayout;
 import de.mrapp.android.bottomsheet.BottomSheet;
 import de.mrapp.android.bottomsheet.R;
 import de.mrapp.android.bottomsheet.animation.DraggableViewAnimation;
+import de.mrapp.android.util.DisplayUtil.DeviceType;
 import de.mrapp.android.util.gesture.DragHelper;
 
 import static de.mrapp.android.util.Condition.ensureAtLeast;
 import static de.mrapp.android.util.Condition.ensureAtMaximum;
+import static de.mrapp.android.util.DisplayUtil.getDeviceType;
 
 /**
  * The root view of a {@link BottomSheet}, which can be dragged by the user.
@@ -471,7 +474,8 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     }
 
     /**
-     * Returns the relative width of the view in relation to the display width.
+     * Returns the relative width of the view in relation to the display width. The relative width
+     * is only used on tablet devices or in landscape mode.
      *
      * @return The relative width of the view in relation to the display width as a {@link Float}
      * value
@@ -481,7 +485,8 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     }
 
     /**
-     * Sets the relative width of the view in relation to the display width.
+     * Sets the relative width of the view in relation to the display width. The relative width is
+     * only used on tablet devices or in landscape mode.
      *
      * @param relativeWidth
      *         The relative width, which should be set, as a {@link Float} value. The relative must
@@ -494,7 +499,8 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     }
 
     /**
-     * Returns the minimum width of the view.
+     * Returns the minimum width of the view. The minimum width is only used on tablet devices or in
+     * landscape mode.
      *
      * @return The minimum width of the view in pixels as an {@link Integer} value or -1, if no
      * minimum width has been set
@@ -504,7 +510,8 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     }
 
     /**
-     * Sets the minimum width of the view.
+     * Sets the minimum width of the view. The minimum width is only used on tablet devices or in
+     * landscape mode.
      *
      * @param minWidth
      *         The minimum width, which should be set, in pixels as an {@link Integer} value or -1,
@@ -519,7 +526,8 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     }
 
     /**
-     * Returns the maximum width of the view.
+     * Returns the maximum width of the view. The maximum width is only used on tablet devices or in
+     * landscape mode.
      *
      * @return The maximum width of the view in pixels as an {@link Integer} value or -1, if no
      * maximum width has been set
@@ -529,7 +537,8 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     }
 
     /**
-     * Sets the maximum width of the view.
+     * Sets the maximum width of the view. The maximum width is only used on tablet devices or in
+     * landscape mode.
      *
      * @param maxWidth
      *         The maximum width, which should be set, in pixels as an {@link Integer} value or -1,
@@ -661,20 +670,26 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
 
     @Override
     protected final void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
-        int displayWidth = getResources().getDisplayMetrics().widthPixels;
-        int width = Math.round(displayWidth * relativeWidth);
+        if (getDeviceType(getContext()) == DeviceType.TABLET ||
+                getResources().getConfiguration().orientation ==
+                        Configuration.ORIENTATION_LANDSCAPE) {
+            int displayWidth = getResources().getDisplayMetrics().widthPixels;
+            int width = Math.round(displayWidth * relativeWidth);
 
-        if (minWidth != -1) {
-            width = Math.max(width, minWidth);
+            if (minWidth != -1) {
+                width = Math.max(width, minWidth);
+            }
+
+            if (maxWidth != -1) {
+                width = Math.min(width, maxWidth);
+            }
+
+            int measureMode = MeasureSpec.getMode(widthMeasureSpec);
+            width = MeasureSpec.makeMeasureSpec(width, measureMode);
+            super.onMeasure(width, heightMeasureSpec);
+        } else {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
-
-        if (maxWidth != -1) {
-            width = Math.min(width, maxWidth);
-        }
-
-        int measureMode = MeasureSpec.getMode(widthMeasureSpec);
-        width = MeasureSpec.makeMeasureSpec(width, measureMode);
-        super.onMeasure(width, heightMeasureSpec);
     }
 
 }

@@ -52,12 +52,10 @@ import de.mrapp.android.bottomsheet.adapter.BottomSheetAdapter;
 import de.mrapp.android.bottomsheet.model.MenuItem;
 import de.mrapp.android.bottomsheet.model.Separator;
 import de.mrapp.android.bottomsheet.view.DraggableView;
-import de.mrapp.android.util.DisplayUtil.DeviceType;
 
 import static de.mrapp.android.util.Condition.ensureAtLeast;
 import static de.mrapp.android.util.Condition.ensureAtMaximum;
 import static de.mrapp.android.util.Condition.ensureNotNull;
-import static de.mrapp.android.util.DisplayUtil.getDeviceType;
 
 /**
  * A bottom sheet, which is designed according to the Android 5's Material Design guidelines even on
@@ -736,7 +734,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
 
         /**
          * Sets the relative width of the bottom sheet, which is created by the builder, in relation
-         * to the display width.
+         * to the display width. The relative width is only used on tablet devices or in landscape
+         * mode.
          *
          * @param relativeWidth
          *         The relative width, which should be set, as a {@link Float} value. The relative
@@ -752,7 +751,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         }
 
         /**
-         * Sets the minimum width of the bottom sheet, which is created by the builder.
+         * Sets the minimum width of the bottom sheet, which is created by the builder. The minimum
+         * width is only used on tablet devices or in landscape mode.
          *
          * @param minWidth
          *         The minimum width, which should be set, in pixels as an {@link Integer} value or
@@ -770,7 +770,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         }
 
         /**
-         * Sets the maximum width of the bottom sheet, which is created by the builder.
+         * Sets the maximum width of the bottom sheet, which is created by the builder. The maximum
+         * width is only used on tablet devices or in landscape mode.
          *
          * @param maxWidth
          *         The maximum width, which should be set, in pixels as an {@link Integer} value or
@@ -1042,17 +1043,17 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     /**
      * The width of the bottom sheet in relation to the display width.
      */
-    private float relativeWidth = 1.0f;
+    private float relativeWidth;
 
     /**
      * The minimum width of the bottom sheet.
      */
-    private int minWidth = -1;
+    private int minWidth;
 
     /**
      * The maximum width of the bottom sheet.
      */
-    private int maxWidth = -1;
+    private int maxWidth;
 
     /**
      * Initializes the bottom sheet.
@@ -1531,124 +1532,90 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * width is only used on tablet devices.
      *
      * @return The relative width of the bottom sheet in relation to the display width as a {@link
-     * Float} value or -1, if the device is not a tabled
+     * Float} value
      */
     public final float getRelativeWidth() {
-        if (getDeviceType(getContext()) == DeviceType.TABLET) {
-            return relativeWidth;
-        }
-
-        return -1;
+        return relativeWidth;
     }
 
     /**
      * Sets the relative width of the bottom sheet in relation to the display width. The relative
-     * width is only used on tablet devices.
+     * width is only used on tablet devices or in landscape mode.
      *
      * @param relativeWidth
      *         The relative width, which should be set, as a {@link Float} value. The relative must
      *         be at least 0 and at maximum 1
-     * @return True, if the relative width has been set, false otherwise
      */
-    public final boolean setRelativeWidth(final float relativeWidth) {
+    public final void setRelativeWidth(final float relativeWidth) {
         ensureAtLeast(relativeWidth, 0, "The relative width must be at least 0");
         ensureAtMaximum(relativeWidth, 1, "The relative width must be at maximum 1");
+        this.relativeWidth = relativeWidth;
 
-        if (getDeviceType(getContext()) == DeviceType.TABLET) {
-            this.relativeWidth = relativeWidth;
-
-            if (rootView != null) {
-                rootView.setRelativeWidth(relativeWidth);
-            }
-
-            return true;
+        if (rootView != null) {
+            rootView.setRelativeWidth(relativeWidth);
         }
-
-        return false;
     }
 
     /**
      * Returns the minimum width of the bottom sheet. The minimum width is only used on tablet
-     * devices.
+     * devices or in landscape mode.
      *
      * @return The minimum width of the bottom sheet in pixels as an {@link Integer} value or -1, if
-     * no minimum width has been set or if the device is not a tablet
+     * no minimum width has been set
      */
     public final int getMinWidth() {
-        if (getDeviceType(getContext()) == DeviceType.TABLET) {
-            return minWidth;
-        }
-
-        return -1;
+        return minWidth;
     }
 
     /**
-     * Sets the minimum width of the bottom sheet. The minimum width is only used on tablet
-     * devices.
+     * Sets the minimum width of the bottom sheet. The minimum width is only used on tablet devices
+     * or in landscape mode.
      *
      * @param minWidth
      *         The minimum width, which should be set, in pixels as an {@link Integer} value or -1,
      *         if no minimum width should be set
-     * @return True, if the minimum width has been set, false otherwise
      */
-    public final boolean setMinWidth(final int minWidth) {
+    public final void setMinWidth(final int minWidth) {
         if (minWidth != -1) {
             ensureAtLeast(minWidth, 1, "The minimum width must be at least 1");
         }
 
-        if (getDeviceType(getContext()) == DeviceType.TABLET) {
-            this.minWidth = minWidth;
+        this.minWidth = minWidth;
 
-            if (rootView != null) {
-                rootView.setMinWidth(minWidth);
-            }
-
-            return true;
+        if (rootView != null) {
+            rootView.setMinWidth(minWidth);
         }
-
-        return false;
     }
 
     /**
      * Returns the maximum width of the bottom sheet. The maximum width is only used on tablet
-     * devices.
+     * devices or in landscape mode.
      *
      * @return The maximum width of the bottom sheet in pixels as an {@link Integer} value or -1, if
-     * no maximum width has been set or if the device is not a tablet
+     * no maximum width has been set
      */
     public final int getMaxWidth() {
-        if (getDeviceType(getContext()) == DeviceType.TABLET) {
-            return maxWidth;
-        }
-
-        return -1;
+        return maxWidth;
     }
 
     /**
-     * Sets the maximum width of the bottom sheet. The maximum width is only used on tablet
-     * devices.
+     * Sets the maximum width of the bottom sheet. The maximum width is only used on tablet devices
+     * or in landscape mode.
      *
      * @param maxWidth
      *         The maximum width, which should be set, in pixels as an {@link Integer} value or -1,
      *         if no maximum width should be set
-     * @return True, if the maximum width has been set, false otherwise
      */
-    public final boolean setMaxWidth(final int maxWidth) {
+    public final void setMaxWidth(final int maxWidth) {
         if (maxWidth != -1) {
             ensureAtLeast(maxWidth, 1, "The maximum width must be at least 1");
         }
 
-        if (getDeviceType(getContext()) == DeviceType.TABLET) {
-            this.maxWidth = maxWidth;
+        this.maxWidth = maxWidth;
 
-            if (rootView != null) {
-                rootView.setMaxWidth(maxWidth);
-            }
-
-            return true;
+        if (rootView != null) {
+            rootView.setMaxWidth(maxWidth);
         }
-
-        return false;
     }
 
     /**
