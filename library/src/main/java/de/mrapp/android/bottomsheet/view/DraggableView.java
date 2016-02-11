@@ -120,19 +120,9 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     private float animationSpeed;
 
     /**
-     * The width of the view in relation to the display width.
+     * The width of the view in pixels.
      */
-    private float relativeWidth;
-
-    /**
-     * The minimum width of the view.
-     */
-    private int minWidth;
-
-    /**
-     * The maximum width of the view.
-     */
-    private int maxWidth;
+    private int width;
 
     /**
      * Initializes the view.
@@ -472,39 +462,14 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     }
 
     /**
-     * Sets the relative width of the view in relation to the display width. The relative width is
-     * only used on tablet devices or in landscape mode.
+     * Sets the width of the view. The width is only used on tablet devices or in landscape mode.
      *
-     * @param relativeWidth
-     *         The relative width, which should be set, as a {@link Float} value. The relative must
-     *         be at least 0 and at maximum 1
+     * @param width
+     *         The width, which should be set, in pixels as an {@link Integer} value. The width must
+     *         be at least 1
      */
-    public final void setRelativeWidth(final float relativeWidth) {
-        this.relativeWidth = relativeWidth;
-    }
-
-    /**
-     * Sets the minimum width of the view. The minimum width is only used on tablet devices or in
-     * landscape mode.
-     *
-     * @param minWidth
-     *         The minimum width, which should be set, in pixels as an {@link Integer} value or -1,
-     *         if no minimum width should be set
-     */
-    public final void setMinWidth(final int minWidth) {
-        this.minWidth = minWidth;
-    }
-
-    /**
-     * Sets the maximum width of the view. The maximum width is only used on tablet devices or in
-     * landscape mode.
-     *
-     * @param maxWidth
-     *         The maximum width, which should be set, in pixels as an {@link Integer} value or -1,
-     *         if no maximum width should be set
-     */
-    public final void setMaxWidth(final int maxWidth) {
-        this.maxWidth = maxWidth;
+    public final void setWidth(final int width) {
+        this.width = width;
     }
 
     /**
@@ -628,20 +593,8 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
         if (getDeviceType(getContext()) == DeviceType.TABLET ||
                 getResources().getConfiguration().orientation ==
                         Configuration.ORIENTATION_LANDSCAPE) {
-            int displayWidth = getResources().getDisplayMetrics().widthPixels;
-            int width = Math.round(displayWidth * relativeWidth);
-
-            if (minWidth != -1) {
-                width = Math.max(width, minWidth);
-            }
-
-            if (maxWidth != -1) {
-                width = Math.min(width, maxWidth);
-            }
-
             int measureMode = MeasureSpec.getMode(widthMeasureSpec);
-            width = MeasureSpec.makeMeasureSpec(width, measureMode);
-            super.onMeasure(width, heightMeasureSpec);
+            super.onMeasure(MeasureSpec.makeMeasureSpec(width, measureMode), heightMeasureSpec);
         } else {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }

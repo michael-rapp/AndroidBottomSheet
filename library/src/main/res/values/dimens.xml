@@ -27,6 +27,6 @@ not, see <http://www.gnu.org/licenses/>.
     <item name="bottom_sheet_drawable_padding" type="dimen">32dp</item>
 
     <!-- Default values -->
-    <item name="default_min_width" type="dimen">480dp</item>
+    <item name="default_width" type="dimen">480dp</item>
 
 </resources>
