@@ -1182,6 +1182,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
                         Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
                 intent.setComponent(componentName);
                 activity.startActivity(intent);
+                dismiss();
             }
 
         };
@@ -1808,6 +1809,16 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     }
 
     @Override
+    public final void dismiss() {
+        rootView.hideView(false);
+    }
+
+    @Override
+    public final void cancel() {
+        rootView.hideView(true);
+    }
+
+    @Override
     public final void setCancelable(final boolean cancelable) {
         super.setCancelable(cancelable);
         this.cancelable = cancelable;
@@ -1825,8 +1836,12 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     }
 
     @Override
-    public final void onHidden() {
-        dismiss();
+    public final void onHidden(final boolean canceled) {
+        if (canceled) {
+            super.cancel();
+        } else {
+            super.dismiss();
+        }
     }
 
     @Override

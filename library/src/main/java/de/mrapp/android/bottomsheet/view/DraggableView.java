@@ -26,6 +26,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.DecelerateInterpolator;
@@ -62,8 +63,11 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
 
         /**
          * The method, which is invoked, when the view has been hidden.
+         *
+         * @param canceled
+         *         True, if the view has been canceled, false otherwise
          */
-        void onHidden();
+        void onHidden(boolean canceled);
 
     }
 
@@ -210,7 +214,8 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
         if (getTopMargin() > initialMargin || dragHelper.getDragSpeed() > animationSpeed ||
                 (getDeviceType(getContext()) == DeviceType.TABLET && isMaximized() &&
                         getTopMargin() > 0)) {
-            animateHideView(parentHeight - getTopMargin(), speed, new DecelerateInterpolator());
+            animateHideView(parentHeight - getTopMargin(), speed, new DecelerateInterpolator(),
+                    true);
         } else {
             animateShowView(-(getTopMargin() - minMargin), speed, new DecelerateInterpolator());
         }
@@ -251,7 +256,7 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
      */
     private void animateShowView(final float diff, final float animationSpeed,
                                  @NonNull final Interpolator interpolator) {
-        animateView(diff, animationSpeed, createAnimationListener(true), interpolator);
+        animateView(diff, animationSpeed, createAnimationListener(true, false), interpolator);
     }
 
     /**
@@ -264,10 +269,12 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
      * @param interpolator
      *         The interpolator, which should be used by the animation, as an instance of the type
      *         {@link Interpolator}. The interpolator may not be null
+     * @param cancel
+     *         True, if the view should be canceled, false otherwise
      */
     private void animateHideView(final float diff, final float animationSpeed,
-                                 @NonNull final Interpolator interpolator) {
-        animateView(diff, animationSpeed, createAnimationListener(false), interpolator);
+                                 @NonNull final Interpolator interpolator, final boolean cancel) {
+        animateView(diff, animationSpeed, createAnimationListener(false, cancel), interpolator);
     }
 
     /**
@@ -316,10 +323,12 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
      *
      * @param show
      *         True, if the view should be shown at the end of the animation, false otherwise
+     * @param cancel
+     *         True, if the view should be canceled, false otherwise
      * @return The listener, which has been created, as an instance of the type {@link
      * AnimationListener}
      */
-    private AnimationListener createAnimationListener(final boolean show) {
+    private AnimationListener createAnimationListener(final boolean show, final boolean cancel) {
         return new AnimationListener() {
 
             @Override
@@ -335,7 +344,7 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
                 if (maximized) {
                     notifyOnMaximized();
                 } else {
-                    notifyOnHidden();
+                    notifyOnHidden(cancel);
                 }
             }
 
@@ -360,10 +369,13 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     /**
      * Notifies the callback, which should be notified about the view's state, that the view has
      * been hidden.
+     *
+     * @param canceled
+     *         True, if the view has been canceled, false otherwise
      */
-    private void notifyOnHidden() {
+    private void notifyOnHidden(final boolean canceled) {
         if (callback != null) {
-            callback.onHidden();
+            callback.onHidden(canceled);
         }
     }
 
@@ -439,6 +451,17 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
                          final int defaultStyle, final int defaultStyleResource) {
         super(context, attributeSet, defaultStyle, defaultStyleResource);
         initialize();
+    }
+
+    /**
+     * Hides the view in an animated manner.
+     *
+     * @param cancel
+     *         True, if the view should be canceled, false otherwise
+     */
+    public final void hideView(final boolean cancel) {
+        animateHideView(parentHeight - getTopMargin(), animationSpeed,
+                new AccelerateDecelerateInterpolator(), cancel);
     }
 
     /**
