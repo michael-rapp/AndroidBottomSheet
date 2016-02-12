@@ -36,12 +36,13 @@ import de.mrapp.android.bottomsheet.model.Separator;
 import static de.mrapp.android.util.Condition.ensureNotNull;
 
 /**
- * An adapter, which manages the menu items of a {@link BottomSheet}.
+ * An adapter, which manages the menu items of a {@link BottomSheet}. It allows to show the items in
+ * a list or grid and supports to show dividers.
  *
  * @author Michael Rapp
  * @since 1.0.0
  */
-public class BottomSheetAdapter extends BaseAdapter {
+public class DividableGridAdapter extends BaseAdapter {
 
     /**
      * The view holder, which is used to visualize menu items.
@@ -144,7 +145,7 @@ public class BottomSheetAdapter extends BaseAdapter {
      *         The context, which should be used by the adapter, as an instance of the class {@link
      *         Context}. The context may not be null
      */
-    public BottomSheetAdapter(@NonNull final Context context) {
+    public DividableGridAdapter(@NonNull final Context context) {
         ensureNotNull(context, "The context may not be null");
         this.context = context;
         this.items = new ArrayList<>();

@@ -55,7 +55,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import de.mrapp.android.bottomsheet.adapter.BottomSheetAdapter;
+import de.mrapp.android.bottomsheet.adapter.DividableGridAdapter;
 import de.mrapp.android.bottomsheet.model.MenuItem;
 import de.mrapp.android.bottomsheet.model.Separator;
 import de.mrapp.android.bottomsheet.view.DraggableView;
@@ -1025,7 +1025,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     /**
      * The adapter, which is used to manage the bottom sheet's menu items.
      */
-    private BottomSheetAdapter adapter;
+    private DividableGridAdapter adapter;
 
     /**
      * True, if the bottom sheet is cancelable, false otherwise.
@@ -1063,7 +1063,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      */
     private void initialize(@Nullable final Collection<Parcelable> items) {
         if (items != null) {
-            adapter = new BottomSheetAdapter(getContext());
+            adapter = new DividableGridAdapter(getContext());
 
             for (Parcelable item : items) {
                 if (item instanceof MenuItem) {
