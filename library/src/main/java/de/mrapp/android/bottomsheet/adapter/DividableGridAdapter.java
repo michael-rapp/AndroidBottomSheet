@@ -29,9 +29,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import de.mrapp.android.bottomsheet.BottomSheet;
 import de.mrapp.android.bottomsheet.R;
+import de.mrapp.android.bottomsheet.model.AbstractItem;
 import de.mrapp.android.bottomsheet.model.Divider;
 import de.mrapp.android.bottomsheet.model.Item;
 
@@ -108,7 +110,7 @@ public class DividableGridAdapter extends BaseAdapter {
     /**
      * A list, which contains the items of the adapter.
      */
-    private List<Parcelable> items;
+    private List<AbstractItem> items;
 
     /**
      * True, if the <code>notifyDataSetChange</code>-method is called automatically, when the
@@ -221,6 +223,24 @@ public class DividableGridAdapter extends BaseAdapter {
     }
 
     /**
+     * Returns the index of the item with a specific id. If no item with the given id is contained
+     * by the adapter, a {@link NoSuchElementException} will be thrown.
+     *
+     * @param id
+     *         The id of the item, whose index should be returned, as an {@link Integer} value
+     * @return The index of the item as an {@link Integer} value
+     */
+    private int indexOf(final int id) {
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).getId() == id) {
+                return i;
+            }
+        }
+
+        throw new NoSuchElementException("No item with id " + id + " available");
+    }
+
+    /**
      * Creates a new adapter, which manages the items of a {@link BottomSheet}.
      *
      * @param context
@@ -316,25 +336,27 @@ public class DividableGridAdapter extends BaseAdapter {
      * Adds a new item to the adapter.
      *
      * @param item
-     *         The item, which should be added, as an instance of the class {@link Item}. The item
-     *         may not be null
+     *         The item, which should be added, as an instance of the class {@link AbstractItem}.
+     *         The item may not be null
      */
-    public final void add(@NonNull final Item item) {
+    public final void add(@NonNull final AbstractItem item) {
         ensureNotNull(item, "The item may not be null");
         items.add(item);
         notifyOnDataSetChanged();
     }
 
     /**
-     * Adds a new divider to the adapter.
+     * Replaces the item with a specific id.
      *
-     * @param divider
-     *         The divider, which should be added, as an instance of the class {@link Divider}. The
-     *         divider may not be null
+     * @param id
+     *         The id of the item, which should be replaced, as an {@link Integer} value
+     * @param item
+     *         The item, which should be set, as an instance of the class {@link AbstractItem}. The
+     *         item may not be null
      */
-    public final void add(@NonNull final Divider divider) {
-        ensureNotNull(divider, "The divider may not be null");
-        items.add(divider);
+    public final void set(final int id, @NonNull final AbstractItem item) {
+        ensureNotNull(item, "The item may not be null");
+        items.set(indexOf(id), item);
         notifyOnDataSetChanged();
     }
 
@@ -345,7 +367,7 @@ public class DividableGridAdapter extends BaseAdapter {
      *         The id of the item, which should be removed, as an {@link Integer} value
      */
     public final void remove(final int id) {
-        items.remove(id);
+        items.remove(indexOf(id));
         notifyOnDataSetChanged();
     }
 

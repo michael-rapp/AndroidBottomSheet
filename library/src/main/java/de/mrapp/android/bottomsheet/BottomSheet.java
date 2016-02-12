@@ -1729,6 +1729,80 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     }
 
     /**
+     * Replaces the item with a specific id with another item.
+     *
+     * @param id
+     *         The id of the item, which should be replaced, as an {@link Integer} value
+     * @param title
+     *         The title of the item, which should be added, as an instance of the type {@link
+     *         CharSequence}. The title may neither be null, nor empty
+     */
+    public final void setItem(final int id, @NonNull final CharSequence title) {
+        if (adapter != null) {
+            Item item = new Item(id, title);
+            adapter.set(id, item);
+        }
+    }
+
+    /**
+     * Replaces the item with a specific id with another item.
+     *
+     * @param id
+     *         The id of the item, which should be replaced, as an {@link Integer} value
+     * @param title
+     *         The title of the item, which should be added, as an instance of the type {@link
+     *         CharSequence}. The title may neither be null, nor empty
+     * @param icon
+     *         The icon of the item, which should be added, as an instance of the class {@link
+     *         Drawable}, or null, if no item should be used
+     */
+    public final void setItem(final int id, @NonNull final CharSequence title,
+                              @Nullable final Drawable icon) {
+        if (adapter != null) {
+            Item item = new Item(id, title);
+            item.setIcon(icon);
+            adapter.set(id, item);
+        }
+    }
+
+    /**
+     * Replaces the item with a specific id with another item.
+     *
+     * @param id
+     *         The id of the item, which should be replaced, as an {@link Integer} value
+     * @param titleId
+     *         The resource id of the title of the item, which should be added, as an {@link
+     *         Integer} value. The resource id must correspond to a valid string resource
+     */
+    public final void setItem(final int id, @StringRes final int titleId) {
+        if (adapter != null) {
+            Item item = new Item(id, getContext(), titleId);
+            adapter.set(id, item);
+        }
+    }
+
+    /**
+     * Replaces the item with a specific id with another item.
+     *
+     * @param id
+     *         The id of the item, which should be replaced, as an {@link Integer} value
+     * @param titleId
+     *         The resource id of the title of the item, which should be added, as an {@link
+     *         Integer} value. The resource id must correspond to a valid string resource
+     * @param iconId
+     *         The resource id of the icon of the item, which should be added, as an {@link Integer}
+     *         value. The resource id must correspond to a valid drawable resource
+     */
+    public final void setItem(final int id, @StringRes final int titleId,
+                              @DrawableRes final int iconId) {
+        if (adapter != null) {
+            Item item = new Item(id, getContext(), titleId);
+            item.setIcon(getContext(), iconId);
+            adapter.set(id, item);
+        }
+    }
+
+    /**
      * Adds a new divider to the bottom sheet.
      *
      * @param id
@@ -1763,14 +1837,61 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * @param id
      *         The id of the divider, which should be added, as an {@link Integer} value
      * @param titleId
-     *         The resource id of the title, which should be added, as an {@link Integer} value. The
-     *         resource id must correspond to a valid string resource
+     *         The resource id of the title of the divider, which should be added, as an {@link
+     *         Integer} value. The resource id must correspond to a valid string resource
      */
     public final void addDivider(final int id, @StringRes final int titleId) {
         if (adapter != null) {
             Divider divider = new Divider(id);
             divider.setTitle(getContext(), titleId);
             adapter.add(divider);
+        }
+    }
+
+    /**
+     * Replaces the item with a specific id with a divider.
+     *
+     * @param id
+     *         The id of the item, which should be replaced, as an {@link Integer} value
+     */
+    public final void setDivider(final int id) {
+        if (adapter != null) {
+            Divider divider = new Divider(id);
+            adapter.set(id, divider);
+        }
+    }
+
+    /**
+     * Replaces the item with a specific id with a divider.
+     *
+     * @param id
+     *         The id of the item, which should be replaced, as an {@link Integer} value
+     * @param title
+     *         The title of the divider, which should be added, as an instance of the type {@link
+     *         CharSequence}, or null, if no title should be used
+     */
+    public final void setDivider(final int id, @Nullable final CharSequence title) {
+        if (adapter != null) {
+            Divider divider = new Divider(id);
+            divider.setTitle(title);
+            adapter.set(id, divider);
+        }
+    }
+
+    /**
+     * Replaces the item with a specific id with a divider.
+     *
+     * @param id
+     *         The id of the item, which should be replaced, as an {@link Integer} value
+     * @param titleId
+     *         The resource id of the title of the divider, which should be added, as an {@link
+     *         Integer} value. The resource id must correspond to a valid string resource
+     */
+    public final void setDivider(final int id, @StringRes final int titleId) {
+        if (adapter != null) {
+            Divider divider = new Divider(id);
+            divider.setTitle(getContext(), titleId);
+            adapter.set(id, divider);
         }
     }
 
