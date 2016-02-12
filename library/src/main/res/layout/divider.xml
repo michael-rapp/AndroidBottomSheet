@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+AndroidBottomSheet Copyright 2016 Michael Rapp
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+Lesser General Public License as published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with this program. If
+not, see <http://www.gnu.org/licenses/>.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:paddingBottom="@dimen/bottom_sheet_divider_vertical_padding"
+              android:paddingTop="@dimen/bottom_sheet_divider_vertical_padding">
+
+    <View
+        android:id="@+id/left_divider"
+        android:layout_width="@dimen/bottom_sheet_divider_indent"
+        android:layout_height="1dp"
+        android:layout_gravity="center_vertical"
+        android:background="@color/divider"/>
+
+    <TextView
+        android:id="@android:id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:ellipsize="end"
+        android:paddingEnd="@dimen/bottom_sheet_divider_title_horizontal_padding"
+        android:paddingLeft="@dimen/bottom_sheet_divider_title_horizontal_padding"
+        android:paddingRight="@dimen/bottom_sheet_divider_title_horizontal_padding"
+        android:paddingStart="@dimen/bottom_sheet_divider_title_horizontal_padding"
+        android:singleLine="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@color/divider"/>
+
+    <View
+        android:id="@+id/right_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:background="@color/divider"/>
+
+</LinearLayout>

@@ -19,10 +19,12 @@ import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -50,7 +52,34 @@ public class DividableGridAdapter extends BaseAdapter {
     private static class MenuItemViewHolder {
 
         /**
+         * The image view, which is used to show a menu item's icon.
+         */
+        private ImageView iconImageView;
+
+        /**
          * The text view, which is used to show a menu item's title.
+         */
+        private TextView titleTextView;
+
+    }
+
+    /**
+     * The view holder, which is used to visualize dividers.
+     */
+    private static class DividerViewHolder {
+
+        /**
+         * The view, which is used to show the left divider.
+         */
+        private View leftDivider;
+
+        /**
+         * The view, which is used to show the right divider.
+         */
+        private View rightDivider;
+
+        /**
+         * The text view, which is used to show a divider's title.
          */
         private TextView titleTextView;
 
@@ -113,6 +142,7 @@ public class DividableGridAdapter extends BaseAdapter {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.list_item, parent, false);
         MenuItemViewHolder viewHolder = new MenuItemViewHolder();
+        viewHolder.iconImageView = (ImageView) view.findViewById(android.R.id.icon);
         viewHolder.titleTextView = (TextView) view.findViewById(android.R.id.title);
         view.setTag(viewHolder);
         return view;
@@ -139,6 +169,48 @@ public class DividableGridAdapter extends BaseAdapter {
     }
 
     /**
+     * Inflates the view, which is used to visualize a divider.
+     *
+     * @param parent
+     *         The parent of the view, which should be inflated, as an instance of the class {@link
+     *         ViewGroup} or null, if no parent is available
+     * @return The view, which has been inflated, as an instance of the class {@link View}
+     */
+    private View inflateDividerView(@Nullable final ViewGroup parent) {
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        View view = layoutInflater.inflate(R.layout.divider, parent, false);
+        DividerViewHolder viewHolder = new DividerViewHolder();
+        viewHolder.leftDivider = view.findViewById(R.id.left_divider);
+        viewHolder.rightDivider = view.findViewById(R.id.right_divider);
+        viewHolder.titleTextView = (TextView) view.findViewById(android.R.id.title);
+        view.setTag(viewHolder);
+        return view;
+    }
+
+    /**
+     * Visualizes a specific divider.
+     *
+     * @param divider
+     *         The divider, which should be visualized, as an instance of the class {@link Divider}.
+     *         The divider may not be null
+     * @param viewHolder
+     *         The view holder, which contains the views, which should be used to visualize the
+     *         divider, as an instance of the class {@link DividerViewHolder}. The view holder may
+     *         not be null
+     */
+    private void visualizeDivider(@NonNull final Divider divider,
+                                  @NonNull final DividerViewHolder viewHolder) {
+        if (!TextUtils.isEmpty(divider.getTitle())) {
+            viewHolder.titleTextView.setText(divider.getTitle());
+            viewHolder.titleTextView.setVisibility(View.VISIBLE);
+            viewHolder.leftDivider.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.titleTextView.setVisibility(View.GONE);
+            viewHolder.leftDivider.setVisibility(View.GONE);
+        }
+    }
+
+    /**
      * Creates a new adapter, which manages the menu items of a {@link BottomSheet}.
      *
      * @param context
@@ -154,8 +226,12 @@ public class DividableGridAdapter extends BaseAdapter {
         items.add(new MenuItem("Item 1"));
         items.add(new MenuItem("Item 2"));
         items.add(new MenuItem("Item 3"));
+        items.add(new Divider());
         items.add(new MenuItem("Item 4"));
         items.add(new MenuItem("Item 5"));
+        Divider divider = new Divider();
+        divider.setTitle("Divider");
+        items.add(divider);
         items.add(new MenuItem("Item 6"));
         items.add(new MenuItem("Item 7"));
         items.add(new MenuItem("Item 8"));
@@ -288,7 +364,7 @@ public class DividableGridAdapter extends BaseAdapter {
             } else if (viewType == MENU_ITEM_VIEW_TYPE) {
                 view = inflateMenuItemView(parent);
             } else {
-
+                view = inflateDividerView(parent);
             }
         }
 
@@ -296,7 +372,8 @@ public class DividableGridAdapter extends BaseAdapter {
             MenuItemViewHolder viewHolder = (MenuItemViewHolder) view.getTag();
             visualizeMenuItem((MenuItem) item, viewHolder);
         } else if (viewType == SEPARATOR_VIEW_TYPE) {
-
+            DividerViewHolder viewHolder = (DividerViewHolder) view.getTag();
+            visualizeDivider((Divider) item, viewHolder);
         }
 
         return view;

@@ -31,6 +31,7 @@ not, see <http://www.gnu.org/licenses/>.
         tools:ignore="UseCompoundDrawables,UselessParent">
 
         <ImageView
+            android:id="@android:id/icon"
             android:layout_width="@dimen/bottom_sheet_list_item_icon_size"
             android:layout_height="@dimen/bottom_sheet_list_item_icon_size"
             android:layout_gravity="center_vertical"
