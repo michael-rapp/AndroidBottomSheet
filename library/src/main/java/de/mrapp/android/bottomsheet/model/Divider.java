@@ -16,13 +16,10 @@ package de.mrapp.android.bottomsheet.model;
 
 import android.content.Context;
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
-
-import java.io.Serializable;
 
 /**
  * Represents a divider, which can be shown in a bottom sheet.
@@ -30,7 +27,7 @@ import java.io.Serializable;
  * @author Michael Rapp
  * @since 1.0.0
  */
-public class Divider implements Serializable, Cloneable, Parcelable {
+public class Divider extends AbstractItem {
 
     /**
      * A creator, which allows to create instances of the class {@link Divider} from parcels.
@@ -67,13 +64,18 @@ public class Divider implements Serializable, Cloneable, Parcelable {
      *         Parcel}. The parcel may not be null
      */
     private Divider(@NonNull final Parcel source) {
+        super(source);
         this.title = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source);
     }
 
     /**
      * Creates a new divider.
+     *
+     * @param id
+     *         The divider's id as an {@link Integer} value
      */
-    public Divider() {
+    public Divider(final int id) {
+        super(id);
         this.title = null;
     }
 
@@ -114,20 +116,20 @@ public class Divider implements Serializable, Cloneable, Parcelable {
 
     @Override
     public final Divider clone() {
-        Divider clonedDivider = new Divider();
-        clonedDivider.setTitle(title);
+        Divider clonedDivider = new Divider(getId());
+        clonedDivider.setTitle(getTitle());
         return clonedDivider;
     }
 
     @Override
     public final String toString() {
-        return "Divider [title=" + title + "]";
+        return "Divider [id=" + getId() + ", title=" + getTitle() + "]";
     }
 
     @Override
     public final int hashCode() {
         final int prime = 31;
-        int result = 1;
+        int result = super.hashCode();
         result = prime * result + ((title == null) ? 0 : title.hashCode());
         return result;
     }
@@ -136,7 +138,7 @@ public class Divider implements Serializable, Cloneable, Parcelable {
     public final boolean equals(final Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
+        if (!super.equals(obj))
             return false;
         if (getClass() != obj.getClass())
             return false;
@@ -150,12 +152,8 @@ public class Divider implements Serializable, Cloneable, Parcelable {
     }
 
     @Override
-    public final int describeContents() {
-        return 0;
-    }
-
-    @Override
     public final void writeToParcel(final Parcel dest, final int flags) {
+        super.writeToParcel(dest, flags);
         TextUtils.writeToParcel(getTitle(), dest, flags);
     }
 

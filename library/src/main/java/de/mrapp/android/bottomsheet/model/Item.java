@@ -19,15 +19,12 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-
-import java.io.Serializable;
 
 import static de.mrapp.android.util.Condition.ensureNotEmpty;
 import static de.mrapp.android.util.Condition.ensureNotNull;
@@ -38,7 +35,7 @@ import static de.mrapp.android.util.Condition.ensureNotNull;
  * @author Michael Rapp
  * @since 1.0.0
  */
-public class Item implements Serializable, Cloneable, Parcelable {
+public class Item extends AbstractItem {
 
     /**
      * A creator, which allows to create instances of the class {@link Item} from parcels.
@@ -81,6 +78,7 @@ public class Item implements Serializable, Cloneable, Parcelable {
      */
     @SuppressWarnings("deprecation")
     private Item(@NonNull final Parcel source) {
+        super(source);
         this.title = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source);
         this.icon =
                 new BitmapDrawable((Bitmap) source.readParcelable(Bitmap.class.getClassLoader()));
@@ -89,11 +87,14 @@ public class Item implements Serializable, Cloneable, Parcelable {
     /**
      * Creates a new item.
      *
+     * @param id
+     *         The item's id as an {@link Integer} value
      * @param title
      *         The item's title as an instance of the type {@link CharSequence}. The title may
      *         neither be null, nor empty
      */
-    public Item(@NonNull final CharSequence title) {
+    public Item(final int id, @NonNull final CharSequence title) {
+        super(id);
         ensureNotNull(title, "The title may not be null");
         ensureNotEmpty(title, "The title may not be empty");
         this.title = title;
@@ -103,6 +104,8 @@ public class Item implements Serializable, Cloneable, Parcelable {
     /**
      * Creates a new item.
      *
+     * @param id
+     *         The item's id as an {@link Integer} value
      * @param context
      *         The context, which should be used, as an instance of the class {@link Context}. The
      *         context may not be null
@@ -110,8 +113,8 @@ public class Item implements Serializable, Cloneable, Parcelable {
      *         The resource id of the item's title as an {@link Integer} value. The resource id must
      *         correspond to a valid string resource
      */
-    public Item(@NonNull final Context context, @StringRes final int resourceId) {
-        this(context.getText(resourceId));
+    public Item(final int id, @NonNull final Context context, @StringRes final int resourceId) {
+        this(id, context.getText(resourceId));
     }
 
     /**
@@ -159,20 +162,20 @@ public class Item implements Serializable, Cloneable, Parcelable {
 
     @Override
     public final Item clone() {
-        Item clonedItem = new Item(title);
+        Item clonedItem = new Item(getId(), getTitle());
         clonedItem.setIcon(getIcon());
         return clonedItem;
     }
 
     @Override
     public final String toString() {
-        return "Item [title=" + title + ", icon=" + icon + "]";
+        return "Item [id=" + getId() + ", title=" + getTitle() + ", icon=" + getIcon() + "]";
     }
 
     @Override
     public final int hashCode() {
         final int prime = 31;
-        int result = 1;
+        int result = super.hashCode();
         result = prime * result + title.hashCode();
         result = prime * result + ((icon == null) ? 0 : icon.hashCode());
         return result;
@@ -182,7 +185,7 @@ public class Item implements Serializable, Cloneable, Parcelable {
     public final boolean equals(final Object obj) {
         if (this == obj)
             return true;
-        if (obj == null)
+        if (!super.equals(obj))
             return false;
         if (getClass() != obj.getClass())
             return false;
@@ -198,12 +201,8 @@ public class Item implements Serializable, Cloneable, Parcelable {
     }
 
     @Override
-    public final int describeContents() {
-        return 0;
-    }
-
-    @Override
     public final void writeToParcel(final Parcel dest, final int flags) {
+        super.writeToParcel(dest, flags);
         TextUtils.writeToParcel(getTitle(), dest, flags);
         Bitmap bitmap = (getIcon() != null && getIcon() instanceof BitmapDrawable) ?
                 ((BitmapDrawable) getIcon()).getBitmap() : null;

@@ -777,14 +777,16 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         /**
          * Adds a new item to the bottom sheet, which is created by the builder.
          *
+         * @param id
+         *         The id of the item, which should be added, as an {@link Integer} value
          * @param title
          *         The title of the item, which should be added, as an instance of the type {@link
          *         CharSequence}. The title may neither be null, nor empty
          * @return The builder, the method has been called upon, as an instance of the class {@link
          * Builder}
          */
-        public final Builder addItem(@NonNull final CharSequence title) {
-            Item item = new Item(title);
+        public final Builder addItem(final int id, @NonNull final CharSequence title) {
+            Item item = new Item(id, title);
             items.add(item);
             activity = null;
             intent = null;
@@ -794,6 +796,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         /**
          * Adds a new item to the bottom sheet, which is created by the builder.
          *
+         * @param id
+         *         The id of the item, which should be added, as an {@link Integer} value
          * @param title
          *         The title of the item, which should be added, as an instance of the type {@link
          *         CharSequence}. The title may neither be null, nor empty
@@ -803,9 +807,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * @return The builder, the method has been called upon, as an instance of the class {@link
          * Builder}
          */
-        public final Builder addItem(@NonNull final CharSequence title,
+        public final Builder addItem(final int id, @NonNull final CharSequence title,
                                      @Nullable final Drawable icon) {
-            Item item = new Item(title);
+            Item item = new Item(id, title);
             item.setIcon(icon);
             items.add(item);
             activity = null;
@@ -816,14 +820,16 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         /**
          * Adds a new item to the bottom sheet, which is created by the builder.
          *
+         * @param id
+         *         The id of the item, which should be added, as an {@link Integer} value
          * @param titleId
          *         The resource id of the title of the item, which should be added, as an {@link
          *         Integer} value. The resource id must correspond to a valid string resource
          * @return The builder, the method has been called upon, as an instance of the class {@link
          * Builder}
          */
-        public final Builder addItem(@StringRes final int titleId) {
-            Item item = new Item(getContext(), titleId);
+        public final Builder addItem(final int id, @StringRes final int titleId) {
+            Item item = new Item(id, getContext(), titleId);
             items.add(item);
             activity = null;
             intent = null;
@@ -833,6 +839,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         /**
          * Adds a new item to the bottom sheet, which is created by the builder.
          *
+         * @param id
+         *         The id of the item, which should be added, as an {@link Integer} value
          * @param titleId
          *         The resource id of the title of the item, which should be added, as an {@link
          *         Integer} value. The resource id must correspond to a valid string resource
@@ -842,8 +850,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * @return The builder, the method has been called upon, as an instance of the class {@link
          * Builder}
          */
-        public final Builder addItem(@StringRes final int titleId, @DrawableRes final int iconId) {
-            Item item = new Item(getContext(), titleId);
+        public final Builder addItem(final int id, @StringRes final int titleId,
+                                     @DrawableRes final int iconId) {
+            Item item = new Item(id, getContext(), titleId);
             item.setIcon(getContext(), iconId);
             items.add(item);
             activity = null;
@@ -854,11 +863,13 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         /**
          * Adds a new divider to the bottom sheet, which is created by the builder.
          *
+         * @param id
+         *         The id of the divider, which should be added, as an {@link Integer} value
          * @return The builder, the method has been called upon, as an instance of the class {@link
          * Builder}
          */
-        public final Builder addDivider() {
-            items.add(new Divider());
+        public final Builder addDivider(final int id) {
+            items.add(new Divider(id));
             activity = null;
             intent = null;
             return this;
@@ -867,12 +878,14 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         /**
          * Adds a new divider to the bottom sheet, which is created by the builder.
          *
+         * @param id
+         *         The id of the divider, which should be added, as an {@link Integer} value
          * @param title
          *         The title of the divider, which should be added, as an instance of the type
          *         {@link CharSequence}, or null, if no title should be used
          */
-        public final Builder addDivider(@Nullable final CharSequence title) {
-            Divider divider = new Divider();
+        public final Builder addDivider(final int id, @Nullable final CharSequence title) {
+            Divider divider = new Divider(id);
             divider.setTitle(title);
             items.add(divider);
             activity = null;
@@ -883,14 +896,16 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         /**
          * Adds a new divider to the bottom sheet, which is created by the builder.
          *
+         * @param id
+         *         The id of the divider, which should be added, as an {@link Integer} value
          * @param titleId
          *         The resource id of the title, which should be added, as an {@link Integer} value.
          *         The resource id must correspond to a valid string resource
          * @return The builder, the method has been called upon, as an instance of the class {@link
          * Builder}
          */
-        public final Builder addDivider(@StringRes final int titleId) {
-            Divider divider = new Divider();
+        public final Builder addDivider(final int id, @StringRes final int titleId) {
+            Divider divider = new Divider(id);
             divider.setTitle(getContext(), titleId);
             items.add(divider);
             activity = null;
@@ -1642,13 +1657,15 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     /**
      * Adds a new item to the bottom sheet.
      *
+     * @param id
+     *         The id of the item, which should be added, as an {@link Integer} value
      * @param title
      *         The title of the item, which should be added, as an instance of the type {@link
      *         CharSequence}. The title may neither be null, nor empty
      */
-    public final void addItem(@NonNull final CharSequence title) {
+    public final void addItem(final int id, @NonNull final CharSequence title) {
         if (adapter != null) {
-            Item item = new Item(title);
+            Item item = new Item(id, title);
             adapter.add(item);
         }
     }
@@ -1656,6 +1673,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     /**
      * Adds a new item to the bottom sheet.
      *
+     * @param id
+     *         The id of the item, which should be added, as an {@link Integer} value
      * @param title
      *         The title of the item, which should be added, as an instance of the type {@link
      *         CharSequence}. The title may neither be null, nor empty
@@ -1663,9 +1682,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         The icon of the item, which should be added, as an instance of the class {@link
      *         Drawable}, or null, if no item should be used
      */
-    public final void addItem(@NonNull final CharSequence title, @Nullable final Drawable icon) {
+    public final void addItem(final int id, @NonNull final CharSequence title,
+                              @Nullable final Drawable icon) {
         if (adapter != null) {
-            Item item = new Item(title);
+            Item item = new Item(id, title);
             item.setIcon(icon);
             adapter.add(item);
         }
@@ -1674,13 +1694,15 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     /**
      * Adds a new item to the bottom sheet.
      *
+     * @param id
+     *         The id of the item, which should be added, as an {@link Integer} value
      * @param titleId
      *         The resource id of the title of the item, which should be added, as an {@link
      *         Integer} value. The resource id must correspond to a valid string resource
      */
-    public final void addItem(@StringRes final int titleId) {
+    public final void addItem(final int id, @StringRes final int titleId) {
         if (adapter != null) {
-            Item item = new Item(getContext(), titleId);
+            Item item = new Item(id, getContext(), titleId);
             adapter.add(item);
         }
     }
@@ -1688,6 +1710,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     /**
      * Adds a new item to the bottom sheet.
      *
+     * @param id
+     *         The id of the item, which should be added, as an {@link Integer} value
      * @param titleId
      *         The resource id of the title of the item, which should be added, as an {@link
      *         Integer} value. The resource id must correspond to a valid string resource
@@ -1695,9 +1719,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         The resource id of the icon of the item, which should be added, as an {@link Integer}
      *         value. The resource id must correspond to a valid drawable resource
      */
-    public final void addItem(@StringRes final int titleId, @DrawableRes final int iconId) {
+    public final void addItem(final int id, @StringRes final int titleId,
+                              @DrawableRes final int iconId) {
         if (adapter != null) {
-            Item item = new Item(getContext(), titleId);
+            Item item = new Item(id, getContext(), titleId);
             item.setIcon(getContext(), iconId);
             adapter.add(item);
         }
@@ -1705,23 +1730,28 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
 
     /**
      * Adds a new divider to the bottom sheet.
+     *
+     * @param id
+     *         The id of the divider, which should be added, as an {@link Integer} value
      */
-    public final void addDivider() {
+    public final void addDivider(final int id) {
         if (adapter != null) {
-            adapter.add(new Divider());
+            adapter.add(new Divider(id));
         }
     }
 
     /**
      * Adds a new divider to the bottom sheet.
      *
+     * @param id
+     *         The id of the divider, which should be added, as an {@link Integer} value
      * @param title
      *         The title of the divider, which should be added, as an instance of the type {@link
      *         CharSequence}, or null, if no title should be used
      */
-    public final void addDivider(@Nullable final CharSequence title) {
+    public final void addDivider(final int id, @Nullable final CharSequence title) {
         if (adapter != null) {
-            Divider divider = new Divider();
+            Divider divider = new Divider(id);
             divider.setTitle(title);
             adapter.add(divider);
         }
@@ -1730,27 +1760,29 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     /**
      * Adds a new divider to the bottom sheet.
      *
+     * @param id
+     *         The id of the divider, which should be added, as an {@link Integer} value
      * @param titleId
      *         The resource id of the title, which should be added, as an {@link Integer} value. The
      *         resource id must correspond to a valid string resource
      */
-    public final void addDivider(@StringRes final int titleId) {
+    public final void addDivider(final int id, @StringRes final int titleId) {
         if (adapter != null) {
-            Divider divider = new Divider();
+            Divider divider = new Divider(id);
             divider.setTitle(getContext(), titleId);
             adapter.add(divider);
         }
     }
 
     /**
-     * Removes the item at a specific index from the bottom sheet.
+     * Removes the item with a specific id from the bottom sheet.
      *
-     * @param index
-     *         The index of the item, which should be removed, as an {@link Integer} value
+     * @param id
+     *         The id of the item, which should be removed, as an {@link Integer} value
      */
-    public final void removeItem(final int index) {
+    public final void removeItem(final int id) {
         if (adapter != null) {
-            adapter.remove(index);
+            adapter.remove(id);
         }
     }
 
@@ -1797,8 +1829,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             PackageManager packageManager = activity.getPackageManager();
             List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent, 0);
 
-            for (ResolveInfo resolveInfo : resolveInfos) {
-                addItem(resolveInfo.loadLabel(packageManager),
+            for (int i = 0; i < resolveInfos.size(); i++) {
+                ResolveInfo resolveInfo = resolveInfos.get(i);
+                addItem(i, resolveInfo.loadLabel(packageManager),
                         resolveInfo.loadIcon(packageManager));
             }
 

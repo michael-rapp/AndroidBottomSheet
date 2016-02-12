@@ -234,40 +234,40 @@ public class DividableGridAdapter extends BaseAdapter {
         this.notifyOnChange = true;
         this.itemColor = -1;
         this.dividerColor = -1;
-        items.add(new Item("Item 1"));
-        items.add(new Item("Item 2"));
-        items.add(new Item("Item 3"));
-        items.add(new Divider());
-        items.add(new Item("Item 4"));
-        items.add(new Item("Item 5"));
-        Divider divider = new Divider();
+        items.add(new Item(0, "Item 1"));
+        items.add(new Item(1, "Item 2"));
+        items.add(new Item(2, "Item 3"));
+        items.add(new Divider(3));
+        items.add(new Item(4, "Item 4"));
+        items.add(new Item(5, "Item 5"));
+        Divider divider = new Divider(6);
         divider.setTitle("Divider");
         items.add(divider);
-        items.add(new Item("Item 6"));
-        items.add(new Item("Item 7"));
-        items.add(new Item("Item 8"));
-        items.add(new Item("Item 9"));
-        items.add(new Item("Item 10"));
-        items.add(new Item("Item 11"));
-        items.add(new Item("Item 12"));
-        items.add(new Item("Item 13"));
-        items.add(new Item("Item 14"));
-        items.add(new Item("Item 15"));
-        items.add(new Item("Item 16"));
-        items.add(new Item("Item 17"));
-        items.add(new Item("Item 18"));
-        items.add(new Item("Item 19"));
-        items.add(new Item("Item 20"));
-        items.add(new Item("Item 21"));
-        items.add(new Item("Item 22"));
-        items.add(new Item("Item 23"));
-        items.add(new Item("Item 24"));
-        items.add(new Item("Item 25"));
-        items.add(new Item("Item 26"));
-        items.add(new Item("Item 27"));
-        items.add(new Item("Item 28"));
-        items.add(new Item("Item 29"));
-        items.add(new Item("Item 30"));
+        items.add(new Item(7, "Item 6"));
+        items.add(new Item(8, "Item 7"));
+        items.add(new Item(9, "Item 8"));
+        items.add(new Item(10, "Item 9"));
+        items.add(new Item(11, "Item 10"));
+        items.add(new Item(12, "Item 11"));
+        items.add(new Item(13, "Item 12"));
+        items.add(new Item(14, "Item 13"));
+        items.add(new Item(15, "Item 14"));
+        items.add(new Item(16, "Item 15"));
+        items.add(new Item(17, "Item 16"));
+        items.add(new Item(18, "Item 17"));
+        items.add(new Item(19, "Item 18"));
+        items.add(new Item(20, "Item 19"));
+        items.add(new Item(21, "Item 20"));
+        items.add(new Item(22, "Item 21"));
+        items.add(new Item(23, "Item 22"));
+        items.add(new Item(24, "Item 23"));
+        items.add(new Item(25, "Item 24"));
+        items.add(new Item(26, "Item 25"));
+        items.add(new Item(27, "Item 26"));
+        items.add(new Item(28, "Item 27"));
+        items.add(new Item(29, "Item 28"));
+        items.add(new Item(30, "Item 29"));
+        items.add(new Item(31, "Item 30"));
     }
 
     /**
@@ -339,13 +339,13 @@ public class DividableGridAdapter extends BaseAdapter {
     }
 
     /**
-     * Removes the item at a specific index.
+     * Removes the item with a specific id.
      *
-     * @param index
-     *         The index of the item, which should be removed, as an {@link Integer} value
+     * @param id
+     *         The id of the item, which should be removed, as an {@link Integer} value
      */
-    public final void remove(final int index) {
-        items.remove(index);
+    public final void remove(final int id) {
+        items.remove(id);
         notifyOnDataSetChanged();
     }
 
