@@ -16,6 +16,7 @@ package de.mrapp.android.bottomsheet.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
@@ -68,6 +69,7 @@ public abstract class AbstractItem implements Serializable, Cloneable, Parcelabl
         return id;
     }
 
+    @CallSuper
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -76,6 +78,7 @@ public abstract class AbstractItem implements Serializable, Cloneable, Parcelabl
         return result;
     }
 
+    @CallSuper
     @Override
     public boolean equals(final Object obj) {
         if (this == obj)
@@ -95,6 +98,7 @@ public abstract class AbstractItem implements Serializable, Cloneable, Parcelabl
         return 0;
     }
 
+    @CallSuper
     @Override
     public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeInt(getId());
