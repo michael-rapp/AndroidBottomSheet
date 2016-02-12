@@ -167,6 +167,9 @@ public class DividableGridAdapter extends BaseAdapter {
      *         null
      */
     private void visualizeItem(@NonNull final Item item, @NonNull final ItemViewHolder viewHolder) {
+        viewHolder.iconImageView.setEnabled(item.isEnabled());
+        viewHolder.iconImageView.setImageDrawable(item.getIcon());
+        viewHolder.titleTextView.setEnabled(item.isEnabled());
         viewHolder.titleTextView.setText(item.getTitle());
 
         if (getItemColor() != -1) {
@@ -255,7 +258,9 @@ public class DividableGridAdapter extends BaseAdapter {
         this.itemColor = -1;
         this.dividerColor = -1;
         items.add(new Item(0, "Item 1"));
-        items.add(new Item(1, "Item 2"));
+        Item item = new Item(1, "Item 2");
+        item.setEnabled(false);
+        items.add(item);
         items.add(new Item(2, "Item 3"));
         items.add(new Divider(3));
         items.add(new Item(4, "Item 4"));
