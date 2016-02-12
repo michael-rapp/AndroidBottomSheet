@@ -213,7 +213,7 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
 
         if (getTopMargin() > initialMargin || dragHelper.getDragSpeed() > animationSpeed ||
                 (getDeviceType(getContext()) == DeviceType.TABLET && isMaximized() &&
-                        getTopMargin() > 0)) {
+                        getTopMargin() > minMargin)) {
             animateHideView(parentHeight - getTopMargin(), speed, new DecelerateInterpolator(),
                     true);
         } else {
