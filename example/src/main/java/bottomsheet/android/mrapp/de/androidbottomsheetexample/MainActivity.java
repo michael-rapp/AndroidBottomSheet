@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(final View v) {
                 BottomSheet.Builder builder = new BottomSheet.Builder(MainActivity.this);
                 builder.setTitle("Title");
-                builder.show();
+                builder.create().show();
             }
 
         });

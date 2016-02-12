@@ -1784,6 +1784,15 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     }
 
     /**
+     * Returns, whether the bottom sheet is currently maximized, or not.
+     *
+     * @return True, if the bottom sheet is currently maximized, false otherwise
+     */
+    public final boolean isMaximized() {
+        return rootView != null && rootView.isMaximized();
+    }
+
+    /**
      * Returns the title of the bottom sheet.
      *
      * @return The title of the bottom sheet as an instance of the type {@link CharSequence} or
@@ -1810,12 +1819,16 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
 
     @Override
     public final void dismiss() {
-        rootView.hideView(false);
+        if (isShowing()) {
+            rootView.hideView(false);
+        }
     }
 
     @Override
     public final void cancel() {
-        rootView.hideView(true);
+        if (isShowing()) {
+            rootView.hideView(true);
+        }
     }
 
     @Override
