@@ -110,7 +110,7 @@ public class BottomSheetAdapter extends BaseAdapter {
      */
     private View inflateMenuItemView(@Nullable final ViewGroup parent) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        View view = layoutInflater.inflate(R.layout.menu_item, parent, false);
+        View view = layoutInflater.inflate(R.layout.list_item, parent, false);
         MenuItemViewHolder viewHolder = new MenuItemViewHolder();
         viewHolder.titleTextView = (TextView) view.findViewById(android.R.id.title);
         view.setTag(viewHolder);
