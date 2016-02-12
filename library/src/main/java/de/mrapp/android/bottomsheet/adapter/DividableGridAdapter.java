@@ -113,6 +113,11 @@ public class DividableGridAdapter extends BaseAdapter {
     private List<AbstractItem> items;
 
     /**
+     * The number of items, which contain an icon.
+     */
+    private int iconCount;
+
+    /**
      * True, if the <code>notifyDataSetChange</code>-method is called automatically, when the
      * adapter's items are changed, false otherwise.
      */
@@ -169,6 +174,7 @@ public class DividableGridAdapter extends BaseAdapter {
     private void visualizeItem(@NonNull final Item item, @NonNull final ItemViewHolder viewHolder) {
         viewHolder.iconImageView.setEnabled(item.isEnabled());
         viewHolder.iconImageView.setImageDrawable(item.getIcon());
+        viewHolder.iconImageView.setVisibility(iconCount > 0 ? View.VISIBLE : View.GONE);
         viewHolder.titleTextView.setEnabled(item.isEnabled());
         viewHolder.titleTextView.setText(item.getTitle());
 
@@ -218,6 +224,10 @@ public class DividableGridAdapter extends BaseAdapter {
             viewHolder.leftDivider.setVisibility(View.GONE);
         }
 
+        viewHolder.leftDivider.getLayoutParams().width = context.getResources()
+                .getDimensionPixelSize(iconCount > 0 ? R.dimen.bottom_sheet_divider_indent :
+                        R.dimen.bottom_sheet_divider_title_horizontal_padding);
+
         if (dividerColor != -1) {
             viewHolder.titleTextView.setTextColor(dividerColor);
             viewHolder.leftDivider.setBackgroundColor(dividerColor);
@@ -254,6 +264,7 @@ public class DividableGridAdapter extends BaseAdapter {
         ensureNotNull(context, "The context may not be null");
         this.context = context;
         this.items = new ArrayList<>();
+        this.iconCount = 0;
         this.notifyOnChange = true;
         this.itemColor = -1;
         this.dividerColor = -1;
@@ -347,6 +358,11 @@ public class DividableGridAdapter extends BaseAdapter {
     public final void add(@NonNull final AbstractItem item) {
         ensureNotNull(item, "The item may not be null");
         items.add(item);
+
+        if (item instanceof Item && ((Item) item).getIcon() != null) {
+            iconCount++;
+        }
+
         notifyOnDataSetChanged();
     }
 
@@ -361,7 +377,16 @@ public class DividableGridAdapter extends BaseAdapter {
      */
     public final void set(final int id, @NonNull final AbstractItem item) {
         ensureNotNull(item, "The item may not be null");
-        items.set(indexOf(id), item);
+        AbstractItem replacedItem = items.set(indexOf(id), item);
+
+        if (replacedItem instanceof Item && ((Item) replacedItem).getIcon() != null) {
+            iconCount--;
+        }
+
+        if (item instanceof Item && ((Item) item).getIcon() != null) {
+            iconCount++;
+        }
+
         notifyOnDataSetChanged();
     }
 
@@ -372,7 +397,12 @@ public class DividableGridAdapter extends BaseAdapter {
      *         The id of the item, which should be removed, as an {@link Integer} value
      */
     public final void remove(final int id) {
-        items.remove(indexOf(id));
+        AbstractItem removedItem = items.remove(indexOf(id));
+
+        if (removedItem instanceof Item && ((Item) removedItem).getIcon() != null) {
+            iconCount--;
+        }
+
         notifyOnDataSetChanged();
     }
 
@@ -381,6 +411,7 @@ public class DividableGridAdapter extends BaseAdapter {
      */
     public final void clear() {
         items.clear();
+        iconCount = 0;
         notifyOnDataSetChanged();
     }
 
