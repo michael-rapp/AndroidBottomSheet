@@ -70,6 +70,11 @@ public class Item extends AbstractItem {
     private Drawable icon;
 
     /**
+     * True, if the item is enabled, false otherwise.
+     */
+    private boolean enabled;
+
+    /**
      * Creates a new item.
      *
      * @param source
@@ -82,6 +87,7 @@ public class Item extends AbstractItem {
         this.title = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source);
         this.icon =
                 new BitmapDrawable((Bitmap) source.readParcelable(Bitmap.class.getClassLoader()));
+        this.enabled = source.readInt() > 0;
     }
 
     /**
@@ -99,6 +105,7 @@ public class Item extends AbstractItem {
         ensureNotEmpty(title, "The title may not be empty");
         this.title = title;
         this.icon = null;
+        this.enabled = true;
     }
 
     /**
@@ -160,16 +167,37 @@ public class Item extends AbstractItem {
         setIcon(ContextCompat.getDrawable(context, resourceId));
     }
 
+    /**
+     * Returns, whether the item is enabled, or not.
+     *
+     * @return True, if the item is enabled, false otherwise
+     */
+    public final boolean isEnabled() {
+        return enabled;
+    }
+
+    /**
+     * Sets, whether the item should be enabled, or not.
+     *
+     * @param enabled
+     *         True, if the item should be enabled, false otherwise
+     */
+    public final void setEnabled(final boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public final Item clone() {
         Item clonedItem = new Item(getId(), getTitle());
         clonedItem.setIcon(getIcon());
+        clonedItem.setEnabled(isEnabled());
         return clonedItem;
     }
 
     @Override
     public final String toString() {
-        return "Item [id=" + getId() + ", title=" + getTitle() + ", icon=" + getIcon() + "]";
+        return "Item [id=" + getId() + ", title=" + getTitle() + ", icon=" + getIcon() +
+                ", enabled=" + isEnabled() + "]";
     }
 
     @Override
@@ -178,6 +206,7 @@ public class Item extends AbstractItem {
         int result = super.hashCode();
         result = prime * result + title.hashCode();
         result = prime * result + ((icon == null) ? 0 : icon.hashCode());
+        result = prime * result + (enabled ? 1231 : 1237);
         return result;
     }
 
@@ -197,6 +226,8 @@ public class Item extends AbstractItem {
                 return false;
         } else if (!icon.equals(other.icon))
             return false;
+        if (enabled != other.enabled)
+            return false;
         return true;
     }
 
@@ -207,6 +238,7 @@ public class Item extends AbstractItem {
         Bitmap bitmap = (getIcon() != null && getIcon() instanceof BitmapDrawable) ?
                 ((BitmapDrawable) getIcon()).getBitmap() : null;
         dest.writeParcelable(bitmap, flags);
+        dest.writeInt(isEnabled() ? 1 : 0);
     }
 
 }

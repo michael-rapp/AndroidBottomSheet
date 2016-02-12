@@ -27,7 +27,6 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
@@ -56,6 +55,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.mrapp.android.bottomsheet.adapter.DividableGridAdapter;
+import de.mrapp.android.bottomsheet.model.AbstractItem;
 import de.mrapp.android.bottomsheet.model.Divider;
 import de.mrapp.android.bottomsheet.model.Item;
 import de.mrapp.android.bottomsheet.view.DraggableView;
@@ -206,7 +206,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         /**
          * The items of the bottom sheet, which is created by the builder.
          */
-        private Collection<Parcelable> items = new LinkedList<>();
+        private Collection<AbstractItem> items = new LinkedList<>();
 
         /**
          * The activity, which should be used to start the apps, which are added as items to the
@@ -914,6 +914,26 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         }
 
         /**
+         * Sets, whether the item with a specific id should be enabled, or not.
+         *
+         * @param id
+         *         The id of the item as an {@link Integer} value
+         * @param enabled
+         *         True, if the item should be enabled, false otherwise
+         * @return The builder, the method has been called upon, as an instance of the class {@link
+         * Builder}
+         */
+        public final Builder setItemEnabled(final int id, final boolean enabled) {
+            for (AbstractItem item : items) {
+                if (item.getId() == id && item instanceof Item) {
+                    ((Item) item).setEnabled(enabled);
+                }
+            }
+
+            return this;
+        }
+
+        /**
          * Adds the apps, which are able to handle a specific intent, as items to the bottom sheet,
          * which is created by the builder. This causes all previously added items to be removed.
          * When an item is clicked, the corresponding app is started.
@@ -1096,16 +1116,12 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         an instance of the type {@link Collection} or null, if a custom view should be shown
      *         instead
      */
-    private void initialize(@Nullable final Collection<Parcelable> items) {
+    private void initialize(@Nullable final Collection<AbstractItem> items) {
         if (items != null) {
             adapter = new DividableGridAdapter(getContext());
 
-            for (Parcelable item : items) {
-                if (item instanceof Item) {
-                    adapter.add((Item) item);
-                } else if (item instanceof Divider) {
-                    adapter.add((Divider) item);
-                }
+            for (AbstractItem item : items) {
+                adapter.add(item);
             }
         }
     }
@@ -1246,7 +1262,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         instead
      */
     protected BottomSheet(@NonNull final Context context,
-                          @Nullable final Collection<Parcelable> items) {
+                          @Nullable final Collection<AbstractItem> items) {
         super(context);
         initialize(items);
     }
@@ -1267,7 +1283,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         instead
      */
     protected BottomSheet(@NonNull final Context context, @StyleRes final int themeResourceId,
-                          @Nullable final Collection<Parcelable> items) {
+                          @Nullable final Collection<AbstractItem> items) {
         super(context, themeResourceId);
         initialize(items);
     }
@@ -1924,10 +1940,35 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      */
     public final int getItemCount() {
         if (adapter != null) {
-            return adapter.getCount();
+            return adapter.getItemCount();
         }
 
         return -1;
+    }
+
+    /**
+     * Returns, whether the item with a specific id is enabled, or not.
+     *
+     * @param id
+     *         The id of the item, which should be checked, as an {@link Integer} value
+     * @return True, if the item is enabled, false otherwise
+     */
+    public final boolean isItemEnabled(final int id) {
+        return adapter != null && adapter.isItemEnabled(id);
+    }
+
+    /**
+     * Sets, whether the item with a specific id should be enabled, or not.
+     *
+     * @param id
+     *         The id of the item as an {@link Integer} value
+     * @param enabled
+     *         True, if the item should be enabled, false otherwise
+     */
+    public final void setItemEnabled(final int id, final boolean enabled) {
+        if (adapter != null) {
+            adapter.setItemEnabled(id, enabled);
+        }
     }
 
     /**

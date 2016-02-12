@@ -380,6 +380,50 @@ public class DividableGridAdapter extends BaseAdapter {
     }
 
     /**
+     * Returns the number of items, which are contained by the adapter.
+     */
+    public final int getItemCount() {
+        int count = 0;
+
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i) != null) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    /**
+     * Returns, whether the item with a specific id is enabled, or not.
+     *
+     * @param id
+     *         The id of the item, which should be checked, as an {@link Integer} value
+     * @return True, if the item is enabled, false otherwise
+     */
+    public final boolean isItemEnabled(final int id) {
+        AbstractItem item = items.get(indexOf(id));
+        return item instanceof Item && ((Item) item).isEnabled();
+    }
+
+    /**
+     * Sets, whether the item with a specific id should be enabled, or not.
+     *
+     * @param id
+     *         The id of the item as an {@link Integer} value
+     * @param enabled
+     *         True, if the item should be enabled, false otherwise
+     */
+    public final void setItemEnabled(final int id, final boolean enabled) {
+        AbstractItem item = items.get(indexOf(id));
+
+        if (item instanceof Item) {
+            ((Item) item).setEnabled(enabled);
+            notifyOnDataSetChanged();
+        }
+    }
+
+    /**
      * Sets, whether the <code>notifyDataSetChanged</code>-method should be called automatically,
      * when the adapter's items have been changed, or not.
      *
@@ -392,12 +436,18 @@ public class DividableGridAdapter extends BaseAdapter {
     }
 
     @Override
+    public final boolean isEnabled(final int position) {
+        AbstractItem item = getItem(position);
+        return item != null && item instanceof Item && ((Item) item).isEnabled();
+    }
+
+    @Override
     public final int getCount() {
         return items.size();
     }
 
     @Override
-    public final Parcelable getItem(final int position) {
+    public final AbstractItem getItem(final int position) {
         return items.get(position);
     }
 
