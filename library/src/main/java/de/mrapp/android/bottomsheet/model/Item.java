@@ -33,26 +33,26 @@ import static de.mrapp.android.util.Condition.ensureNotEmpty;
 import static de.mrapp.android.util.Condition.ensureNotNull;
 
 /**
- * Represents a menu item, which can be shown in a bottom sheet.
+ * Represents a item, which can be shown in a bottom sheet.
  *
  * @author Michael Rapp
  * @since 1.0.0
  */
-public class MenuItem implements Serializable, Cloneable, Parcelable {
+public class Item implements Serializable, Cloneable, Parcelable {
 
     /**
-     * A creator, which allows to create instances of the class {@link MenuItem} from parcels.
+     * A creator, which allows to create instances of the class {@link Item} from parcels.
      */
-    public static final Creator<MenuItem> CREATOR = new Creator<MenuItem>() {
+    public static final Creator<Item> CREATOR = new Creator<Item>() {
 
         @Override
-        public MenuItem createFromParcel(final Parcel source) {
-            return new MenuItem(source);
+        public Item createFromParcel(final Parcel source) {
+            return new Item(source);
         }
 
         @Override
-        public MenuItem[] newArray(final int size) {
-            return new MenuItem[size];
+        public Item[] newArray(final int size) {
+            return new Item[size];
         }
 
     };
@@ -63,37 +63,37 @@ public class MenuItem implements Serializable, Cloneable, Parcelable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The menu item's title.
+     * The item's title.
      */
     private final CharSequence title;
 
     /**
-     * The menu item's icon.
+     * The item's icon.
      */
     private Drawable icon;
 
     /**
-     * Creates a new menu item.
+     * Creates a new item.
      *
      * @param source
-     *         The parcel, the menu item should be created from, as an instance of the class {@link
+     *         The parcel, the item should be created from, as an instance of the class {@link
      *         Parcel}. The parcel may not be null
      */
     @SuppressWarnings("deprecation")
-    private MenuItem(@NonNull final Parcel source) {
+    private Item(@NonNull final Parcel source) {
         this.title = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source);
         this.icon =
                 new BitmapDrawable((Bitmap) source.readParcelable(Bitmap.class.getClassLoader()));
     }
 
     /**
-     * Creates a new menu item.
+     * Creates a new item.
      *
      * @param title
-     *         The menu item's title as an instance of the type {@link CharSequence}. The title may
+     *         The item's title as an instance of the type {@link CharSequence}. The title may
      *         neither be null, nor empty
      */
-    public MenuItem(@NonNull final CharSequence title) {
+    public Item(@NonNull final CharSequence title) {
         ensureNotNull(title, "The title may not be null");
         ensureNotEmpty(title, "The title may not be empty");
         this.title = title;
@@ -101,39 +101,39 @@ public class MenuItem implements Serializable, Cloneable, Parcelable {
     }
 
     /**
-     * Creates a new menu item.
+     * Creates a new item.
      *
      * @param context
      *         The context, which should be used, as an instance of the class {@link Context}. The
      *         context may not be null
      * @param resourceId
-     *         The resource id of the menu item's title as an {@link Integer} value. The resource id
-     *         must correspond to a valid string resource
+     *         The resource id of the item's title as an {@link Integer} value. The resource id must
+     *         correspond to a valid string resource
      */
-    public MenuItem(@NonNull final Context context, @StringRes final int resourceId) {
+    public Item(@NonNull final Context context, @StringRes final int resourceId) {
         this(context.getText(resourceId));
     }
 
     /**
-     * Returns the menu item's title.
+     * Returns the item's title.
      *
-     * @return The menu item's title as an instance of the type {@link CharSequence}
+     * @return The item's title as an instance of the type {@link CharSequence}
      */
     public final CharSequence getTitle() {
         return title;
     }
 
     /**
-     * Returns the menu item's icon.
+     * Returns the item's icon.
      *
-     * @return The menu item's icon as an instance of the class {@link Drawable}
+     * @return The item's icon as an instance of the class {@link Drawable}
      */
     public final Drawable getIcon() {
         return icon;
     }
 
     /**
-     * Sets the menu item's icon.
+     * Sets the item's icon.
      *
      * @param icon
      *         The icon, which should be set, as an instance of the class {@link Drawable}, or null,
@@ -144,7 +144,7 @@ public class MenuItem implements Serializable, Cloneable, Parcelable {
     }
 
     /**
-     * Sets the menu item's icon.
+     * Sets the item's icon.
      *
      * @param context
      *         The context, which should be used, as an instance of the class {@link Context}. The
@@ -158,15 +158,15 @@ public class MenuItem implements Serializable, Cloneable, Parcelable {
     }
 
     @Override
-    public final MenuItem clone() {
-        MenuItem clonedMenuItem = new MenuItem(title);
-        clonedMenuItem.setIcon(getIcon());
-        return clonedMenuItem;
+    public final Item clone() {
+        Item clonedItem = new Item(title);
+        clonedItem.setIcon(getIcon());
+        return clonedItem;
     }
 
     @Override
     public final String toString() {
-        return "MenuItem [title=" + title + ", icon=" + icon + "]";
+        return "Item [title=" + title + ", icon=" + icon + "]";
     }
 
     @Override
@@ -186,7 +186,7 @@ public class MenuItem implements Serializable, Cloneable, Parcelable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        MenuItem other = (MenuItem) obj;
+        Item other = (Item) obj;
         if (!title.equals(other.title))
             return false;
         if (icon == null) {

@@ -57,7 +57,7 @@ import java.util.List;
 
 import de.mrapp.android.bottomsheet.adapter.DividableGridAdapter;
 import de.mrapp.android.bottomsheet.model.Divider;
-import de.mrapp.android.bottomsheet.model.MenuItem;
+import de.mrapp.android.bottomsheet.model.Item;
 import de.mrapp.android.bottomsheet.view.DraggableView;
 
 import static de.mrapp.android.util.Condition.ensureAtLeast;
@@ -67,8 +67,8 @@ import static de.mrapp.android.util.Condition.ensureNotNull;
 /**
  * A bottom sheet, which is designed according to the Android 5's Material Design guidelines even on
  * pre-Lollipop devices. Such a bottom sheet appears at the bottom of the window and consists of a
- * title and multiple menu items. It is possible to customize the appearance of the bottom sheet or
- * to replace its title and menu items with custom views.
+ * title and multiple items. It is possible to customize the appearance of the bottom sheet or to
+ * replace its title and items with custom views.
  *
  * For creating or showing such bottom sheets, the methods {@link Builder#create()} or {@link
  * Builder#show()} of the builder {@link de.mrapp.android.bottomsheet.BottomSheet.Builder} can be
@@ -82,9 +82,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     /**
      * A builder, which allows to create and show bottom sheets, which are designed according to
      * Android 5's Material Design guidelines even on pre-Lollipop devices. Such a bottom sheet
-     * appears at the bottom of the window and consists of a title and multiple menu items. It is
-     * possible to customize the appearance of the bottom sheet or to replace its title and menu
-     * items with custom views.
+     * appears at the bottom of the window and consists of a title and multiple items. It is
+     * possible to customize the appearance of the bottom sheet or to replace its title and items
+     * with custom views.
      */
     public static class Builder {
 
@@ -784,7 +784,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder addItem(@NonNull final CharSequence title) {
-            MenuItem item = new MenuItem(title);
+            Item item = new Item(title);
             items.add(item);
             activity = null;
             intent = null;
@@ -805,7 +805,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          */
         public final Builder addItem(@NonNull final CharSequence title,
                                      @Nullable final Drawable icon) {
-            MenuItem item = new MenuItem(title);
+            Item item = new Item(title);
             item.setIcon(icon);
             items.add(item);
             activity = null;
@@ -823,7 +823,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder addItem(@StringRes final int titleId) {
-            MenuItem item = new MenuItem(getContext(), titleId);
+            Item item = new Item(getContext(), titleId);
             items.add(item);
             activity = null;
             intent = null;
@@ -843,7 +843,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder addItem(@StringRes final int titleId, @DrawableRes final int iconId) {
-            MenuItem item = new MenuItem(getContext(), titleId);
+            Item item = new Item(getContext(), titleId);
             item.setIcon(getContext(), iconId);
             items.add(item);
             activity = null;
@@ -1038,12 +1038,12 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     private ViewGroup contentContainer;
 
     /**
-     * The grid view, which is used to show the bottom sheet's menu items.
+     * The grid view, which is used to show the bottom sheet's items.
      */
     private GridView gridView;
 
     /**
-     * The adapter, which is used to manage the bottom sheet's menu items.
+     * The adapter, which is used to manage the bottom sheet's items.
      */
     private DividableGridAdapter adapter;
 
@@ -1086,8 +1086,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             adapter = new DividableGridAdapter(getContext());
 
             for (Parcelable item : items) {
-                if (item instanceof MenuItem) {
-                    adapter.add((MenuItem) item);
+                if (item instanceof Item) {
+                    adapter.add((Item) item);
                 } else if (item instanceof Divider) {
                     adapter.add((Divider) item);
                 }
@@ -1648,7 +1648,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      */
     public final void addItem(@NonNull final CharSequence title) {
         if (adapter != null) {
-            MenuItem item = new MenuItem(title);
+            Item item = new Item(title);
             adapter.add(item);
         }
     }
@@ -1665,7 +1665,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      */
     public final void addItem(@NonNull final CharSequence title, @Nullable final Drawable icon) {
         if (adapter != null) {
-            MenuItem item = new MenuItem(title);
+            Item item = new Item(title);
             item.setIcon(icon);
             adapter.add(item);
         }
@@ -1680,7 +1680,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      */
     public final void addItem(@StringRes final int titleId) {
         if (adapter != null) {
-            MenuItem item = new MenuItem(getContext(), titleId);
+            Item item = new Item(getContext(), titleId);
             adapter.add(item);
         }
     }
@@ -1697,7 +1697,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      */
     public final void addItem(@StringRes final int titleId, @DrawableRes final int iconId) {
         if (adapter != null) {
-            MenuItem item = new MenuItem(getContext(), titleId);
+            Item item = new Item(getContext(), titleId);
             item.setIcon(getContext(), iconId);
             adapter.add(item);
         }

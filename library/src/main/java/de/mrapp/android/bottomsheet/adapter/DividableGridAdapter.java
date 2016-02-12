@@ -33,13 +33,13 @@ import java.util.List;
 import de.mrapp.android.bottomsheet.BottomSheet;
 import de.mrapp.android.bottomsheet.R;
 import de.mrapp.android.bottomsheet.model.Divider;
-import de.mrapp.android.bottomsheet.model.MenuItem;
+import de.mrapp.android.bottomsheet.model.Item;
 
 import static de.mrapp.android.util.Condition.ensureNotNull;
 
 /**
- * An adapter, which manages the menu items of a {@link BottomSheet}. It allows to show the items in
- * a list or grid and supports to show dividers.
+ * An adapter, which manages the items of a {@link BottomSheet}. It allows to show the items in a
+ * list or grid and supports to show dividers.
  *
  * @author Michael Rapp
  * @since 1.0.0
@@ -47,17 +47,17 @@ import static de.mrapp.android.util.Condition.ensureNotNull;
 public class DividableGridAdapter extends BaseAdapter {
 
     /**
-     * The view holder, which is used to visualize menu items.
+     * The view holder, which is used to visualize items.
      */
-    private static class MenuItemViewHolder {
+    private static class ItemViewHolder {
 
         /**
-         * The image view, which is used to show a menu item's icon.
+         * The image view, which is used to show an item's icon.
          */
         private ImageView iconImageView;
 
         /**
-         * The text view, which is used to show a menu item's title.
+         * The text view, which is used to show an item's title.
          */
         private TextView titleTextView;
 
@@ -91,9 +91,9 @@ public class DividableGridAdapter extends BaseAdapter {
     private static final int PLACEHOLDER_VIEW_TYPE = 0;
 
     /**
-     * The view type, which is used to visualize menu items.
+     * The view type, which is used to visualize items.
      */
-    private static final int MENU_ITEM_VIEW_TYPE = 1;
+    private static final int ITEM_VIEW_TYPE = 1;
 
     /**
      * The view type, which is used to visualize dividers.
@@ -136,17 +136,17 @@ public class DividableGridAdapter extends BaseAdapter {
     }
 
     /**
-     * Inflates the view, which is used to visualize a menu item.
+     * Inflates the view, which is used to visualize an item.
      *
      * @param parent
      *         The parent of the view, which should be inflated, as an instance of the class {@link
      *         ViewGroup} or null, if no parent is available
      * @return The view, which has been inflated, as an instance of the class {@link View}
      */
-    private View inflateMenuItemView(@Nullable final ViewGroup parent) {
+    private View inflateItemView(@Nullable final ViewGroup parent) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.list_item, parent, false);
-        MenuItemViewHolder viewHolder = new MenuItemViewHolder();
+        ItemViewHolder viewHolder = new ItemViewHolder();
         viewHolder.iconImageView = (ImageView) view.findViewById(android.R.id.icon);
         viewHolder.titleTextView = (TextView) view.findViewById(android.R.id.title);
         view.setTag(viewHolder);
@@ -154,19 +154,18 @@ public class DividableGridAdapter extends BaseAdapter {
     }
 
     /**
-     * Visualizes a specific menu item.
+     * Visualizes a specific item.
      *
-     * @param menuItem
-     *         The menu item, which should be visualized, as an instance of the class {@link
-     *         MenuItem}. The menu item may not be null
+     * @param item
+     *         The item, which should be visualized, as an instance of the class {@link Item}. The
+     *         item may not be null
      * @param viewHolder
-     *         The view holder, which contains the views, which should be used to visualize the menu
-     *         item, as an instance of the class {@link MenuItemViewHolder}. The view holder may not
-     *         be null
+     *         The view holder, which contains the views, which should be used to visualize the
+     *         item, as an instance of the class {@link ItemViewHolder}. The view holder may not be
+     *         null
      */
-    private void visualizeMenuItem(@NonNull final MenuItem menuItem,
-                                   @NonNull final MenuItemViewHolder viewHolder) {
-        viewHolder.titleTextView.setText(menuItem.getTitle());
+    private void visualizeItem(@NonNull final Item item, @NonNull final ItemViewHolder viewHolder) {
+        viewHolder.titleTextView.setText(item.getTitle());
 
         if (getItemColor() != -1) {
             viewHolder.titleTextView.setTextColor(getItemColor());
@@ -222,7 +221,7 @@ public class DividableGridAdapter extends BaseAdapter {
     }
 
     /**
-     * Creates a new adapter, which manages the menu items of a {@link BottomSheet}.
+     * Creates a new adapter, which manages the items of a {@link BottomSheet}.
      *
      * @param context
      *         The context, which should be used by the adapter, as an instance of the class {@link
@@ -235,40 +234,40 @@ public class DividableGridAdapter extends BaseAdapter {
         this.notifyOnChange = true;
         this.itemColor = -1;
         this.dividerColor = -1;
-        items.add(new MenuItem("Item 1"));
-        items.add(new MenuItem("Item 2"));
-        items.add(new MenuItem("Item 3"));
+        items.add(new Item("Item 1"));
+        items.add(new Item("Item 2"));
+        items.add(new Item("Item 3"));
         items.add(new Divider());
-        items.add(new MenuItem("Item 4"));
-        items.add(new MenuItem("Item 5"));
+        items.add(new Item("Item 4"));
+        items.add(new Item("Item 5"));
         Divider divider = new Divider();
         divider.setTitle("Divider");
         items.add(divider);
-        items.add(new MenuItem("Item 6"));
-        items.add(new MenuItem("Item 7"));
-        items.add(new MenuItem("Item 8"));
-        items.add(new MenuItem("Item 9"));
-        items.add(new MenuItem("Item 10"));
-        items.add(new MenuItem("Item 11"));
-        items.add(new MenuItem("Item 12"));
-        items.add(new MenuItem("Item 13"));
-        items.add(new MenuItem("Item 14"));
-        items.add(new MenuItem("Item 15"));
-        items.add(new MenuItem("Item 16"));
-        items.add(new MenuItem("Item 17"));
-        items.add(new MenuItem("Item 18"));
-        items.add(new MenuItem("Item 19"));
-        items.add(new MenuItem("Item 20"));
-        items.add(new MenuItem("Item 21"));
-        items.add(new MenuItem("Item 22"));
-        items.add(new MenuItem("Item 23"));
-        items.add(new MenuItem("Item 24"));
-        items.add(new MenuItem("Item 25"));
-        items.add(new MenuItem("Item 26"));
-        items.add(new MenuItem("Item 27"));
-        items.add(new MenuItem("Item 28"));
-        items.add(new MenuItem("Item 29"));
-        items.add(new MenuItem("Item 30"));
+        items.add(new Item("Item 6"));
+        items.add(new Item("Item 7"));
+        items.add(new Item("Item 8"));
+        items.add(new Item("Item 9"));
+        items.add(new Item("Item 10"));
+        items.add(new Item("Item 11"));
+        items.add(new Item("Item 12"));
+        items.add(new Item("Item 13"));
+        items.add(new Item("Item 14"));
+        items.add(new Item("Item 15"));
+        items.add(new Item("Item 16"));
+        items.add(new Item("Item 17"));
+        items.add(new Item("Item 18"));
+        items.add(new Item("Item 19"));
+        items.add(new Item("Item 20"));
+        items.add(new Item("Item 21"));
+        items.add(new Item("Item 22"));
+        items.add(new Item("Item 23"));
+        items.add(new Item("Item 24"));
+        items.add(new Item("Item 25"));
+        items.add(new Item("Item 26"));
+        items.add(new Item("Item 27"));
+        items.add(new Item("Item 28"));
+        items.add(new Item("Item 29"));
+        items.add(new Item("Item 30"));
     }
 
     /**
@@ -314,15 +313,15 @@ public class DividableGridAdapter extends BaseAdapter {
     }
 
     /**
-     * Adds a new menu item to the adapter.
+     * Adds a new item to the adapter.
      *
-     * @param menuItem
-     *         The menu item, which should be added, as an instance of the class {@link MenuItem}.
-     *         The menu item may not be null
+     * @param item
+     *         The item, which should be added, as an instance of the class {@link Item}. The item
+     *         may not be null
      */
-    public final void add(@NonNull final MenuItem menuItem) {
-        ensureNotNull(menuItem, "The menu item may not be null");
-        items.add(menuItem);
+    public final void add(@NonNull final Item item) {
+        ensureNotNull(item, "The item may not be null");
+        items.add(item);
         notifyOnDataSetChanged();
     }
 
@@ -394,16 +393,16 @@ public class DividableGridAdapter extends BaseAdapter {
         if (view == null) {
             if (viewType == PLACEHOLDER_VIEW_TYPE) {
 
-            } else if (viewType == MENU_ITEM_VIEW_TYPE) {
-                view = inflateMenuItemView(parent);
+            } else if (viewType == ITEM_VIEW_TYPE) {
+                view = inflateItemView(parent);
             } else {
                 view = inflateDividerView(parent);
             }
         }
 
-        if (viewType == MENU_ITEM_VIEW_TYPE) {
-            MenuItemViewHolder viewHolder = (MenuItemViewHolder) view.getTag();
-            visualizeMenuItem((MenuItem) item, viewHolder);
+        if (viewType == ITEM_VIEW_TYPE) {
+            ItemViewHolder viewHolder = (ItemViewHolder) view.getTag();
+            visualizeItem((Item) item, viewHolder);
         } else if (viewType == SEPARATOR_VIEW_TYPE) {
             DividerViewHolder viewHolder = (DividerViewHolder) view.getTag();
             visualizeDivider((Divider) item, viewHolder);
@@ -423,8 +422,8 @@ public class DividableGridAdapter extends BaseAdapter {
 
         if (item == null) {
             return PLACEHOLDER_VIEW_TYPE;
-        } else if (item instanceof MenuItem) {
-            return MENU_ITEM_VIEW_TYPE;
+        } else if (item instanceof Item) {
+            return ITEM_VIEW_TYPE;
         } else {
             return SEPARATOR_VIEW_TYPE;
         }
