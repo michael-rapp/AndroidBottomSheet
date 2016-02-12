@@ -23,7 +23,9 @@ not, see <http://www.gnu.org/licenses/>.
     <item name="bottom_sheet_title_height" type="dimen">56dp</item>
     <item name="bottom_sheet_item_height" type="dimen">48dp</item>
     <item name="bottom_sheet_list_item_horizontal_padding" type="dimen">16dp</item>
+    <item name="bottom_sheet_list_item_icon_size" type="dimen">24dp</item>
     <item name="bottom_sheet_grid_item_horizontal_padding" type="dimen">24dp</item>
+    <item name="bottom_sheet_grid_item_icon_size" type="dimen">48dp</item>
     <item name="bottom_sheet_drawable_padding" type="dimen">32dp</item>
 
     <!-- Default values -->
