@@ -156,9 +156,14 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         private int titleColor = -1;
 
         /**
-         * The color of the menu items of the bottom sheet, which is created by the builder.
+         * The color of the items of the bottom sheet, which is created by the builder.
          */
         private int itemColor = -1;
+
+        /**
+         * The color of the dividers of the bottom sheet, which is created by the builder.
+         */
+        private int dividerColor = -1;
 
         /**
          * The background of the bottom sheet, which is created by the builder.
@@ -532,7 +537,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         }
 
         /**
-         * Sets the color of the menu items of the bottom sheet, which is created by the builder.
+         * Sets the color of the items of the bottom sheet, which is created by the builder.
          *
          * @param color
          *         The color, which should be set, as an {@link Integer} value or -1, if no custom
@@ -542,6 +547,20 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          */
         public final Builder setItemColor(@ColorInt final int color) {
             this.itemColor = color;
+            return this;
+        }
+
+        /**
+         * Sets the color of the dividers of the bottom sheet, which is created by the builder.
+         *
+         * @param color
+         *         The color, which should be set, as an {@link Integer} value or -1, if no custom
+         *         color should be set
+         * @return The builder, the method has been called upon, as an instance of the class {@link
+         * Builder}
+         */
+        public final Builder setDividerColor(@ColorInt final int color) {
+            this.dividerColor = color;
             return this;
         }
 
@@ -934,6 +953,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             bottomSheet.setDragSensitivity(dragSensitivity);
             bottomSheet.setDimAmount(dimAmount);
             bottomSheet.setItemColor(itemColor);
+            bottomSheet.setDividerColor(dividerColor);
             bottomSheet.setWidth(width);
 
             if (activity != null && intent != null) {
@@ -1383,6 +1403,34 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     public final void setItemColor(@ColorInt final int color) {
         if (adapter != null) {
             adapter.setItemColor(color);
+        }
+    }
+
+    /**
+     * Returns the color of the dividers of the bottom sheet.
+     *
+     * @return The color of the dividers of the bottom sheet as an {@link Integer} value or -1, if
+     * the bottom sheet does not show any items or has not been shown yet or if no custom color has
+     * been set
+     */
+    public final int getDividerColor() {
+        if (adapter != null) {
+            return adapter.getDividerColor();
+        }
+
+        return -1;
+    }
+
+    /**
+     * Sets the color of the dividers of the bottom sheet.
+     *
+     * @param color
+     *         The color, which should be set, as an {@link Integer} value or -1, if no custom color
+     *         should be set
+     */
+    public final void setDividerColor(@ColorInt final int color) {
+        if (adapter != null) {
+            adapter.setDividerColor(color);
         }
     }
 

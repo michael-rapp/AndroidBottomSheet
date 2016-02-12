@@ -122,6 +122,11 @@ public class DividableGridAdapter extends BaseAdapter {
     private int itemColor;
 
     /**
+     * The color of the adapter's dividers.
+     */
+    private int dividerColor;
+
+    /**
      * Notifies, that the adapter's items have been changed.
      */
     private void notifyOnDataSetChanged() {
@@ -208,6 +213,12 @@ public class DividableGridAdapter extends BaseAdapter {
             viewHolder.titleTextView.setVisibility(View.GONE);
             viewHolder.leftDivider.setVisibility(View.GONE);
         }
+
+        if (dividerColor != -1) {
+            viewHolder.titleTextView.setTextColor(dividerColor);
+            viewHolder.leftDivider.setBackgroundColor(dividerColor);
+            viewHolder.rightDivider.setBackgroundColor(dividerColor);
+        }
     }
 
     /**
@@ -223,6 +234,7 @@ public class DividableGridAdapter extends BaseAdapter {
         this.items = new ArrayList<>();
         this.notifyOnChange = true;
         this.itemColor = -1;
+        this.dividerColor = -1;
         items.add(new MenuItem("Item 1"));
         items.add(new MenuItem("Item 2"));
         items.add(new MenuItem("Item 3"));
@@ -278,6 +290,27 @@ public class DividableGridAdapter extends BaseAdapter {
      */
     public final void setItemColor(@ColorInt final int color) {
         this.itemColor = color;
+    }
+
+    /**
+     * Returns the color of the adapter's dividers.
+     *
+     * @return The color of the adapter's dividers as an {@link Integer} value or -1, if no custom
+     * color has been set
+     */
+    public final int getDividerColor() {
+        return dividerColor;
+    }
+
+    /**
+     * Sets the color of the adapter's dividers.
+     *
+     * @param color
+     *         The color, which should be set, as an {@link Integer} value or -1, if no custom color
+     *         should be set
+     */
+    public final void setDividerColor(@ColorInt final int color) {
+        this.dividerColor = color;
     }
 
     /**
