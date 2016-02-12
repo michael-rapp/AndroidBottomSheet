@@ -56,8 +56,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import de.mrapp.android.bottomsheet.adapter.DividableGridAdapter;
+import de.mrapp.android.bottomsheet.model.Divider;
 import de.mrapp.android.bottomsheet.model.MenuItem;
-import de.mrapp.android.bottomsheet.model.Separator;
 import de.mrapp.android.bottomsheet.view.DraggableView;
 
 import static de.mrapp.android.util.Condition.ensureAtLeast;
@@ -833,36 +833,36 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         }
 
         /**
-         * Adds a new separator to the bottom sheet, which is created by the builder.
+         * Adds a new divider to the bottom sheet, which is created by the builder.
          *
          * @return The builder, the method has been called upon, as an instance of the class {@link
          * Builder}
          */
-        public final Builder addSeparator() {
-            items.add(new Separator());
+        public final Builder addDivider() {
+            items.add(new Divider());
             activity = null;
             intent = null;
             return this;
         }
 
         /**
-         * Adds a new separator to the bottom sheet, which is created by the builder.
+         * Adds a new divider to the bottom sheet, which is created by the builder.
          *
          * @param title
-         *         The title of the separator, which should be added, as an instance of the type
+         *         The title of the divider, which should be added, as an instance of the type
          *         {@link CharSequence}, or null, if no title should be used
          */
-        public final Builder addSeparator(@Nullable final CharSequence title) {
-            Separator separator = new Separator();
-            separator.setTitle(title);
-            items.add(separator);
+        public final Builder addDivider(@Nullable final CharSequence title) {
+            Divider divider = new Divider();
+            divider.setTitle(title);
+            items.add(divider);
             activity = null;
             intent = null;
             return this;
         }
 
         /**
-         * Adds a new separator to the bottom sheet, which is created by the builder.
+         * Adds a new divider to the bottom sheet, which is created by the builder.
          *
          * @param titleId
          *         The resource id of the title, which should be added, as an {@link Integer} value.
@@ -870,10 +870,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * @return The builder, the method has been called upon, as an instance of the class {@link
          * Builder}
          */
-        public final Builder addSeparator(@StringRes final int titleId) {
-            Separator separator = new Separator();
-            separator.setTitle(getContext(), titleId);
-            items.add(separator);
+        public final Builder addDivider(@StringRes final int titleId) {
+            Divider divider = new Divider();
+            divider.setTitle(getContext(), titleId);
+            items.add(divider);
             activity = null;
             intent = null;
             return this;
@@ -1068,8 +1068,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             for (Parcelable item : items) {
                 if (item instanceof MenuItem) {
                     adapter.add((MenuItem) item);
-                } else if (item instanceof Separator) {
-                    adapter.add((Separator) item);
+                } else if (item instanceof Divider) {
+                    adapter.add((Divider) item);
                 }
             }
         }
@@ -1656,41 +1656,41 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     }
 
     /**
-     * Adds a new separator to the bottom sheet.
+     * Adds a new divider to the bottom sheet.
      */
-    public final void addSeparator() {
+    public final void addDivider() {
         if (adapter != null) {
-            adapter.add(new Separator());
+            adapter.add(new Divider());
         }
     }
 
     /**
-     * Adds a new separator to the bottom sheet.
+     * Adds a new divider to the bottom sheet.
      *
      * @param title
-     *         The title of the separator, which should be added, as an instance of the type {@link
+     *         The title of the divider, which should be added, as an instance of the type {@link
      *         CharSequence}, or null, if no title should be used
      */
-    public final void addSeparator(@Nullable final CharSequence title) {
+    public final void addDivider(@Nullable final CharSequence title) {
         if (adapter != null) {
-            Separator separator = new Separator();
-            separator.setTitle(title);
-            adapter.add(separator);
+            Divider divider = new Divider();
+            divider.setTitle(title);
+            adapter.add(divider);
         }
     }
 
     /**
-     * Adds a new separator to the bottom sheet.
+     * Adds a new divider to the bottom sheet.
      *
      * @param titleId
      *         The resource id of the title, which should be added, as an {@link Integer} value. The
      *         resource id must correspond to a valid string resource
      */
-    public final void addSeparator(@StringRes final int titleId) {
+    public final void addDivider(@StringRes final int titleId) {
         if (adapter != null) {
-            Separator separator = new Separator();
-            separator.setTitle(getContext(), titleId);
-            adapter.add(separator);
+            Divider divider = new Divider();
+            divider.setTitle(getContext(), titleId);
+            adapter.add(divider);
         }
     }
 

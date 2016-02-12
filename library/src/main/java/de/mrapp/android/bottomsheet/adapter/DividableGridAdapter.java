@@ -30,8 +30,8 @@ import java.util.List;
 
 import de.mrapp.android.bottomsheet.BottomSheet;
 import de.mrapp.android.bottomsheet.R;
+import de.mrapp.android.bottomsheet.model.Divider;
 import de.mrapp.android.bottomsheet.model.MenuItem;
-import de.mrapp.android.bottomsheet.model.Separator;
 
 import static de.mrapp.android.util.Condition.ensureNotNull;
 
@@ -67,7 +67,7 @@ public class DividableGridAdapter extends BaseAdapter {
     private static final int MENU_ITEM_VIEW_TYPE = 1;
 
     /**
-     * The view type, which is used to visualize separators.
+     * The view type, which is used to visualize dividers.
      */
     private static final int SEPARATOR_VIEW_TYPE = 2;
 
@@ -218,15 +218,15 @@ public class DividableGridAdapter extends BaseAdapter {
     }
 
     /**
-     * Adds a new separator to the adapter.
+     * Adds a new divider to the adapter.
      *
-     * @param separator
-     *         The separator, which should be added, as an instance of the class {@link Separator}.
-     *         The separator may not be null
+     * @param divider
+     *         The divider, which should be added, as an instance of the class {@link Divider}. The
+     *         divider may not be null
      */
-    public final void add(@NonNull final Separator separator) {
-        ensureNotNull(separator, "The separator may not be null");
-        items.add(separator);
+    public final void add(@NonNull final Divider divider) {
+        ensureNotNull(divider, "The divider may not be null");
+        items.add(divider);
         notifyOnDataSetChanged();
     }
 

@@ -25,26 +25,26 @@ import android.text.TextUtils;
 import java.io.Serializable;
 
 /**
- * Represents a separator, which can be shown in a bottom sheet.
+ * Represents a divider, which can be shown in a bottom sheet.
  *
  * @author Michael Rapp
  * @since 1.0.0
  */
-public class Separator implements Serializable, Cloneable, Parcelable {
+public class Divider implements Serializable, Cloneable, Parcelable {
 
     /**
-     * A creator, which allows to create instances of the class {@link Separator} from parcels.
+     * A creator, which allows to create instances of the class {@link Divider} from parcels.
      */
-    public static final Creator<Separator> CREATOR = new Creator<Separator>() {
+    public static final Creator<Divider> CREATOR = new Creator<Divider>() {
 
         @Override
-        public Separator createFromParcel(final Parcel source) {
-            return new Separator(source);
+        public Divider createFromParcel(final Parcel source) {
+            return new Divider(source);
         }
 
         @Override
-        public Separator[] newArray(final int size) {
-            return new Separator[size];
+        public Divider[] newArray(final int size) {
+            return new Divider[size];
         }
 
     };
@@ -55,32 +55,32 @@ public class Separator implements Serializable, Cloneable, Parcelable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The separator's title.
+     * The divider's title.
      */
     private CharSequence title;
 
     /**
-     * Creates a new separator.
+     * Creates a new divider.
      *
      * @param source
      *         The parcel, the menu item should be created from, as an instance of the class {@link
      *         Parcel}. The parcel may not be null
      */
-    private Separator(@NonNull final Parcel source) {
+    private Divider(@NonNull final Parcel source) {
         this.title = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source);
     }
 
     /**
-     * Creates a new separator.
+     * Creates a new divider.
      */
-    public Separator() {
+    public Divider() {
         this.title = null;
     }
 
     /**
-     * Returns the separator's title.
+     * Returns the divider's title.
      *
-     * @return The separator's title as an instance of the type {@link CharSequence} or null, if no
+     * @return The divider's title as an instance of the type {@link CharSequence} or null, if no
      * title has been set
      */
     public final CharSequence getTitle() {
@@ -88,7 +88,7 @@ public class Separator implements Serializable, Cloneable, Parcelable {
     }
 
     /**
-     * Sets the separator's title.
+     * Sets the divider's title.
      *
      * @param title
      *         The title, which should be set, as an instance of the type {@link CharSequence} or
@@ -99,7 +99,7 @@ public class Separator implements Serializable, Cloneable, Parcelable {
     }
 
     /**
-     * Sets the separator's title.
+     * Sets the divider's title.
      *
      * @param context
      *         The context, which should be used, as an instance of the class {@link Context}. The
@@ -113,15 +113,15 @@ public class Separator implements Serializable, Cloneable, Parcelable {
     }
 
     @Override
-    public final Separator clone() {
-        Separator clonedSeparator = new Separator();
-        clonedSeparator.setTitle(title);
-        return clonedSeparator;
+    public final Divider clone() {
+        Divider clonedDivider = new Divider();
+        clonedDivider.setTitle(title);
+        return clonedDivider;
     }
 
     @Override
     public final String toString() {
-        return "Separator [title=" + title + "]";
+        return "Divider [title=" + title + "]";
     }
 
     @Override
@@ -140,7 +140,7 @@ public class Separator implements Serializable, Cloneable, Parcelable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Separator other = (Separator) obj;
+        Divider other = (Divider) obj;
         if (title == null) {
             if (other.title != null)
                 return false;
