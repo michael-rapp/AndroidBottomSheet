@@ -63,7 +63,7 @@ public class Divider implements Serializable, Cloneable, Parcelable {
      * Creates a new divider.
      *
      * @param source
-     *         The parcel, the menu item should be created from, as an instance of the class {@link
+     *         The parcel, the divider should be created from, as an instance of the class {@link
      *         Parcel}. The parcel may not be null
      */
     private Divider(@NonNull final Parcel source) {
