@@ -15,6 +15,8 @@
 package de.mrapp.android.bottomsheet.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
@@ -27,6 +29,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -171,12 +174,32 @@ public class DividableGridAdapter extends BaseAdapter {
      *         item, as an instance of the class {@link ItemViewHolder}. The view holder may not be
      *         null
      */
+    @SuppressWarnings("PrimitiveArrayArgumentToVariableArgMethod")
     private void visualizeItem(@NonNull final Item item, @NonNull final ItemViewHolder viewHolder) {
-        viewHolder.iconImageView.setEnabled(item.isEnabled());
-        viewHolder.iconImageView.setImageDrawable(item.getIcon());
         viewHolder.iconImageView.setVisibility(iconCount > 0 ? View.VISIBLE : View.GONE);
-        viewHolder.titleTextView.setEnabled(item.isEnabled());
+        viewHolder.iconImageView.setEnabled(item.isEnabled());
+
+        if (item.getIcon() != null && item.getIcon() instanceof StateListDrawable) {
+            StateListDrawable stateListDrawable = (StateListDrawable) item.getIcon();
+
+            try {
+                int[] currentState = viewHolder.iconImageView.getDrawableState();
+                Method getStateDrawableIndex =
+                        StateListDrawable.class.getMethod("getStateDrawableIndex", int[].class);
+                Method getStateDrawable =
+                        StateListDrawable.class.getMethod("getStateDrawable", int.class);
+                int index = (int) getStateDrawableIndex.invoke(stateListDrawable, currentState);
+                Drawable drawable = (Drawable) getStateDrawable.invoke(stateListDrawable, index);
+                viewHolder.iconImageView.setImageDrawable(drawable);
+            } catch (Exception e) {
+                viewHolder.iconImageView.setImageDrawable(item.getIcon());
+            }
+        } else {
+            viewHolder.iconImageView.setImageDrawable(item.getIcon());
+        }
+
         viewHolder.titleTextView.setText(item.getTitle());
+        viewHolder.titleTextView.setEnabled(item.isEnabled());
 
         if (getItemColor() != -1) {
             viewHolder.titleTextView.setTextColor(getItemColor());
@@ -224,10 +247,6 @@ public class DividableGridAdapter extends BaseAdapter {
             viewHolder.leftDivider.setVisibility(View.GONE);
         }
 
-        viewHolder.leftDivider.getLayoutParams().width = context.getResources()
-                .getDimensionPixelSize(iconCount > 0 ? R.dimen.bottom_sheet_divider_indent :
-                        R.dimen.bottom_sheet_divider_title_horizontal_padding);
-
         if (dividerColor != -1) {
             viewHolder.titleTextView.setTextColor(dividerColor);
             viewHolder.leftDivider.setBackgroundColor(dividerColor);
@@ -268,42 +287,6 @@ public class DividableGridAdapter extends BaseAdapter {
         this.notifyOnChange = true;
         this.itemColor = -1;
         this.dividerColor = -1;
-        items.add(new Item(0, "Item 1"));
-        Item item = new Item(1, "Item 2");
-        item.setEnabled(false);
-        items.add(item);
-        items.add(new Item(2, "Item 3"));
-        items.add(new Divider(3));
-        items.add(new Item(4, "Item 4"));
-        items.add(new Item(5, "Item 5"));
-        Divider divider = new Divider(6);
-        divider.setTitle("Divider");
-        items.add(divider);
-        items.add(new Item(7, "Item 6"));
-        items.add(new Item(8, "Item 7"));
-        items.add(new Item(9, "Item 8"));
-        items.add(new Item(10, "Item 9"));
-        items.add(new Item(11, "Item 10"));
-        items.add(new Item(12, "Item 11"));
-        items.add(new Item(13, "Item 12"));
-        items.add(new Item(14, "Item 13"));
-        items.add(new Item(15, "Item 14"));
-        items.add(new Item(16, "Item 15"));
-        items.add(new Item(17, "Item 16"));
-        items.add(new Item(18, "Item 17"));
-        items.add(new Item(19, "Item 18"));
-        items.add(new Item(20, "Item 19"));
-        items.add(new Item(21, "Item 20"));
-        items.add(new Item(22, "Item 21"));
-        items.add(new Item(23, "Item 22"));
-        items.add(new Item(24, "Item 23"));
-        items.add(new Item(25, "Item 24"));
-        items.add(new Item(26, "Item 25"));
-        items.add(new Item(27, "Item 26"));
-        items.add(new Item(28, "Item 27"));
-        items.add(new Item(29, "Item 28"));
-        items.add(new Item(30, "Item 29"));
-        items.add(new Item(31, "Item 30"));
     }
 
     /**
