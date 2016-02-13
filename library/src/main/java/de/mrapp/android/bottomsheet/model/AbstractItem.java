@@ -32,27 +32,41 @@ public abstract class AbstractItem implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The item's id.
+     * The item's title.
      */
-    private final int id;
+    private CharSequence title;
 
     /**
      * Creates a new item.
      *
-     * @param id
-     *         The item's id as an {@link Integer} value
+     * @param title
+     *         The item's title as an instance of the type {@link CharSequence} or null, if no title
+     *         should be set
      */
-    public AbstractItem(final int id) {
-        this.id = id;
+    public AbstractItem(final CharSequence title) {
+        this.title = title;
     }
 
     /**
-     * Returns the item's id.
+     * Returns the item's title.
      *
-     * @return The item's id as an {@link Integer} value
+     * @return The items's title as an instance of the type {@link CharSequence} or null, if no
+     * title has been set
      */
-    public final int getId() {
-        return id;
+    public final CharSequence getTitle() {
+        return title;
+    }
+
+    /**
+     * Sets the item's title.
+     *
+     * @param title
+     *         The title, which should be set, as an instance of the type {@link CharSequence} or
+     *         null, of no title should be set
+     */
+    @CallSuper
+    public void setTitle(final CharSequence title) {
+        this.title = title;
     }
 
     @CallSuper
@@ -60,7 +74,7 @@ public abstract class AbstractItem implements Serializable, Cloneable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + id;
+        result = prime * result + ((title == null) ? 0 : title.hashCode());
         return result;
     }
 
@@ -74,7 +88,10 @@ public abstract class AbstractItem implements Serializable, Cloneable {
         if (getClass() != obj.getClass())
             return false;
         AbstractItem other = (AbstractItem) obj;
-        if (id != other.id)
+        if (title == null) {
+            if (other.title != null)
+                return false;
+        } else if (!title.equals(other.title))
             return false;
         return true;
     }

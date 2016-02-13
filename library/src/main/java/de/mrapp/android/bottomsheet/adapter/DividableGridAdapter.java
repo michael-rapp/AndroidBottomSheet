@@ -31,7 +31,6 @@ import android.widget.TextView;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import de.mrapp.android.bottomsheet.BottomSheet;
 import de.mrapp.android.bottomsheet.R;
@@ -254,24 +253,6 @@ public class DividableGridAdapter extends BaseAdapter {
     }
 
     /**
-     * Returns the index of the item with a specific id. If no item with the given id is contained
-     * by the adapter, a {@link NoSuchElementException} will be thrown.
-     *
-     * @param id
-     *         The id of the item, whose index should be returned, as an {@link Integer} value
-     * @return The index of the item as an {@link Integer} value
-     */
-    private int indexOf(final int id) {
-        for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).getId() == id) {
-                return i;
-            }
-        }
-
-        throw new NoSuchElementException("No item with id " + id + " available");
-    }
-
-    /**
      * Creates a new adapter, which manages the items of a {@link BottomSheet}.
      *
      * @param context
@@ -349,17 +330,17 @@ public class DividableGridAdapter extends BaseAdapter {
     }
 
     /**
-     * Replaces the item with a specific id.
+     * Replaces the item with at a specific index
      *
-     * @param id
-     *         The id of the item, which should be replaced, as an {@link Integer} value
+     * @param index
+     *         The index of the item, which should be replaced, as an {@link Integer} value
      * @param item
      *         The item, which should be set, as an instance of the class {@link AbstractItem}. The
      *         item may not be null
      */
-    public final void set(final int id, @NonNull final AbstractItem item) {
+    public final void set(final int index, @NonNull final AbstractItem item) {
         ensureNotNull(item, "The item may not be null");
-        AbstractItem replacedItem = items.set(indexOf(id), item);
+        AbstractItem replacedItem = items.set(index, item);
 
         if (replacedItem instanceof Item && ((Item) replacedItem).getIcon() != null) {
             iconCount--;
@@ -373,13 +354,13 @@ public class DividableGridAdapter extends BaseAdapter {
     }
 
     /**
-     * Removes the item with a specific id.
+     * Removes the item at a specific index.
      *
-     * @param id
-     *         The id of the item, which should be removed, as an {@link Integer} value
+     * @param index
+     *         The index of the item, which should be removed, as an {@link Integer} value
      */
-    public final void remove(final int id) {
-        AbstractItem removedItem = items.remove(indexOf(id));
+    public final void remove(final int index) {
+        AbstractItem removedItem = items.remove(index);
 
         if (removedItem instanceof Item && ((Item) removedItem).getIcon() != null) {
             iconCount--;
@@ -413,27 +394,27 @@ public class DividableGridAdapter extends BaseAdapter {
     }
 
     /**
-     * Returns, whether the item with a specific id is enabled, or not.
+     * Returns, whether the item at a specific index is enabled, or not.
      *
-     * @param id
-     *         The id of the item, which should be checked, as an {@link Integer} value
+     * @param index
+     *         The index of the item, which should be checked, as an {@link Integer} value
      * @return True, if the item is enabled, false otherwise
      */
-    public final boolean isItemEnabled(final int id) {
-        AbstractItem item = items.get(indexOf(id));
+    public final boolean isItemEnabled(final int index) {
+        AbstractItem item = items.get(index);
         return item instanceof Item && ((Item) item).isEnabled();
     }
 
     /**
-     * Sets, whether the item with a specific id should be enabled, or not.
+     * Sets, whether the item at a specific index should be enabled, or not.
      *
-     * @param id
-     *         The id of the item as an {@link Integer} value
+     * @param index
+     *         The index of the item as an {@link Integer} value
      * @param enabled
      *         True, if the item should be enabled, false otherwise
      */
-    public final void setItemEnabled(final int id, final boolean enabled) {
-        AbstractItem item = items.get(indexOf(id));
+    public final void setItemEnabled(final int index, final boolean enabled) {
+        AbstractItem item = items.get(index);
 
         if (item instanceof Item) {
             ((Item) item).setEnabled(enabled);

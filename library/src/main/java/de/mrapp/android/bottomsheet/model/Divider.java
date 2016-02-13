@@ -16,7 +16,6 @@ package de.mrapp.android.bottomsheet.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 /**
@@ -33,40 +32,10 @@ public class Divider extends AbstractItem {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The divider's title.
-     */
-    private CharSequence title;
-
-    /**
      * Creates a new divider.
-     *
-     * @param id
-     *         The divider's id as an {@link Integer} value
      */
-    public Divider(final int id) {
-        super(id);
-        this.title = null;
-    }
-
-    /**
-     * Returns the divider's title.
-     *
-     * @return The divider's title as an instance of the type {@link CharSequence} or null, if no
-     * title has been set
-     */
-    public final CharSequence getTitle() {
-        return title;
-    }
-
-    /**
-     * Sets the divider's title.
-     *
-     * @param title
-     *         The title, which should be set, as an instance of the type {@link CharSequence} or
-     *         null, if no title should be set
-     */
-    public final void setTitle(@Nullable final CharSequence title) {
-        this.title = title;
+    public Divider() {
+        super(null);
     }
 
     /**
@@ -85,39 +54,14 @@ public class Divider extends AbstractItem {
 
     @Override
     public final Divider clone() {
-        Divider clonedDivider = new Divider(getId());
+        Divider clonedDivider = new Divider();
         clonedDivider.setTitle(getTitle());
         return clonedDivider;
     }
 
     @Override
     public final String toString() {
-        return "Divider [id=" + getId() + ", title=" + getTitle() + "]";
-    }
-
-    @Override
-    public final int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + ((title == null) ? 0 : title.hashCode());
-        return result;
-    }
-
-    @Override
-    public final boolean equals(final Object obj) {
-        if (this == obj)
-            return true;
-        if (!super.equals(obj))
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Divider other = (Divider) obj;
-        if (title == null) {
-            if (other.title != null)
-                return false;
-        } else if (!title.equals(other.title))
-            return false;
-        return true;
+        return "Divider [title=" + getTitle() + "]";
     }
 
 }
