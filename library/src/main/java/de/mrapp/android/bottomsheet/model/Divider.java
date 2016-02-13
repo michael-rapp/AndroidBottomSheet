@@ -15,11 +15,9 @@
 package de.mrapp.android.bottomsheet.model;
 
 import android.content.Context;
-import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.text.TextUtils;
 
 /**
  * Represents a divider, which can be shown in a bottom sheet.
@@ -30,23 +28,6 @@ import android.text.TextUtils;
 public class Divider extends AbstractItem {
 
     /**
-     * A creator, which allows to create instances of the class {@link Divider} from parcels.
-     */
-    public static final Creator<Divider> CREATOR = new Creator<Divider>() {
-
-        @Override
-        public Divider createFromParcel(final Parcel source) {
-            return new Divider(source);
-        }
-
-        @Override
-        public Divider[] newArray(final int size) {
-            return new Divider[size];
-        }
-
-    };
-
-    /**
      * The constant serial version UID.
      */
     private static final long serialVersionUID = 1L;
@@ -55,18 +36,6 @@ public class Divider extends AbstractItem {
      * The divider's title.
      */
     private CharSequence title;
-
-    /**
-     * Creates a new divider.
-     *
-     * @param source
-     *         The parcel, the divider should be created from, as an instance of the class {@link
-     *         Parcel}. The parcel may not be null
-     */
-    private Divider(@NonNull final Parcel source) {
-        super(source);
-        this.title = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source);
-    }
 
     /**
      * Creates a new divider.
@@ -149,12 +118,6 @@ public class Divider extends AbstractItem {
         } else if (!title.equals(other.title))
             return false;
         return true;
-    }
-
-    @Override
-    public final void writeToParcel(final Parcel dest, final int flags) {
-        super.writeToParcel(dest, flags);
-        TextUtils.writeToParcel(getTitle(), dest, flags);
     }
 
 }

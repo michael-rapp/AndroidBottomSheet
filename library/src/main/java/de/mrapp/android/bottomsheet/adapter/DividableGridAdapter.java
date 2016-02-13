@@ -17,7 +17,6 @@ package de.mrapp.android.bottomsheet.adapter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
-import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -479,7 +478,7 @@ public class DividableGridAdapter extends BaseAdapter {
     public final View getView(final int position, final View convertView, final ViewGroup parent) {
         View view = convertView;
         int viewType = getItemViewType(position);
-        Parcelable item = getItem(position);
+        AbstractItem item = getItem(position);
 
         if (view == null) {
             if (viewType == PLACEHOLDER_VIEW_TYPE) {
@@ -509,7 +508,7 @@ public class DividableGridAdapter extends BaseAdapter {
 
     @Override
     public final int getItemViewType(final int position) {
-        Parcelable item = getItem(position);
+        AbstractItem item = getItem(position);
 
         if (item == null) {
             return PLACEHOLDER_VIEW_TYPE;

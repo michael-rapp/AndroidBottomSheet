@@ -14,10 +14,7 @@
  */
 package de.mrapp.android.bottomsheet.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.CallSuper;
-import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
@@ -27,7 +24,7 @@ import java.io.Serializable;
  * @author Michael Rapp
  * @since 1.0.0
  */
-public abstract class AbstractItem implements Serializable, Cloneable, Parcelable {
+public abstract class AbstractItem implements Serializable, Cloneable {
 
     /**
      * The constant serial version UID.
@@ -38,17 +35,6 @@ public abstract class AbstractItem implements Serializable, Cloneable, Parcelabl
      * The item's id.
      */
     private final int id;
-
-    /**
-     * Creates a new item.
-     *
-     * @param source
-     *         The parcel, the item should be created from, as an instance of the class {@link
-     *         Parcel}. The parcel may not be null
-     */
-    protected AbstractItem(@NonNull final Parcel source) {
-        this.id = source.readInt();
-    }
 
     /**
      * Creates a new item.
@@ -91,17 +77,6 @@ public abstract class AbstractItem implements Serializable, Cloneable, Parcelabl
         if (id != other.id)
             return false;
         return true;
-    }
-
-    @Override
-    public final int describeContents() {
-        return 0;
-    }
-
-    @CallSuper
-    @Override
-    public void writeToParcel(final Parcel dest, final int flags) {
-        dest.writeInt(getId());
     }
 
 }

@@ -15,16 +15,12 @@
 package de.mrapp.android.bottomsheet.model;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Parcel;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 
 import static de.mrapp.android.util.Condition.ensureNotEmpty;
 import static de.mrapp.android.util.Condition.ensureNotNull;
@@ -36,23 +32,6 @@ import static de.mrapp.android.util.Condition.ensureNotNull;
  * @since 1.0.0
  */
 public class Item extends AbstractItem {
-
-    /**
-     * A creator, which allows to create instances of the class {@link Item} from parcels.
-     */
-    public static final Creator<Item> CREATOR = new Creator<Item>() {
-
-        @Override
-        public Item createFromParcel(final Parcel source) {
-            return new Item(source);
-        }
-
-        @Override
-        public Item[] newArray(final int size) {
-            return new Item[size];
-        }
-
-    };
 
     /**
      * The constant serial version UID.
@@ -73,22 +52,6 @@ public class Item extends AbstractItem {
      * True, if the item is enabled, false otherwise.
      */
     private boolean enabled;
-
-    /**
-     * Creates a new item.
-     *
-     * @param source
-     *         The parcel, the item should be created from, as an instance of the class {@link
-     *         Parcel}. The parcel may not be null
-     */
-    @SuppressWarnings("deprecation")
-    private Item(@NonNull final Parcel source) {
-        super(source);
-        this.title = TextUtils.CHAR_SEQUENCE_CREATOR.createFromParcel(source);
-        this.icon =
-                new BitmapDrawable((Bitmap) source.readParcelable(Bitmap.class.getClassLoader()));
-        this.enabled = source.readInt() > 0;
-    }
 
     /**
      * Creates a new item.
@@ -229,16 +192,6 @@ public class Item extends AbstractItem {
         if (enabled != other.enabled)
             return false;
         return true;
-    }
-
-    @Override
-    public final void writeToParcel(final Parcel dest, final int flags) {
-        super.writeToParcel(dest, flags);
-        TextUtils.writeToParcel(getTitle(), dest, flags);
-        Bitmap bitmap = (getIcon() != null && getIcon() instanceof BitmapDrawable) ?
-                ((BitmapDrawable) getIcon()).getBitmap() : null;
-        dest.writeParcelable(bitmap, flags);
-        dest.writeInt(isEnabled() ? 1 : 0);
     }
 
 }
