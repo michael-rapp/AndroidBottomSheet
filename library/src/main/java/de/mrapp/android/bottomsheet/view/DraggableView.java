@@ -169,8 +169,8 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
         int location[] = new int[2];
         viewGroup.getLocationOnScreen(location);
 
-        if (x >= location[0] && x <= viewGroup.getWidth() && y >= location[1] &&
-                y <= viewGroup.getHeight()) {
+        if (x >= location[0] && x <= location[0] + viewGroup.getWidth() && y >= location[1] &&
+                y <= location[1] + viewGroup.getHeight()) {
             for (int i = 0; i < viewGroup.getChildCount(); i++) {
                 View view = viewGroup.getChildAt(i);
 
