@@ -211,7 +211,8 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     private void handleRelease() {
         float speed = Math.max(dragHelper.getDragSpeed(), animationSpeed);
 
-        if (getTopMargin() > initialMargin || dragHelper.getDragSpeed() > animationSpeed ||
+        if (getTopMargin() > initialMargin ||
+                (dragHelper.getDragSpeed() > animationSpeed && dragHelper.getDistance() > 0) ||
                 (getDeviceType(getContext()) == DeviceType.TABLET && isMaximized() &&
                         getTopMargin() > minMargin)) {
             animateHideView(parentHeight - getTopMargin(), speed, new DecelerateInterpolator(),
