@@ -30,15 +30,20 @@ import android.widget.TextView;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.mrapp.android.bottomsheet.BottomSheet;
+import de.mrapp.android.bottomsheet.BottomSheet.Style;
 import de.mrapp.android.bottomsheet.R;
 import de.mrapp.android.bottomsheet.model.AbstractItem;
 import de.mrapp.android.bottomsheet.model.Divider;
 import de.mrapp.android.bottomsheet.model.Item;
+import de.mrapp.android.util.DisplayUtil.DeviceType;
 
 import static de.mrapp.android.util.Condition.ensureNotNull;
+import static de.mrapp.android.util.DisplayUtil.getDeviceType;
 
 /**
  * An adapter, which manages the items of a {@link BottomSheet}. It allows to show the items in a
@@ -109,9 +114,25 @@ public class DividableGridAdapter extends BaseAdapter {
     private final Context context;
 
     /**
+     * The number of columns, which are displayed by the adapter.
+     */
+    private final int columnCount;
+
+    /**
      * A list, which contains the items of the adapter.
      */
     private List<AbstractItem> items;
+
+    /**
+     * A list, which contains the items of the adapter including placeholders.
+     */
+    private List<AbstractItem> rawItems;
+
+    /**
+     * A map, which maps the indices of the adapter's items to the indices all items, including
+     * placeholders.
+     */
+    private Map<Integer, Integer> mapping;
 
     /**
      * The number of items, which contain an icon.
@@ -141,6 +162,19 @@ public class DividableGridAdapter extends BaseAdapter {
         if (notifyOnChange) {
             notifyDataSetChanged();
         }
+    }
+
+    /**
+     * Inflates the view, which is used to visualize a placeholder.
+     *
+     * @param parent
+     *         The parent of the view, which should be inflated, as an instance of the class {@link
+     *         ViewGroup} or null, if no parent is available
+     * @return The view, which has been inflated, as an instance of the class {@link View}
+     */
+    private View inflatePlaceholderView(@Nullable ViewGroup parent) {
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
+        return layoutInflater.inflate(R.layout.list_placeholder, parent, false);
     }
 
     /**
@@ -210,9 +244,15 @@ public class DividableGridAdapter extends BaseAdapter {
      * @param parent
      *         The parent of the view, which should be inflated, as an instance of the class {@link
      *         ViewGroup} or null, if no parent is available
+     * @param divider
+     *         The divider, which should be visualized, as an instance of the class {@link Divider}.
+     *         The divider may not be null
+     * @param position
+     *         The position of the divider, which should be visualized, as an {@link Integer} value
      * @return The view, which has been inflated, as an instance of the class {@link View}
      */
-    private View inflateDividerView(@Nullable final ViewGroup parent) {
+    private View inflateDividerView(@Nullable final ViewGroup parent,
+                                    @NonNull final Divider divider, final int position) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.divider, parent, false);
         DividerViewHolder viewHolder = new DividerViewHolder();
@@ -220,6 +260,19 @@ public class DividableGridAdapter extends BaseAdapter {
         viewHolder.rightDivider = view.findViewById(R.id.right_divider);
         viewHolder.titleTextView = (TextView) view.findViewById(android.R.id.title);
         view.setTag(viewHolder);
+
+        if (!TextUtils.isEmpty(divider.getTitle()) || (position % columnCount != 0 &&
+                !TextUtils.isEmpty(rawItems.get(position - 1).getTitle()))) {
+            view.setPadding(0, 0, 0, 0);
+            view.setMinimumHeight(context.getResources()
+                    .getDimensionPixelSize(R.dimen.bottom_sheet_divider_title_min_height));
+        } else {
+            int padding = context.getResources()
+                    .getDimensionPixelSize(R.dimen.bottom_sheet_divider_vertical_padding);
+            view.setPadding(0, padding, 0, padding);
+            view.setMinimumHeight(0);
+        }
+
         return view;
     }
 
@@ -258,11 +311,20 @@ public class DividableGridAdapter extends BaseAdapter {
      * @param context
      *         The context, which should be used by the adapter, as an instance of the class {@link
      *         Context}. The context may not be null
+     * @param style
+     *         The style, which should be used to display the adapter's items, as a value of the
+     *         enum {@link Style}. The style may either be <code>LIST</code>,
+     *         <code>LIST_COLUMNS</code> or <code>GRID</code>
      */
-    public DividableGridAdapter(@NonNull final Context context) {
+    public DividableGridAdapter(@NonNull final Context context, final Style style) {
         ensureNotNull(context, "The context may not be null");
+        ensureNotNull(style, "The style may not be null");
         this.context = context;
+        this.columnCount = style == BottomSheet.Style.LIST_COLUMNS &&
+                getDeviceType(context) == DeviceType.TABLET ? 2 : 1;
         this.items = new ArrayList<>();
+        this.rawItems = new ArrayList<>();
+        this.mapping = new HashMap<>();
         this.iconCount = 0;
         this.notifyOnChange = true;
         this.itemColor = -1;
@@ -320,12 +382,31 @@ public class DividableGridAdapter extends BaseAdapter {
      */
     public final void add(@NonNull final AbstractItem item) {
         ensureNotNull(item, "The item may not be null");
+        int index = items.size();
+        int rawIndex;
         items.add(item);
 
         if (item instanceof Item && ((Item) item).getIcon() != null) {
             iconCount++;
         }
 
+        if (item instanceof Divider && columnCount > 1) {
+            for (int i = 0; i < rawItems.size() % columnCount; i++) {
+                rawItems.add(null);
+            }
+
+            rawIndex = rawItems.size();
+            rawItems.add(item);
+
+            for (int i = 0; i < columnCount - 1; i++) {
+                rawItems.add(new Divider());
+            }
+        } else {
+            rawIndex = rawItems.size();
+            rawItems.add(item);
+        }
+
+        mapping.put(index, rawIndex);
         notifyOnDataSetChanged();
     }
 
@@ -341,6 +422,7 @@ public class DividableGridAdapter extends BaseAdapter {
     public final void set(final int index, @NonNull final AbstractItem item) {
         ensureNotNull(item, "The item may not be null");
         AbstractItem replacedItem = items.set(index, item);
+        rawItems.set(mapping.get(index), item);
 
         if (replacedItem instanceof Item && ((Item) replacedItem).getIcon() != null) {
             iconCount--;
@@ -361,6 +443,15 @@ public class DividableGridAdapter extends BaseAdapter {
      */
     public final void remove(final int index) {
         AbstractItem removedItem = items.remove(index);
+        int rawIndex = mapping.remove(index);
+        rawItems.remove(rawIndex);
+        rawIndex++;
+
+        while (rawIndex < rawItems.size() &&
+                rawIndex % columnCount > 0 && !(rawItems.get(rawIndex) instanceof Item)) {
+            rawItems.remove(rawIndex);
+            rawIndex++;
+        }
 
         if (removedItem instanceof Item && ((Item) removedItem).getIcon() != null) {
             iconCount--;
@@ -374,6 +465,8 @@ public class DividableGridAdapter extends BaseAdapter {
      */
     public final void clear() {
         items.clear();
+        rawItems.clear();
+        mapping.clear();
         iconCount = 0;
         notifyOnDataSetChanged();
     }
@@ -382,15 +475,7 @@ public class DividableGridAdapter extends BaseAdapter {
      * Returns the number of items, which are contained by the adapter.
      */
     public final int getItemCount() {
-        int count = 0;
-
-        for (int i = 0; i < items.size(); i++) {
-            if (items.get(i) != null) {
-                count++;
-            }
-        }
-
-        return count;
+        return items.size();
     }
 
     /**
@@ -437,17 +522,17 @@ public class DividableGridAdapter extends BaseAdapter {
     @Override
     public final boolean isEnabled(final int position) {
         AbstractItem item = getItem(position);
-        return item != null && item instanceof Item && ((Item) item).isEnabled();
+        return item instanceof Item && ((Item) item).isEnabled();
     }
 
     @Override
     public final int getCount() {
-        return items.size();
+        return rawItems.size();
     }
 
     @Override
     public final AbstractItem getItem(final int position) {
-        return items.get(position);
+        return rawItems.get(position);
     }
 
     @Override
@@ -463,11 +548,11 @@ public class DividableGridAdapter extends BaseAdapter {
 
         if (view == null) {
             if (viewType == PLACEHOLDER_VIEW_TYPE) {
-
+                view = inflatePlaceholderView(parent);
             } else if (viewType == ITEM_VIEW_TYPE) {
                 view = inflateItemView(parent);
             } else {
-                view = inflateDividerView(parent);
+                view = inflateDividerView(parent, (Divider) item, position);
             }
         }
 

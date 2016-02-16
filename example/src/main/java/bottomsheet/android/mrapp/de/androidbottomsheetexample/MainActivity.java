@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(final View v) {
                 BottomSheet.Builder builder = new BottomSheet.Builder(MainActivity.this);
+                builder.setStyle(BottomSheet.Style.LIST_COLUMNS);
                 builder.setTitle("Title");
 
                 Drawable listItemIcon =

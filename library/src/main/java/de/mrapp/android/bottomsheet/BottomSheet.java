@@ -59,10 +59,12 @@ import de.mrapp.android.bottomsheet.model.AbstractItem;
 import de.mrapp.android.bottomsheet.model.Divider;
 import de.mrapp.android.bottomsheet.model.Item;
 import de.mrapp.android.bottomsheet.view.DraggableView;
+import de.mrapp.android.util.DisplayUtil.DeviceType;
 
 import static de.mrapp.android.util.Condition.ensureAtLeast;
 import static de.mrapp.android.util.Condition.ensureAtMaximum;
 import static de.mrapp.android.util.Condition.ensureNotNull;
+import static de.mrapp.android.util.DisplayUtil.getDeviceType;
 
 /**
  * A bottom sheet, which is designed according to the Android 5's Material Design guidelines even on
@@ -356,7 +358,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
 
             if (gridView != null) {
                 contentContainer.setVisibility(View.VISIBLE);
-                gridView.setNumColumns(1);
+                gridView.setNumColumns(style == Style.LIST_COLUMNS &&
+                        getDeviceType(getContext()) == DeviceType.TABLET ? 2 : 1);
 
                 if (style == Style.LIST) {
                     int paddingBottom = getContext().getResources()
@@ -956,7 +959,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             int themeResourceId =
                     this.themeResourceId != -1 ? this.themeResourceId : R.style.BottomSheet;
             BottomSheet bottomSheet =
-                    new BottomSheet(context, themeResourceId, gridView != null ? items : null);
+                    new BottomSheet(context, themeResourceId, gridView != null ? items : null,
+                            style);
             bottomSheet.requestWindowFeature(Window.FEATURE_NO_TITLE);
             FrameLayout.LayoutParams layoutParams =
                     new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
@@ -1009,6 +1013,11 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         LIST,
 
         /**
+         * If the bottom sheet's items should be shown as a two-columned list on tablet devices.
+         */
+        LIST_COLUMNS,
+
+        /**
          * If the bottom sheet's items should be shown in a grid.
          */
         GRID
@@ -1026,16 +1035,6 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * has an effect on the bottom sheet.
      */
     private static final int MAX_DRAG_SENSITIVITY = 260;
-
-    /**
-     * The listener, which is notified, when an item of the bottom sheet has been clicked.
-     */
-    private OnItemClickListener itemClickListener;
-
-    /**
-     * The listener, which is notified, when the bottom sheet is maximized.
-     */
-    private OnMaximizeListener maximizeListener;
 
     /**
      * The root view of the bottom sheet.
@@ -1066,6 +1065,21 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * The adapter, which is used to manage the bottom sheet's items.
      */
     private DividableGridAdapter adapter;
+
+    /**
+     * The style, which is used to display the bottom sheet's items.
+     */
+    private Style style;
+
+    /**
+     * The listener, which is notified, when an item of the bottom sheet has been clicked.
+     */
+    private OnItemClickListener itemClickListener;
+
+    /**
+     * The listener, which is notified, when the bottom sheet is maximized.
+     */
+    private OnMaximizeListener maximizeListener;
 
     /**
      * True, if the bottom sheet is cancelable, false otherwise.
@@ -1100,10 +1114,17 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         A collection, which contains the items, which should be added to the bottom sheet, as
      *         an instance of the type {@link Collection} or null, if a custom view should be shown
      *         instead
+     * @param style
+     *         The style, which should be used to display the bottom sheet's items, as a value of
+     *         the enum {@link Style}. The style may either be <code>LIST</code>,
+     *         <code>LIST_COLUMNS</code> or <code>GRID</code>
      */
-    private void initialize(@Nullable final Collection<AbstractItem> items) {
+    private void initialize(@Nullable final Collection<AbstractItem> items,
+                            @NonNull final Style style) {
+        this.style = style;
+
         if (items != null) {
-            adapter = new DividableGridAdapter(getContext());
+            adapter = new DividableGridAdapter(getContext(), style);
 
             for (AbstractItem item : items) {
                 adapter.add(item);
@@ -1245,11 +1266,17 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         A collection, which contains the items, which should be added to the bottom sheet, as
      *         an instance of the type {@link Collection} or null, if a custom view should be shown
      *         instead
+     * @param style
+     *         The style, which should be used to display the bottom sheet's items, as a value of
+     *         the enum {@link Style}. The style may either be <code>LIST</code>,
+     *         <code>LIST_COLUMNS</code> or <code>GRID</code>
      */
     protected BottomSheet(@NonNull final Context context,
-                          @Nullable final Collection<AbstractItem> items) {
+                          @Nullable final Collection<AbstractItem> items,
+                          @NonNull final Style style) {
         super(context);
-        initialize(items);
+        ensureNotNull(style, "The style may not be null");
+        initialize(items, style);
     }
 
     /**
@@ -1266,11 +1293,17 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         A collection, which contains the items, which should be added to the bottom sheet, as
      *         an instance of the type {@link Collection} or null, if a custom view should be shown
      *         instead
+     * @param style
+     *         The style, which should be used to display the bottom sheet's items, as a value of
+     *         the enum {@link Style}. The style may either be <code>LIST</code>,
+     *         <code>LIST_COLUMNS</code> or <code>GRID</code>
      */
     protected BottomSheet(@NonNull final Context context, @StyleRes final int themeResourceId,
-                          @Nullable final Collection<AbstractItem> items) {
+                          @Nullable final Collection<AbstractItem> items,
+                          @NonNull final Style style) {
         super(context, themeResourceId);
-        initialize(items);
+        ensureNotNull(style, "The style may not be null");
+        initialize(items, style);
     }
 
     /**
@@ -2000,6 +2033,16 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      */
     public final boolean isMaximized() {
         return rootView != null && rootView.isMaximized();
+    }
+
+    /**
+     * Returns the style, which is used to display the bottom sheet's items.
+     *
+     * @return style The style, which is used to display the bottom sheet's items, as a value of the
+     * enum {@link Style}
+     */
+    public final Style getStyle() {
+        return style;
     }
 
     /**
