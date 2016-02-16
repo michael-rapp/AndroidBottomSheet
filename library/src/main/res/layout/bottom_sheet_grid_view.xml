@@ -22,4 +22,5 @@ not, see <http://www.gnu.org/licenses/>.
     android:clipToPadding="false"
     android:divider="@null"
     android:dividerHeight="0dp"
-    android:scrollbars="none"/>
+    android:scrollbars="none"
+    android:stretchMode="columnWidth"/>

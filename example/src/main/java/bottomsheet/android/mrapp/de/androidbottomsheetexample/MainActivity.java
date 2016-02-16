@@ -41,14 +41,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(final View v) {
                 BottomSheet.Builder builder = new BottomSheet.Builder(MainActivity.this);
-                builder.setStyle(BottomSheet.Style.LIST_COLUMNS);
+                builder.setStyle(BottomSheet.Style.GRID);
                 builder.setTitle("Title");
 
                 Drawable listItemIcon =
                         ContextCompat.getDrawable(MainActivity.this, R.drawable.list_item);
 
                 builder.addItem("Item 1", listItemIcon);
-                builder.addItem("Item 2", listItemIcon);
+                builder.addItem("Item 2 abdfhuisfhduhfhiusahduih", listItemIcon);
                 builder.addItem("Item 3", listItemIcon);
                 builder.setItemEnabled(2, false);
                 builder.addDivider();

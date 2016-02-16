@@ -358,17 +358,22 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
 
             if (gridView != null) {
                 contentContainer.setVisibility(View.VISIBLE);
-                gridView.setNumColumns(style == Style.LIST_COLUMNS &&
-                        getDeviceType(getContext()) == DeviceType.TABLET ? 2 : 1);
 
                 if (style == Style.GRID) {
+                    int horizontalPadding = getContext().getResources().getDimensionPixelSize(
+                            R.dimen.bottom_sheet_grid_item_horizontal_padding);
                     int paddingBottom = getContext().getResources()
                             .getDimensionPixelSize(R.dimen.bottom_sheet_grid_padding_bottom);
-                    gridView.setPadding(0, 0, 0, paddingBottom);
+                    gridView.setPadding(horizontalPadding, 0, horizontalPadding, paddingBottom);
+                    gridView.setNumColumns(GridView.AUTO_FIT);
+                    gridView.setColumnWidth(getContext().getResources()
+                            .getDimensionPixelSize(R.dimen.bottom_sheet_grid_item_size));
                 } else {
                     int paddingBottom = getContext().getResources()
                             .getDimensionPixelSize(R.dimen.bottom_sheet_list_padding_bottom);
                     gridView.setPadding(0, 0, 0, paddingBottom);
+                    gridView.setNumColumns(style == Style.LIST_COLUMNS &&
+                            getDeviceType(getContext()) == DeviceType.TABLET ? 2 : 1);
                 }
             }
 
@@ -960,7 +965,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
                     this.themeResourceId != -1 ? this.themeResourceId : R.style.BottomSheet;
             BottomSheet bottomSheet =
                     new BottomSheet(context, themeResourceId, gridView != null ? items : null,
-                            style);
+                            style, width);
             bottomSheet.requestWindowFeature(Window.FEATURE_NO_TITLE);
             FrameLayout.LayoutParams layoutParams =
                     new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
@@ -978,7 +983,6 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             bottomSheet.setDimAmount(dimAmount);
             bottomSheet.setItemColor(itemColor);
             bottomSheet.setDividerColor(dividerColor);
-            bottomSheet.setWidth(width);
 
             if (activity != null && intent != null) {
                 bottomSheet.setIntent(activity, intent);
@@ -1013,7 +1017,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         LIST,
 
         /**
-         * If the bottom sheet's items should be shown as a two-columned list on tablet devices.
+         * If the bottom sheet's items should be shown as a two-columned list on tablet devices. On
+         * phones this is similar to the style <code>LIST</code>.
          */
         LIST_COLUMNS,
 
@@ -1118,13 +1123,17 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         The style, which should be used to display the bottom sheet's items, as a value of
      *         the enum {@link Style}. The style may either be <code>LIST</code>,
      *         <code>LIST_COLUMNS</code> or <code>GRID</code>
+     * @param width
+     *         The width of the bottom sheet in pixels as an {@link Integer} value
      */
     private void initialize(@Nullable final Collection<AbstractItem> items,
-                            @NonNull final Style style) {
+                            @NonNull final Style style, final int width) {
         this.style = style;
+        this.width = width;
 
         if (items != null) {
-            adapter = new DividableGridAdapter(getContext(), style);
+            adapter = new DividableGridAdapter(getContext(), style, width);
+            adapter.setWidth(width);
 
             for (AbstractItem item : items) {
                 adapter.add(item);
@@ -1270,13 +1279,17 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         The style, which should be used to display the bottom sheet's items, as a value of
      *         the enum {@link Style}. The style may either be <code>LIST</code>,
      *         <code>LIST_COLUMNS</code> or <code>GRID</code>
+     * @param width
+     *         The width of the bottom sheet in pixels as an {@link Integer} value. The width must
+     *         be at least 1
      */
     protected BottomSheet(@NonNull final Context context,
                           @Nullable final Collection<AbstractItem> items,
-                          @NonNull final Style style) {
+                          @NonNull final Style style, final int width) {
         super(context);
         ensureNotNull(style, "The style may not be null");
-        initialize(items, style);
+        ensureAtLeast(width, 1, "The width must be at least 1");
+        initialize(items, style, width);
     }
 
     /**
@@ -1297,13 +1310,17 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         The style, which should be used to display the bottom sheet's items, as a value of
      *         the enum {@link Style}. The style may either be <code>LIST</code>,
      *         <code>LIST_COLUMNS</code> or <code>GRID</code>
+     * @param width
+     *         The width of the bottom sheet in pixels as an {@link Integer} value. The width must
+     *         be at least 1
      */
     protected BottomSheet(@NonNull final Context context, @StyleRes final int themeResourceId,
                           @Nullable final Collection<AbstractItem> items,
-                          @NonNull final Style style) {
+                          @NonNull final Style style, final int width) {
         super(context, themeResourceId);
         ensureNotNull(style, "The style may not be null");
-        initialize(items, style);
+        ensureAtLeast(width, 1, "The width must be at least 1");
+        initialize(items, style, width);
     }
 
     /**
@@ -1682,6 +1699,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     public final void setWidth(final int width) {
         ensureAtLeast(width, 1, "The width must be at least 1");
         this.width = width;
+        adapter.setWidth(width);
 
         if (rootView != null) {
             rootView.setWidth(width);
