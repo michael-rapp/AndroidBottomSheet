@@ -361,13 +361,13 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
                 gridView.setNumColumns(style == Style.LIST_COLUMNS &&
                         getDeviceType(getContext()) == DeviceType.TABLET ? 2 : 1);
 
-                if (style == Style.LIST) {
+                if (style == Style.GRID) {
                     int paddingBottom = getContext().getResources()
-                            .getDimensionPixelSize(R.dimen.bottom_sheet_list_padding_bottom);
+                            .getDimensionPixelSize(R.dimen.bottom_sheet_grid_padding_bottom);
                     gridView.setPadding(0, 0, 0, paddingBottom);
                 } else {
                     int paddingBottom = getContext().getResources()
-                            .getDimensionPixelSize(R.dimen.bottom_sheet_grid_padding_bottom);
+                            .getDimensionPixelSize(R.dimen.bottom_sheet_list_padding_bottom);
                     gridView.setPadding(0, 0, 0, paddingBottom);
                 }
             }
