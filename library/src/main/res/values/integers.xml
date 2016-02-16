@@ -16,6 +16,6 @@ not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
 
-    <integer name="animation_duration">350</integer>
+    <integer name="animation_duration">250</integer>
 
 </resources>
