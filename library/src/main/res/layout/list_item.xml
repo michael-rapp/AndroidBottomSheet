@@ -48,7 +48,8 @@ not, see <http://www.gnu.org/licenses/>.
             android:layout_weight="1"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceListItemSmall"/>
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="?android:attr/textColorPrimary"/>
 
     </LinearLayout>
 
