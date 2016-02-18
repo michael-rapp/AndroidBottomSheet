@@ -58,6 +58,7 @@ import de.mrapp.android.bottomsheet.adapter.DividableGridAdapter;
 import de.mrapp.android.bottomsheet.model.AbstractItem;
 import de.mrapp.android.bottomsheet.model.Divider;
 import de.mrapp.android.bottomsheet.model.Item;
+import de.mrapp.android.bottomsheet.view.DividableGridView;
 import de.mrapp.android.bottomsheet.view.DraggableView;
 import de.mrapp.android.util.DisplayUtil.DeviceType;
 
@@ -1064,7 +1065,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     /**
      * The grid view, which is used to show the bottom sheet's items.
      */
-    private GridView gridView;
+    private DividableGridView gridView;
 
     /**
      * The adapter, which is used to manage the bottom sheet's items.
@@ -1717,6 +1718,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         if (adapter != null) {
             Item item = new Item(title);
             adapter.add(item);
+            gridView.adaptHeightToChildren();
         }
     }
 
@@ -1735,6 +1737,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             Item item = new Item(title);
             item.setIcon(icon);
             adapter.add(item);
+            gridView.adaptHeightToChildren();
         }
     }
 
@@ -1749,6 +1752,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         if (adapter != null) {
             Item item = new Item(getContext(), titleId);
             adapter.add(item);
+            gridView.adaptHeightToChildren();
         }
     }
 
@@ -1767,6 +1771,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             Item item = new Item(getContext(), titleId);
             item.setIcon(getContext(), iconId);
             adapter.add(item);
+            gridView.adaptHeightToChildren();
         }
     }
 
@@ -1783,6 +1788,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         if (adapter != null) {
             Item item = new Item(title);
             adapter.set(index, item);
+            gridView.adaptHeightToChildren();
         }
     }
 
@@ -1804,6 +1810,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             Item item = new Item(title);
             item.setIcon(icon);
             adapter.set(index, item);
+            gridView.adaptHeightToChildren();
         }
     }
 
@@ -1820,6 +1827,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         if (adapter != null) {
             Item item = new Item(getContext(), titleId);
             adapter.set(index, item);
+            gridView.adaptHeightToChildren();
         }
     }
 
@@ -1841,6 +1849,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             Item item = new Item(getContext(), titleId);
             item.setIcon(getContext(), iconId);
             adapter.set(index, item);
+            gridView.adaptHeightToChildren();
         }
     }
 
@@ -1850,6 +1859,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     public final void addDivider() {
         if (adapter != null) {
             adapter.add(new Divider());
+            gridView.adaptHeightToChildren();
         }
     }
 
@@ -1865,6 +1875,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             Divider divider = new Divider();
             divider.setTitle(title);
             adapter.add(divider);
+            gridView.adaptHeightToChildren();
         }
     }
 
@@ -1880,6 +1891,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             Divider divider = new Divider();
             divider.setTitle(getContext(), titleId);
             adapter.add(divider);
+            gridView.adaptHeightToChildren();
         }
     }
 
@@ -1893,6 +1905,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         if (adapter != null) {
             Divider divider = new Divider();
             adapter.set(index, divider);
+            gridView.adaptHeightToChildren();
         }
     }
 
@@ -1910,6 +1923,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             Divider divider = new Divider();
             divider.setTitle(title);
             adapter.set(index, divider);
+            gridView.adaptHeightToChildren();
         }
     }
 
@@ -1927,6 +1941,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             Divider divider = new Divider();
             divider.setTitle(getContext(), titleId);
             adapter.set(index, divider);
+            gridView.adaptHeightToChildren();
         }
     }
 
@@ -1939,6 +1954,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     public final void removeItem(final int index) {
         if (adapter != null) {
             adapter.remove(index);
+            gridView.adaptHeightToChildren();
         }
     }
 
@@ -1948,6 +1964,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     public final void removeAllItems() {
         if (adapter != null) {
             adapter.clear();
+            gridView.adaptHeightToChildren();
         }
     }
 
@@ -2142,11 +2159,12 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         contentContainer = (ViewGroup) findViewById(R.id.content_container);
         titleTextView =
                 (titleView != null && titleView instanceof TextView) ? (TextView) titleView : null;
-        gridView = (GridView) findViewById(R.id.bottom_sheet_grid_view);
+        gridView = (DividableGridView) findViewById(R.id.bottom_sheet_grid_view);
 
         if (gridView != null) {
             gridView.setOnItemClickListener(createItemClickListener());
             gridView.setAdapter(adapter);
+            gridView.adaptHeightToChildren();
         }
     }
 

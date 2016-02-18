@@ -30,9 +30,9 @@ not, see <http://www.gnu.org/licenses/>.
     <item name="bottom_sheet_grid_item_vertical_spacing" type="dimen">16dp</item>
     <item name="bottom_sheet_grid_item_icon_size" type="dimen">48dp</item>
     <item name="bottom_sheet_grid_title_height" type="dimen">16dp</item>
-    <item name="bottom_sheet_divider_vertical_padding" type="dimen">8dp</item>
+    <item name="bottom_sheet_divider_height" type="dimen">9dp</item>
+    <item name="bottom_sheet_divider_title_height" type="dimen">34dp</item>
     <item name="bottom_sheet_divider_title_horizontal_padding" type="dimen">8dp</item>
-    <item name="bottom_sheet_divider_title_min_height" type="dimen">34dp</item>
     <item name="bottom_sheet_divider_indent" type="dimen">8dp</item>
     <item name="bottom_sheet_drawable_padding" type="dimen">32dp</item>
 

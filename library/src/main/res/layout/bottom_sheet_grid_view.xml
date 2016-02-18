@@ -14,7 +14,7 @@ General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License along with this program. If
 not, see <http://www.gnu.org/licenses/>.
 -->
-<GridView
+<de.mrapp.android.bottomsheet.view.DividableGridView
     android:id="@+id/bottom_sheet_grid_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"

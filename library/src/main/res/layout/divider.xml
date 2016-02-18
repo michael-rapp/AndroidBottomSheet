@@ -16,10 +16,8 @@ not, see <http://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="horizontal"
-              android:paddingBottom="@dimen/bottom_sheet_divider_vertical_padding"
-              android:paddingTop="@dimen/bottom_sheet_divider_vertical_padding">
+              android:layout_height="@dimen/bottom_sheet_divider_height"
+              android:orientation="horizontal">
 
     <View
         android:id="@+id/left_divider"

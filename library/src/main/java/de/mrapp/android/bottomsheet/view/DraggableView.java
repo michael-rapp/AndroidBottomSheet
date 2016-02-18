@@ -20,6 +20,7 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StyleRes;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -424,7 +425,7 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public DraggableView(@NonNull final Context context, @Nullable final AttributeSet attributeSet,
-                         final int defaultStyle) {
+                         @StyleRes final int defaultStyle) {
         super(context, attributeSet, defaultStyle);
         initialize();
     }
@@ -449,7 +450,8 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public DraggableView(@NonNull final Context context, @Nullable final AttributeSet attributeSet,
-                         final int defaultStyle, final int defaultStyleResource) {
+                         @StyleRes final int defaultStyle,
+                         @StyleRes final int defaultStyleResource) {
         super(context, attributeSet, defaultStyle, defaultStyleResource);
         initialize();
     }

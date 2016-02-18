@@ -297,14 +297,8 @@ public class DividableGridAdapter extends BaseAdapter {
 
         if (!TextUtils.isEmpty(divider.getTitle()) || (position % columnCount > 0 && !TextUtils
                 .isEmpty(getRawItems().get(position - (position % columnCount)).getTitle()))) {
-            view.setPadding(0, 0, 0, 0);
-            view.setMinimumHeight(context.getResources()
-                    .getDimensionPixelSize(R.dimen.bottom_sheet_divider_title_min_height));
-        } else {
-            int padding = context.getResources()
-                    .getDimensionPixelSize(R.dimen.bottom_sheet_divider_vertical_padding);
-            view.setPadding(0, padding, 0, padding);
-            view.setMinimumHeight(0);
+            view.getLayoutParams().height = context.getResources()
+                    .getDimensionPixelSize(R.dimen.bottom_sheet_divider_title_height);
         }
 
         return view;
@@ -394,6 +388,26 @@ public class DividableGridAdapter extends BaseAdapter {
 
         rawItems = null;
         notifyDataSetChanged();
+    }
+
+    /**
+     * Returns the style, which is used to display the adapter's items.
+     *
+     * @return The style, which is used to display the adapter's items, as a value of the enum
+     * {@link Style}. The style may either be <code>LIST</code>, <code>LIST_COLUMNS</code> or
+     * <code>GRID</code>
+     */
+    public final Style getStyle() {
+        return style;
+    }
+
+    /**
+     * Returns the number of columns, which are displayed by the adapter.
+     *
+     * @return The number of columns, which are displayed by the adapter
+     */
+    public final int getColumnCount() {
+        return columnCount;
     }
 
     /**
