@@ -16,7 +16,11 @@ not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
 
-    <color name="divider_light">#ffcecece</color>
-    <color name="divider_dark">#ff757575</color>
+    <attr name="bottomSheetBackground" format="color|reference"/>
+    <attr name="bottomSheetTitleColor" format="color"/>
+    <attr name="bottomSheetItemColor" format="color"/>
+    <attr name="bottomSheetDividerColor" format="color"/>
+    <attr name="bottomSheetDimAmount" format="fraction"/>
+    <attr name="bottomSheetDragSensitivity" format="fraction"/>
 
 </resources>

@@ -24,7 +24,7 @@ not, see <http://www.gnu.org/licenses/>.
         android:layout_width="@dimen/bottom_sheet_divider_indent"
         android:layout_height="1dp"
         android:layout_gravity="center_vertical"
-        android:background="@color/divider"/>
+        android:background="@color/divider_light"/>
 
     <TextView
         android:id="@android:id/title"
@@ -38,7 +38,7 @@ not, see <http://www.gnu.org/licenses/>.
         android:paddingStart="@dimen/bottom_sheet_divider_title_horizontal_padding"
         android:singleLine="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textColor="@color/divider"/>
+        android:textColor="@color/divider_light"/>
 
     <View
         android:id="@+id/right_divider"
@@ -46,6 +46,6 @@ not, see <http://www.gnu.org/licenses/>.
         android:layout_height="1dp"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:background="@color/divider"/>
+        android:background="@color/divider_light"/>
 
 </LinearLayout>

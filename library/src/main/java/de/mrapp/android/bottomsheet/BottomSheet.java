@@ -36,6 +36,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
 import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -193,13 +194,13 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * The sensitivity, which specifies the distance after which dragging has an effect on the
          * bottom sheet
          */
-        private float dragSensitivity = 0.25f;
+        private float dragSensitivity;
 
         /**
          * The dim amount, which is used to darken the area around the bottom sheet, which is
          * created by the builder.
          */
-        private float dimAmount = 0.25f;
+        private float dimAmount;
 
         /**
          * The width of the bottom sheet, which is created by the builder, in pixels.
@@ -222,6 +223,102 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * the builder, should handle.
          */
         private Intent intent;
+
+        /**
+         * Obtains all relevant attributes from the current theme.
+         */
+        private void obtainStyledAttributes() {
+            obtainBackground();
+            obtainTitleColor();
+            obtainItemColor();
+            obtainDividerColor();
+            obtainDimAmount();
+            obtainDragSensitivity();
+        }
+
+        /**
+         * Obtains the background from the current theme.
+         */
+        private void obtainBackground() {
+            TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(themeResourceId,
+                    new int[]{R.attr.bottomSheetBackground});
+            int color = typedArray.getColor(0, -1);
+
+            if (color != -1) {
+                setBackgroundColor(color);
+            } else {
+                int resourceId = typedArray.getResourceId(0, 0);
+
+                if (resourceId != 0) {
+                    setBackground(resourceId);
+                }
+            }
+        }
+
+        /**
+         * Obtains the title color from the current theme.
+         */
+        private void obtainTitleColor() {
+            TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(themeResourceId,
+                    new int[]{R.attr.bottomSheetTitleColor});
+            int color = typedArray.getColor(0, -1);
+
+            if (color != -1) {
+                setTitleColor(color);
+            }
+        }
+
+        /**
+         * Obtains the divider color from the current theme.
+         */
+        private void obtainDividerColor() {
+            TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(themeResourceId,
+                    new int[]{R.attr.bottomSheetDividerColor});
+            int color = typedArray.getColor(0, -1);
+
+            if (color != -1) {
+                setDividerColor(color);
+            }
+        }
+
+        /**
+         * Obtains the item color from the current theme.
+         */
+        private void obtainItemColor() {
+            TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(themeResourceId,
+                    new int[]{R.attr.bottomSheetItemColor});
+            int color = typedArray.getColor(0, -1);
+
+            if (color != -1) {
+                setItemColor(color);
+            }
+        }
+
+        /**
+         * Obtains the dim amount from the current theme.
+         */
+        private void obtainDimAmount() {
+            TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(themeResourceId,
+                    new int[]{R.attr.bottomSheetDimAmount});
+            float dimAmount = typedArray.getFraction(0, 1, 1, -1);
+
+            if (dimAmount != -1) {
+                setDimAmount(dimAmount);
+            }
+        }
+
+        /**
+         * Obtains the drag sensitivity from the current theme.
+         */
+        private void obtainDragSensitivity() {
+            TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(themeResourceId,
+                    new int[]{R.attr.bottomSheetDragSensitivity});
+            float dragSensitivity = typedArray.getFraction(0, 1, 1, -1);
+
+            if (dragSensitivity != -1) {
+                setDragSensitivity(dragSensitivity);
+            }
+        }
 
         /**
          * Inflates the bottom sheet's layout.
@@ -406,9 +503,11 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          */
         public Builder(@NonNull final Context context, @StyleRes final int themeResourceId) {
             ensureNotNull(context, "The context may not be null");
-            this.context = context;
-            this.themeResourceId = themeResourceId;
+            this.themeResourceId =
+                    themeResourceId == -1 ? R.style.BottomSheet_Light : themeResourceId;
+            this.context = new ContextThemeWrapper(context, themeResourceId);
             this.width = getContext().getResources().getDimensionPixelSize(R.dimen.default_width);
+            obtainStyledAttributes();
         }
 
         /**
@@ -962,8 +1061,6 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             DraggableView root = inflateLayout();
             inflateTitleView(root);
             GridView gridView = inflateContentView(root);
-            int themeResourceId =
-                    this.themeResourceId != -1 ? this.themeResourceId : R.style.BottomSheet;
             BottomSheet bottomSheet =
                     new BottomSheet(context, themeResourceId, gridView != null ? items : null,
                             style, width);

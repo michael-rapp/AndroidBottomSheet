@@ -16,10 +16,22 @@ not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
 
-    <style name="BottomSheet" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="BottomSheet.Light" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowAnimationStyle">@style/BottomSheetAnimation</item>
+        <item name="bottomSheetDividerColor">@color/divider_light</item>
+        <item name="bottomSheetDimAmount">25%</item>
+        <item name="bottomSheetDragSensitivity">25%</item>
+    </style>
+
+    <style name="BottomSheet" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowAnimationStyle">@style/BottomSheetAnimation</item>
+        <item name="bottomSheetDividerColor">@color/divider_dark</item>
+        <item name="bottomSheetDimAmount">25%</item>
+        <item name="bottomSheetDragSensitivity">25%</item>
     </style>
 
     <style name="BottomSheetAnimation">
