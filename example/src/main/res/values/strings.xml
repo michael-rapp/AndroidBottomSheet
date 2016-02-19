@@ -1,3 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+AndroidBottomSheet Copyright 2016 Michael Rapp
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+Lesser General Public License as published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with this program. If
+not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
     <string name="app_name">AndroidBottomSheet Example</string>
+    <string name="show_bottom_sheet_preference_category_title">Show example bottom sheet</string>
+    <string name="show_bottom_sheet_preference_key">show_bottom_sheet_preference_key</string>
+    <string name="show_bottom_sheet_preference_title">Show example bottom sheet</string>
+
+    <string name="bottom_sheet_style_preference_category_title">Style</string>
+    <string name="bottom_sheet_style_preference_key">style_preference_key</string>
+    <string name="bottom_sheet_style_preference_title">Style</string>
+    <string name="bottom_sheet_style_preference_default_value">list</string>
+
+    <string name="bottom_sheet_title_preference_category_title">Title</string>
+    <string name="show_bottom_sheet_title_preference_key">show_bottom_sheet_title_preference_key</string>
+    <string name="show_bottom_sheet_title_preference_title">Show bottom sheet title</string>
+    <string name="bottom_sheet_title_preference_key">bottom_sheet_title_preference_key</string>
+    <string name="bottom_sheet_title_preference_title">Bottom sheet title</string>
+    <string name="bottom_sheet_title_preference_default_value">Title</string>
+
+    <string name="bottom_sheet_icon_preference_category_title">Icon</string>
+    <string name="show_bottom_sheet_icon_preference_key">show_bottom_sheet_icon_preference_key</string>
+    <string name="show_bottom_sheet_icon_preference_title">Show bottom sheet icon</string>
+
+    <string name="bottom_sheet_items_preference_category_title">Items &amp; Dividers</string>
+    <string name="divider_count_preference_key">divider_count_key</string>
+    <string name="divider_count_preference_title">Number of dividers</string>
+    <string name="divider_count_preference_default_value">0</string>
+    <string name="show_divider_title_preference_key">show_divider_title_preference_key</string>
+    <string name="show_divider_title_preference_title">Show divider title</string>
+    <string name="item_count_preference_key">item_count_preference_key</string>
+    <string name="item_count_preference_title">Number of items per divider</string>
+    <string name="item_count_preference_default_value">5</string>
+    <string name="disable_items_preference_key">disable_items_preference_key</string>
+    <string name="disable_items_preference_title">Disable items</string>
+
+    <string name="theme_preference_category_title">Theme</string>
+    <string name="theme_preference_key">theme_preference_key</string>
+    <string name="theme_preference_title">Theme</string>
+    <string name="theme_preference_default_value">light</string>
+
+    <string-array name="style_entries">
+        <item>List</item>
+        <item>Two-columned list</item>
+        <item>Grid</item>
+    </string-array>
+
+    <string-array name="style_values">
+        <item>list</item>
+        <item>list_columns</item>
+        <item>grid</item>
+    </string-array>
+
+    <string-array name="divider_count_entries">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="divider_count_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="item_count_entries">
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="item_count_values">
+        <item>1</item>
+        <item>3</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="theme_entries">
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+
+    <string-array name="theme_values">
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+
 </resources>

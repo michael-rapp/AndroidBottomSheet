@@ -16,10 +16,9 @@ not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">#ffd64937</item>
-        <item name="colorPrimaryDark">#ffd64937</item>
-        <item name="colorAccent">#ffd64937</item>
-    </style>
+    <bool name="show_bottom_sheet_title_preference_default_value">true</bool>
+    <bool name="show_bottom_sheet_icon_preference_default_value">false</bool>
+    <bool name="show_divider_title_preference_default_value">false</bool>
+    <bool name="disable_items_preference_default_value">false</bool>
 
 </resources>

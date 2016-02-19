@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+AndroidBottomSheet Copyright 2016 Michael Rapp
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU
+Lesser General Public License as published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License along with this program. If
+not, see <http://www.gnu.org/licenses/>.
+-->
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/show_bottom_sheet_preference_category_title">
+        <Preference
+            android:key="@string/show_bottom_sheet_preference_key"
+            android:title="@string/show_bottom_sheet_preference_title"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/bottom_sheet_style_preference_category_title">
+        <ListPreference
+            android:defaultValue="@string/bottom_sheet_style_preference_default_value"
+            android:entries="@array/style_entries"
+            android:entryValues="@array/style_values"
+            android:key="@string/bottom_sheet_style_preference_key"
+            android:title="@string/bottom_sheet_style_preference_title"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/bottom_sheet_title_preference_category_title">
+        <CheckBoxPreference
+            android:defaultValue="@bool/show_bottom_sheet_title_preference_default_value"
+            android:key="@string/show_bottom_sheet_title_preference_key"
+            android:title="@string/show_bottom_sheet_title_preference_title"/>
+
+        <EditTextPreference
+            android:defaultValue="@string/bottom_sheet_title_preference_default_value"
+            android:key="@string/bottom_sheet_title_preference_key"
+            android:title="@string/bottom_sheet_title_preference_title"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/bottom_sheet_icon_preference_category_title">
+        <CheckBoxPreference
+            android:defaultValue="@bool/show_bottom_sheet_icon_preference_default_value"
+            android:key="@string/show_bottom_sheet_icon_preference_key"
+            android:title="@string/show_bottom_sheet_icon_preference_title"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/bottom_sheet_items_preference_category_title">
+        <ListPreference
+            android:defaultValue="@string/divider_count_preference_default_value"
+            android:entries="@array/divider_count_entries"
+            android:entryValues="@array/divider_count_values"
+            android:key="@string/divider_count_preference_key"
+            android:title="@string/divider_count_preference_title"/>
+
+        <CheckBoxPreference
+            android:defaultValue="@bool/show_divider_title_preference_default_value"
+            android:key="@string/show_divider_title_preference_key"
+            android:title="@string/show_divider_title_preference_title"/>
+
+        <ListPreference
+            android:defaultValue="@string/item_count_preference_default_value"
+            android:entries="@array/item_count_entries"
+            android:entryValues="@array/item_count_values"
+            android:key="@string/item_count_preference_key"
+            android:title="@string/item_count_preference_title"/>
+
+        <CheckBoxPreference
+            android:defaultValue="@bool/disable_items_preference_default_value"
+            android:key="@string/disable_items_preference_key"
+            android:title="@string/disable_items_preference_title"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/theme_preference_category_title">
+        <ListPreference
+            android:defaultValue="@string/theme_preference_default_value"
+            android:entries="@array/theme_entries"
+            android:entryValues="@array/theme_values"
+            android:key="@string/theme_preference_key"
+            android:title="@string/theme_preference_title"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>
