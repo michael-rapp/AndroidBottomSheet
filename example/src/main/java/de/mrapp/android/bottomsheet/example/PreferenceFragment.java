@@ -126,12 +126,13 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
         String defaultValue = getString(R.string.bottom_sheet_style_preference_default_value);
         String style = sharedPreferences.getString(key, defaultValue);
 
-        if (style.equals("list")) {
-            return Style.LIST;
-        } else if (style.equals("list_columns")) {
-            return Style.LIST_COLUMNS;
-        } else {
-            return Style.GRID;
+        switch (style) {
+            case "list":
+                return Style.LIST;
+            case "list_columns":
+                return Style.LIST_COLUMNS;
+            default:
+                return Style.GRID;
         }
     }
 
