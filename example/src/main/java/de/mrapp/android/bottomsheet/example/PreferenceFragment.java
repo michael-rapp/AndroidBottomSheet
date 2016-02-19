@@ -34,6 +34,33 @@ import de.mrapp.android.bottomsheet.BottomSheet.Style;
 public class PreferenceFragment extends android.preference.PreferenceFragment {
 
     /**
+     * Initializes the preference, which allows to change the app's theme.
+     */
+    private void initializeThemePreference() {
+        Preference themePreference = findPreference(getString(R.string.theme_preference_key));
+        themePreference.setOnPreferenceChangeListener(createThemeChangeListener());
+    }
+
+    /**
+     * Creates and returns a listener, which allows to adapt the app's theme, when the value of the
+     * corresponding preference has been changed.
+     *
+     * @return The listener, which has been created, as an instance of the type {@link
+     * Preference.OnPreferenceChangeListener}
+     */
+    private Preference.OnPreferenceChangeListener createThemeChangeListener() {
+        return new Preference.OnPreferenceChangeListener() {
+
+            @Override
+            public boolean onPreferenceChange(final Preference preference, final Object newValue) {
+                getActivity().recreate();
+                return true;
+            }
+
+        };
+    }
+
+    /**
      * Initializes the preference, which allows to show a bottom sheet.
      */
     private void initializeShowBottomSheetPreference() {
@@ -101,7 +128,8 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
      * BottomSheet.Builder}
      */
     private BottomSheet.Builder createBottomSheetBuilder() {
-        BottomSheet.Builder builder = new BottomSheet.Builder(getActivity());
+        BottomSheet.Builder builder = new BottomSheet.Builder(getActivity(),
+                isDarkThemeSet() ? R.style.BottomSheet : R.style.BottomSheet_Light);
         builder.setStyle(getStyle());
 
         if (shouldTitleBeShown()) {
@@ -292,10 +320,24 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
         return sharedPreferences.getBoolean(key, defaultValue);
     }
 
+    /**
+     * Returns, whether the app uses the dark theme, or not.
+     *
+     * @return True, if the app uses the dark theme, false otherwise
+     */
+    private boolean isDarkThemeSet() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String key = getString(R.string.theme_preference_key);
+        String defaultValue = getString(R.string.theme_preference_default_value);
+        return Integer.valueOf(sharedPreferences.getString(key, defaultValue)) != 0;
+    }
+
     @Override
     public final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
+        initializeThemePreference();
         initializeShowBottomSheetPreference();
         initializeShowCustomBottmSheetPreference();
     }

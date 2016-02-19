@@ -16,7 +16,13 @@ not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="LightTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#ffd64937</item>
+        <item name="colorPrimaryDark">#ffd64937</item>
+        <item name="colorAccent">#ffd64937</item>
+    </style>
+
+    <style name="DarkTheme" parent="Theme.AppCompat">
         <item name="colorPrimary">#ffd64937</item>
         <item name="colorPrimaryDark">#ffd64937</item>
         <item name="colorAccent">#ffd64937</item>

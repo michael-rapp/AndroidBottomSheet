@@ -53,7 +53,7 @@ not, see <http://www.gnu.org/licenses/>.
     <string name="theme_preference_category_title">Theme</string>
     <string name="theme_preference_key">theme_preference_key</string>
     <string name="theme_preference_title">Theme</string>
-    <string name="theme_preference_default_value">light</string>
+    <string name="theme_preference_default_value">0</string>
 
     <string-array name="style_entries">
         <item>List</item>
@@ -97,8 +97,8 @@ not, see <http://www.gnu.org/licenses/>.
     </string-array>
 
     <string-array name="theme_values">
-        <item>light</item>
-        <item>dark</item>
+        <item>0</item>
+        <item>1</item>
     </string-array>
 
 </resources>
