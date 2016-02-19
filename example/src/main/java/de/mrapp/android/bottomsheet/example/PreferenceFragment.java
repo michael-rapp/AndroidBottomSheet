@@ -122,7 +122,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
      *
      * @param builder
      *         The builder, which allows to create the bottom sheet, as an instance of the class
-     *         {@link BottomSheet.Builder}
+     *         {@link BottomSheet.Builder}. The builder may not be null
      */
     private void addItems(@NonNull final BottomSheet.Builder builder) {
         int dividerCount = getDividerCount();
@@ -140,9 +140,9 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
 
             for (int j = 0; j < itemCount; j++) {
                 String title = getString(R.string.item_title, i * itemCount + j + 1);
-                Drawable icon =
-                        showIcon ? ContextCompat.getDrawable(getActivity(), R.drawable.list_item) :
-                                null;
+                Drawable icon = showIcon ? ContextCompat.getDrawable(getActivity(),
+                        getStyle() == Style.GRID ? R.drawable.grid_item : R.drawable.list_item) :
+                        null;
                 builder.addItem(title, icon);
 
                 if (disableItems) {
