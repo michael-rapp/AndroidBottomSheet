@@ -16,6 +16,8 @@ not, see <http://www.gnu.org/licenses/>.
 -->
 <resources>
     <string name="app_name">AndroidBottomSheet Example</string>
+    <string name="divider_title" formatted="false">Divider %d</string>
+    <string name="item_title" formatted="false">Item %d</string>
     <string name="show_bottom_sheet_preference_category_title">Show example bottom sheet</string>
     <string name="show_bottom_sheet_preference_key">show_bottom_sheet_preference_key</string>
     <string name="show_bottom_sheet_preference_title">Show example bottom sheet</string>
@@ -63,15 +65,15 @@ not, see <http://www.gnu.org/licenses/>.
     </string-array>
 
     <string-array name="divider_count_entries">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
+        <item>No dividers</item>
+        <item>1 Divider</item>
+        <item>2 Dividers</item>
     </string-array>
 
     <string-array name="divider_count_values">
-        <item>No dividers</item>
-        <item>1 Divider</item>
-        <item>2 Divider</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
 
     <string-array name="item_count_entries">

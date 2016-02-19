@@ -14,9 +14,13 @@
  */
 package de.mrapp.android.bottomsheet.example;
 
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 
 import de.mrapp.android.bottomsheet.BottomSheet;
 import de.mrapp.android.bottomsheet.BottomSheet.Style;
@@ -49,22 +53,200 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
 
             @Override
             public boolean onPreferenceClick(final Preference preference) {
-                BottomSheet.Builder builder = new BottomSheet.Builder(getActivity());
-                builder.setStyle(Style.LIST_COLUMNS);
-                builder.addItem("Item 1");
-                builder.addItem("Item 2");
-                builder.addItem("Item 3");
-                builder.addItem("Item 4");
-                builder.addItem("Item 5");
-                builder.addItem("Item 6");
-                builder.addItem("Item 7");
-                builder.addItem("Item 8");
-                builder.addItem("Item 9");
+                BottomSheet.Builder builder = createBottomSheetBuilder();
                 builder.show();
                 return true;
             }
 
         };
+    }
+
+    /**
+     * Creates and returns a builder, which allows to create bottom sheets, depending on the app's
+     * settings.
+     *
+     * @return The builder, which has been created, as an instance of the class {@link
+     * BottomSheet.Builder}
+     */
+    private BottomSheet.Builder createBottomSheetBuilder() {
+        BottomSheet.Builder builder = new BottomSheet.Builder(getActivity());
+        builder.setStyle(getStyle());
+
+        if (shouldTitleBeShown()) {
+            builder.setTitle(getBottomSheetTitle());
+        }
+
+        if (shouldIconBeShown()) {
+            builder.setIcon(
+                    ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_dialog_alert));
+        }
+
+        int dividerCount = getDividerCount();
+        boolean showDividerTitle = shouldDividerTitleBeShown();
+        int itemCount = getItemCount();
+        boolean showIcon = shouldItemIconsBeShown();
+        boolean disableItems = shouldItemsBeDisabled();
+        int index = 0;
+
+        for (int i = 0; i < dividerCount + 1; i++) {
+            if (i > 0) {
+                builder.addDivider(showDividerTitle ? getString(R.string.divider_title, i) : null);
+                index++;
+            }
+
+            for (int j = 0; j < itemCount; j++) {
+                String title = getString(R.string.item_title, i * itemCount + j + 1);
+                Drawable icon =
+                        showIcon ? ContextCompat.getDrawable(getActivity(), R.drawable.list_item) :
+                                null;
+                builder.addItem(title, icon);
+
+                if (disableItems) {
+                    builder.setItemEnabled(index, false);
+                }
+
+                index++;
+            }
+        }
+
+        return builder;
+    }
+
+    /**
+     * Returns the style, which should be used to create bottom sheets, depending on the app's
+     * settings.
+     *
+     * @return The style, which should be used to create bottom sheets, as a value of the enum
+     * {@link Style}
+     */
+    private Style getStyle() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String key = getString(R.string.bottom_sheet_style_preference_key);
+        String defaultValue = getString(R.string.bottom_sheet_style_preference_default_value);
+        String style = sharedPreferences.getString(key, defaultValue);
+
+        if (style.equals("list")) {
+            return Style.LIST;
+        } else if (style.equals("list_columns")) {
+            return Style.LIST_COLUMNS;
+        } else {
+            return Style.GRID;
+        }
+    }
+
+    /**
+     * Returns, whether the title of bottom sheets should be shown, depending on the app's settings,
+     * or not.
+     *
+     * @return True, if the title of bottom sheets should be shown, false otherwise
+     */
+    private boolean shouldTitleBeShown() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String key = getString(R.string.show_bottom_sheet_title_preference_key);
+        boolean defaultValue =
+                getResources().getBoolean(R.bool.show_bottom_sheet_title_preference_default_value);
+        return sharedPreferences.getBoolean(key, defaultValue);
+    }
+
+    /**
+     * Returns the title of bottom sheets, depending on the app's settings.
+     *
+     * @return The title of the bottom sheets
+     */
+    private String getBottomSheetTitle() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String key = getString(R.string.bottom_sheet_title_preference_key);
+        String defaultValue = getString(R.string.bottom_sheet_title_preference_default_value);
+        return sharedPreferences.getString(key, defaultValue);
+    }
+
+    /**
+     * Returns, whether the icon of bottom sheets should be shown, depending on the app's settings,
+     * or not.
+     *
+     * @return True, if the icon of bottom sheets should be shown, false otherwise
+     */
+    private boolean shouldIconBeShown() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String key = getString(R.string.show_bottom_sheet_icon_preference_key);
+        boolean defaultValue =
+                getResources().getBoolean(R.bool.show_bottom_sheet_icon_preference_default_value);
+        return sharedPreferences.getBoolean(key, defaultValue);
+    }
+
+    /**
+     * Returns the number of dividers, which should be shown, depending on the app's settings.
+     *
+     * @return The number of dividers, which should be shown, as an {@link Integer} value
+     */
+    private int getDividerCount() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String key = getString(R.string.divider_count_preference_key);
+        String defaultValue = getString(R.string.divider_count_preference_default_value);
+        return Integer.valueOf(sharedPreferences.getString(key, defaultValue));
+    }
+
+    /**
+     * Returns, whether the title of dividers should be shown, depending on the app's settings, or
+     * not.
+     *
+     * @return True, if the title of dividers should be shown, false otherwise
+     */
+    private boolean shouldDividerTitleBeShown() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String key = getString(R.string.show_divider_title_preference_key);
+        boolean defaultValue =
+                getResources().getBoolean(R.bool.show_divider_title_preference_default_value);
+        return sharedPreferences.getBoolean(key, defaultValue);
+    }
+
+    /**
+     * Returns the number of items, which should be shown per divider, depending on the app's
+     * settings.
+     *
+     * @return The number of items, which should be shown per divider, as an {@link Integer} value
+     */
+    private int getItemCount() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String key = getString(R.string.item_count_preference_key);
+        String defaultValue = getString(R.string.item_count_preference_default_value);
+        return Integer.valueOf(sharedPreferences.getString(key, defaultValue));
+    }
+
+    /**
+     * Returns, whether icons should be shown next to items, depending on the app's settings, or
+     * not.
+     *
+     * @return True, if icons should be shown next to items, false otherwise
+     */
+    private boolean shouldItemIconsBeShown() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String key = getString(R.string.show_item_icons_preference_key);
+        boolean defaultValue =
+                getResources().getBoolean(R.bool.show_item_icons_preference_default_value);
+        return sharedPreferences.getBoolean(key, defaultValue);
+    }
+
+    /**
+     * Returns, whether items should be disabled, depending on the app's settings, or not.
+     *
+     * @return True, if items should be disabled, false otherwise.
+     */
+    private boolean shouldItemsBeDisabled() {
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String key = getString(R.string.disable_items_preference_key);
+        boolean defaultValue =
+                getResources().getBoolean(R.bool.disable_items_preference_default_value);
+        return sharedPreferences.getBoolean(key, defaultValue);
     }
 
     @Override
