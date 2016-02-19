@@ -211,7 +211,9 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
                     toast.cancel();
                 }
 
-                String text = getString(R.string.item_clicked_toast, position + 1);
+                int itemCount = getItemCount();
+                String text = getString(R.string.item_clicked_toast,
+                        position - position / (itemCount + 1) + 1);
                 toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
                 toast.show();
             }

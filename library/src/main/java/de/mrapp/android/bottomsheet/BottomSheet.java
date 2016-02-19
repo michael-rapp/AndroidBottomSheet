@@ -1306,7 +1306,19 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
                                     final int position, final long id) {
                 if (!rootView.isDragging() && !rootView.isAnimationRunning()) {
                     if (itemClickListener != null) {
-                        itemClickListener.onItemClick(parent, view, position, id);
+                        int index = position;
+
+                        if (adapter.containsDividers()) {
+                            for (int i = position; i >= 0; i--) {
+                                if (adapter.getItem(i) == null ||
+                                        (adapter.getItem(i) instanceof Divider &&
+                                                i % adapter.getColumnCount() > 0)) {
+                                    index--;
+                                }
+                            }
+                        }
+
+                        itemClickListener.onItemClick(parent, view, index, id);
                     }
 
                     dismiss();

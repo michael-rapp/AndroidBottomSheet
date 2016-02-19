@@ -140,6 +140,11 @@ public class DividableGridAdapter extends BaseAdapter {
     private int iconCount;
 
     /**
+     * The number of dividers, which are contained by the adapter.
+     */
+    private int dividerCount;
+
+    /**
      * True, if the <code>notifyDataSetChange</code>-method is called automatically, when the
      * adapter's items are changed, false otherwise.
      */
@@ -358,6 +363,7 @@ public class DividableGridAdapter extends BaseAdapter {
         this.items = new ArrayList<>();
         this.rawItems = null;
         this.iconCount = 0;
+        this.dividerCount = 0;
         this.notifyOnChange = true;
         this.itemColor = -1;
         this.dividerColor = -1;
@@ -391,6 +397,15 @@ public class DividableGridAdapter extends BaseAdapter {
 
         rawItems = null;
         notifyDataSetChanged();
+    }
+
+    /**
+     * Returns, whether the adapter contains dividers, or not.
+     *
+     * @return True, if the adapter contains dividers, false otherwise
+     */
+    public final boolean containsDividers() {
+        return dividerCount > 0;
     }
 
     /**
@@ -468,6 +483,8 @@ public class DividableGridAdapter extends BaseAdapter {
 
         if (item instanceof Item && ((Item) item).getIcon() != null) {
             iconCount++;
+        } else if (item instanceof Divider) {
+            dividerCount++;
         }
 
         rawItems = null;
@@ -489,10 +506,14 @@ public class DividableGridAdapter extends BaseAdapter {
 
         if (replacedItem instanceof Item && ((Item) replacedItem).getIcon() != null) {
             iconCount--;
+        } else if (replacedItem instanceof Divider) {
+            dividerCount--;
         }
 
         if (item instanceof Item && ((Item) item).getIcon() != null) {
             iconCount++;
+        } else if (item instanceof Divider) {
+            dividerCount++;
         }
 
         rawItems = null;
@@ -510,6 +531,8 @@ public class DividableGridAdapter extends BaseAdapter {
 
         if (removedItem instanceof Item && ((Item) removedItem).getIcon() != null) {
             iconCount--;
+        } else if (removedItem instanceof Divider) {
+            dividerCount--;
         }
 
         rawItems = null;
@@ -522,6 +545,7 @@ public class DividableGridAdapter extends BaseAdapter {
     public final void clear() {
         items.clear();
         iconCount = 0;
+        dividerCount = 0;
 
         if (rawItems != null) {
             rawItems.clear();
