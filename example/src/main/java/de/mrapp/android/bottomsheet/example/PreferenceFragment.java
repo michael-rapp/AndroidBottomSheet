@@ -22,6 +22,9 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Toast;
 
 import de.mrapp.android.bottomsheet.BottomSheet;
 import de.mrapp.android.bottomsheet.BottomSheet.Style;
@@ -32,6 +35,11 @@ import de.mrapp.android.bottomsheet.BottomSheet.Style;
  * @author Michael Rapp
  */
 public class PreferenceFragment extends android.preference.PreferenceFragment {
+
+    /**
+     * The toast, which is used to indicate, when a bottom sheet's item has been clicked.
+     */
+    private Toast toast;
 
     /**
      * Initializes the preference, which allows to change the app's theme.
@@ -189,6 +197,26 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
                 index++;
             }
         }
+
+        builder.setOnItemClickListener(createItemClickListener());
+    }
+
+    private AdapterView.OnItemClickListener createItemClickListener() {
+        return new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(final AdapterView<?> parent, final View view,
+                                    final int position, final long id) {
+                if (toast != null) {
+                    toast.cancel();
+                }
+
+                String text = getString(R.string.item_clicked_toast, position + 1);
+                toast = Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT);
+                toast.show();
+            }
+
+        };
     }
 
     /**
