@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
 import de.mrapp.android.bottomsheet.BottomSheet;
@@ -43,6 +44,16 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
     }
 
     /**
+     * Initializes the preference, which allows to show a bottom sheet with custom content.
+     */
+    private void initializeShowCustomBottmSheetPreference() {
+        Preference showCustomBottomSheetPreference =
+                findPreference(getString(R.string.show_custom_bottom_sheet_preference_key));
+        showCustomBottomSheetPreference
+                .setOnPreferenceClickListener(createShowCustomBottomSheetPreferenceListener());
+    }
+
+    /**
      * Creates and returns a listener, which allows to show a bottom sheet.
      *
      * @return The listener, which has been created, as an instance of the type {@link
@@ -54,6 +65,27 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
             @Override
             public boolean onPreferenceClick(final Preference preference) {
                 BottomSheet.Builder builder = createBottomSheetBuilder();
+                addItems(builder);
+                builder.show();
+                return true;
+            }
+
+        };
+    }
+
+    /**
+     * Creates and returns a listener, which allows to show a bottom sheet with custom content.
+     *
+     * @return The listener, which has been created, as an instance of the type {@link
+     * OnPreferenceClickListener}
+     */
+    private OnPreferenceClickListener createShowCustomBottomSheetPreferenceListener() {
+        return new OnPreferenceClickListener() {
+
+            @Override
+            public boolean onPreferenceClick(final Preference preference) {
+                BottomSheet.Builder builder = createBottomSheetBuilder();
+                builder.setView(R.layout.custom_view);
                 builder.show();
                 return true;
             }
@@ -81,6 +113,18 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
                     ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_dialog_alert));
         }
 
+        return builder;
+    }
+
+    /**
+     * Adds items, depending on the app's settings, to a builder, which allows to create a bottom
+     * sheet.
+     *
+     * @param builder
+     *         The builder, which allows to create the bottom sheet, as an instance of the class
+     *         {@link BottomSheet.Builder}
+     */
+    private void addItems(@NonNull final BottomSheet.Builder builder) {
         int dividerCount = getDividerCount();
         boolean showDividerTitle = shouldDividerTitleBeShown();
         int itemCount = getItemCount();
@@ -108,8 +152,6 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
                 index++;
             }
         }
-
-        return builder;
     }
 
     /**
@@ -255,6 +297,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
         initializeShowBottomSheetPreference();
+        initializeShowCustomBottmSheetPreference();
     }
 
 }
