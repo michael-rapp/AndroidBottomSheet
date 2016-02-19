@@ -19,23 +19,19 @@ not, see <http://www.gnu.org/licenses/>.
     <string name="show_bottom_sheet_preference_category_title">Show example bottom sheet</string>
     <string name="show_bottom_sheet_preference_key">show_bottom_sheet_preference_key</string>
     <string name="show_bottom_sheet_preference_title">Show example bottom sheet</string>
-
     <string name="bottom_sheet_style_preference_category_title">Style</string>
     <string name="bottom_sheet_style_preference_key">style_preference_key</string>
     <string name="bottom_sheet_style_preference_title">Style</string>
     <string name="bottom_sheet_style_preference_default_value">list</string>
-
     <string name="bottom_sheet_title_preference_category_title">Title</string>
     <string name="show_bottom_sheet_title_preference_key">show_bottom_sheet_title_preference_key</string>
     <string name="show_bottom_sheet_title_preference_title">Show bottom sheet title</string>
     <string name="bottom_sheet_title_preference_key">bottom_sheet_title_preference_key</string>
     <string name="bottom_sheet_title_preference_title">Bottom sheet title</string>
     <string name="bottom_sheet_title_preference_default_value">Title</string>
-
     <string name="bottom_sheet_icon_preference_category_title">Icon</string>
     <string name="show_bottom_sheet_icon_preference_key">show_bottom_sheet_icon_preference_key</string>
     <string name="show_bottom_sheet_icon_preference_title">Show bottom sheet icon</string>
-
     <string name="bottom_sheet_items_preference_category_title">Items &amp; Dividers</string>
     <string name="divider_count_preference_key">divider_count_key</string>
     <string name="divider_count_preference_title">Number of dividers</string>
@@ -45,9 +41,10 @@ not, see <http://www.gnu.org/licenses/>.
     <string name="item_count_preference_key">item_count_preference_key</string>
     <string name="item_count_preference_title">Number of items per divider</string>
     <string name="item_count_preference_default_value">5</string>
+    <string name="show_item_icons_preference_key">show_item_icons_preference_key</string>
+    <string name="show_item_icons_preference_title">Show icons next to items</string>
     <string name="disable_items_preference_key">disable_items_preference_key</string>
     <string name="disable_items_preference_title">Disable items</string>
-
     <string name="theme_preference_category_title">Theme</string>
     <string name="theme_preference_key">theme_preference_key</string>
     <string name="theme_preference_title">Theme</string>

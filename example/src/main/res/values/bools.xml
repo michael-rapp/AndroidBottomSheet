@@ -19,6 +19,7 @@ not, see <http://www.gnu.org/licenses/>.
     <bool name="show_bottom_sheet_title_preference_default_value">true</bool>
     <bool name="show_bottom_sheet_icon_preference_default_value">false</bool>
     <bool name="show_divider_title_preference_default_value">false</bool>
+    <bool name="show_item_icons_preference_default_value">true</bool>
     <bool name="disable_items_preference_default_value">false</bool>
 
 </resources>

@@ -71,6 +71,11 @@ not, see <http://www.gnu.org/licenses/>.
             android:title="@string/item_count_preference_title"/>
 
         <CheckBoxPreference
+            android:defaultValue="@bool/show_item_icons_preference_default_value"
+            android:key="@string/show_item_icons_preference_key"
+            android:title="@string/show_item_icons_preference_title"/>
+
+        <CheckBoxPreference
             android:defaultValue="@bool/disable_items_preference_default_value"
             android:key="@string/disable_items_preference_key"
             android:title="@string/disable_items_preference_title"/>
