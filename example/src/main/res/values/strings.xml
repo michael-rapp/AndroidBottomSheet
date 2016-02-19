@@ -72,15 +72,15 @@ not, see <http://www.gnu.org/licenses/>.
     </string-array>
 
     <string-array name="divider_count_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
+        <item>No dividers</item>
+        <item>1 Divider</item>
+        <item>2 Divider</item>
     </string-array>
 
     <string-array name="item_count_entries">
-        <item>1</item>
-        <item>3</item>
-        <item>5</item>
+        <item>1 Items</item>
+        <item>3 Items</item>
+        <item>5 Items</item>
     </string-array>
 
     <string-array name="item_count_values">
