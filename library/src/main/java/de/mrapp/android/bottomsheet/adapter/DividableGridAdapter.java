@@ -40,9 +40,11 @@ import de.mrapp.android.bottomsheet.model.AbstractItem;
 import de.mrapp.android.bottomsheet.model.Divider;
 import de.mrapp.android.bottomsheet.model.Item;
 import de.mrapp.android.util.DisplayUtil.DeviceType;
+import de.mrapp.android.util.DisplayUtil.Orientation;
 
 import static de.mrapp.android.util.Condition.ensureNotNull;
 import static de.mrapp.android.util.DisplayUtil.getDeviceType;
+import static de.mrapp.android.util.DisplayUtil.getOrientation;
 
 /**
  * An adapter, which manages the items of a {@link BottomSheet}. It allows to show the items in a
@@ -370,7 +372,8 @@ public class DividableGridAdapter extends BaseAdapter {
      *         The width, which should be set, as an {@link Integer} value
      */
     public final void setWidth(final int width) {
-        if (style == Style.LIST_COLUMNS && getDeviceType(context) == DeviceType.TABLET) {
+        if (style == Style.LIST_COLUMNS && (getDeviceType(context) == DeviceType.TABLET ||
+                getOrientation(context) == Orientation.LANDSCAPE)) {
             columnCount = 2;
         } else if (style == Style.GRID) {
             int padding = context.getResources()

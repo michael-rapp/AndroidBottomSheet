@@ -62,11 +62,13 @@ import de.mrapp.android.bottomsheet.model.Item;
 import de.mrapp.android.bottomsheet.view.DividableGridView;
 import de.mrapp.android.bottomsheet.view.DraggableView;
 import de.mrapp.android.util.DisplayUtil.DeviceType;
+import de.mrapp.android.util.DisplayUtil.Orientation;
 
 import static de.mrapp.android.util.Condition.ensureAtLeast;
 import static de.mrapp.android.util.Condition.ensureAtMaximum;
 import static de.mrapp.android.util.Condition.ensureNotNull;
 import static de.mrapp.android.util.DisplayUtil.getDeviceType;
+import static de.mrapp.android.util.DisplayUtil.getOrientation;
 
 /**
  * A bottom sheet, which is designed according to the Android 5's Material Design guidelines even on
@@ -471,7 +473,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
                             .getDimensionPixelSize(R.dimen.bottom_sheet_list_padding_bottom);
                     gridView.setPadding(0, 0, 0, paddingBottom);
                     gridView.setNumColumns(style == Style.LIST_COLUMNS &&
-                            getDeviceType(getContext()) == DeviceType.TABLET ? 2 : 1);
+                            (getDeviceType(getContext()) == DeviceType.TABLET ||
+                                    getOrientation(getContext()) == Orientation.LANDSCAPE) ? 2 : 1);
                 }
             }
 
@@ -1115,8 +1118,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         LIST,
 
         /**
-         * If the bottom sheet's items should be shown as a two-columned list on tablet devices. On
-         * phones this is similar to the style <code>LIST</code>.
+         * If the bottom sheet's items should be shown as a two-columned list on tablet devices and
+         * in landscape mode.
          */
         LIST_COLUMNS,
 
