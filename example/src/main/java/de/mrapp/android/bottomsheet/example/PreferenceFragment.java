@@ -168,9 +168,18 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
 
             for (int j = 0; j < itemCount; j++) {
                 String title = getString(R.string.item_title, i * itemCount + j + 1);
-                Drawable icon = showIcon ? ContextCompat.getDrawable(getActivity(),
-                        getStyle() == Style.GRID ? R.drawable.grid_item : R.drawable.list_item) :
-                        null;
+                Drawable icon;
+
+                if (isDarkThemeSet()) {
+                    icon = showIcon ? ContextCompat.getDrawable(getActivity(),
+                            getStyle() == Style.GRID ? R.drawable.grid_item_dark :
+                                    R.drawable.list_item_dark) : null;
+                } else {
+                    icon = showIcon ? ContextCompat.getDrawable(getActivity(),
+                            getStyle() == Style.GRID ? R.drawable.grid_item :
+                                    R.drawable.list_item) : null;
+                }
+
                 builder.addItem(title, icon);
 
                 if (disableItems) {
