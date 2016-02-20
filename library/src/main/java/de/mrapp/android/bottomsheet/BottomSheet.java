@@ -49,6 +49,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -125,6 +126,12 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * created by the builder, has been clicked.
          */
         private OnItemClickListener itemClickListener;
+
+        /**
+         * The listener, which should be notified, when an item of the bottom sheet, which is
+         * created by the builder, has been long-clicked.
+         */
+        private OnItemLongClickListener itemLongClickListener;
 
         /**
          * The listener, which should be notified, when the bottom sheet, which is created by the
@@ -569,6 +576,22 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          */
         public final Builder setOnItemClickListener(@Nullable final OnItemClickListener listener) {
             this.itemClickListener = listener;
+            return this;
+        }
+
+        /**
+         * Sets the listener, which should be notified, when an item of the bottom sheet has been
+         * long-clicked.
+         *
+         * @param listener
+         *         The listener, which should be set, as an instance of the type {@link
+         *         OnItemLongClickListener} or null, if no listener should be notified
+         * @return The builder, the method has been called upon, as an instance of the class {@link
+         * Builder}
+         */
+        public final Builder setOnItemLongClickListener(
+                @Nullable final OnItemLongClickListener listener) {
+            this.itemLongClickListener = listener;
             return this;
         }
 
@@ -1078,6 +1101,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             layoutParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
             bottomSheet.setContentView(root, layoutParams);
             bottomSheet.setOnItemClickListener(itemClickListener);
+            bottomSheet.setOnItemLongClickListener(itemLongClickListener);
             bottomSheet.setOnMaximizeListener(maximizeListener);
             bottomSheet.setOnCancelListener(cancelListener);
             bottomSheet.setOnDismissListener(dismissListener);
@@ -1210,6 +1234,11 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * The listener, which is notified, when an item of the bottom sheet has been clicked.
      */
     private OnItemClickListener itemClickListener;
+
+    /**
+     * The listener, which is notified, when an item of the bottom sheet has been long-clicked.
+     */
+    private OnItemLongClickListener itemLongClickListener;
 
     /**
      * The listener, which is notified, when the bottom sheet is maximized.
@@ -1389,6 +1418,43 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     }
 
     /**
+     * Creates and returns a listener, which allows to observe when the items of a bottom sheet have
+     * been long-clicked.
+     *
+     * @return The listener, which has been created, as an instance of the type {qlink
+     * OnItemLongClickListener}
+     */
+    private OnItemLongClickListener createItemLongClickListener() {
+        return new OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(final AdapterView<?> parent, final View view,
+                                           final int position, final long id) {
+
+                if (!rootView.isDragging() && !rootView.isAnimationRunning() &&
+                        itemLongClickListener != null) {
+                    int index = position;
+
+                    if (adapter.containsDividers()) {
+                        for (int i = position; i >= 0; i--) {
+                            if (adapter.getItem(i) == null ||
+                                    (adapter.getItem(i) instanceof Divider &&
+                                            i % adapter.getColumnCount() > 0)) {
+                                index--;
+                            }
+                        }
+                    }
+
+                    return itemLongClickListener.onItemLongClick(parent, view, index, id);
+                }
+
+                return false;
+            }
+
+        };
+    }
+
+    /**
      * Creates and returns a listener, which allows to start an app, when an item of the bottom
      * sheet has been clicked.
      *
@@ -1506,6 +1572,18 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      */
     public final void setOnItemClickListener(@Nullable final OnItemClickListener listener) {
         this.itemClickListener = listener;
+    }
+
+    /**
+     * Sets the listener, which should be notified, when an item of the bottom sheet has been
+     * long-clicked.
+     *
+     * @param listener
+     *         The listener, which should be set, as an instance of the type {@link
+     *         OnItemLongClickListener} or null, if no listener should be notified
+     */
+    public final void setOnItemLongClickListener(@Nullable final OnItemLongClickListener listener) {
+        this.itemLongClickListener = listener;
     }
 
     /**
@@ -2355,6 +2433,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
 
         if (gridView != null) {
             gridView.setOnItemClickListener(createItemClickListener());
+            gridView.setOnItemLongClickListener(createItemLongClickListener());
             gridView.setAdapter(adapter);
             gridView.adaptHeightToChildren();
         }
