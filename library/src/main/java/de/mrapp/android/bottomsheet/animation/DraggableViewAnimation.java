@@ -37,12 +37,12 @@ public class DraggableViewAnimation extends Animation {
     private final DraggableView view;
 
     /**
-     * The initial position of the animated view's top edge.
+     * The initial top margin of the animated view.
      */
-    private final int startTop;
+    private final int initialMargin;
 
     /**
-     * The distance, the view should be vertically resized by in pixels.
+     * The distance, the view should be vertically moved by in pixels.
      */
     private final float diff;
 
@@ -53,7 +53,7 @@ public class DraggableViewAnimation extends Animation {
      *         The view, which should be animated, as an instance of the class {@link
      *         DraggableView}. The view may not be null
      * @param diff
-     *         The distance, the view should be vertically resized by, as a {@link Float} value. If
+     *         The distance, the view should be vertically moved by, as a {@link Float} value. If
      *         the value is negative, the view's height will be increased, if it is positive, the
      *         view's height will be increased
      * @param duration
@@ -68,7 +68,7 @@ public class DraggableViewAnimation extends Animation {
         ensureNotNull(view, "The view may not be null");
         ensureNotNull(listener, "The animation listener may not be null");
         this.view = view;
-        this.startTop = view.getTop();
+        this.initialMargin = ((FrameLayout.LayoutParams) view.getLayoutParams()).topMargin;
         this.diff = diff;
         setDuration(duration);
         setAnimationListener(listener);
@@ -79,7 +79,7 @@ public class DraggableViewAnimation extends Animation {
                                              final Transformation transformation) {
         super.applyTransformation(interpolatedTime, transformation);
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
-        layoutParams.topMargin = Math.round(startTop + interpolatedTime * diff);
+        layoutParams.topMargin = Math.round(initialMargin + interpolatedTime * diff);
         view.setLayoutParams(layoutParams);
     }
 
