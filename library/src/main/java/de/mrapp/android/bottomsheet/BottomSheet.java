@@ -2396,6 +2396,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         this.canceledOnTouchOutside = canceledOnTouchOutside;
     }
 
+    @TargetApi(Build.VERSION_CODES.FROYO)
     @Override
     public final void setOnShowListener(@Nullable final OnShowListener listener) {
         this.onShowListener = listener;
