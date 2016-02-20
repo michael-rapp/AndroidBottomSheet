@@ -44,7 +44,7 @@ public class DraggableViewAnimation extends Animation {
     /**
      * The distance, the view should be vertically moved by in pixels.
      */
-    private final float diff;
+    private final int diff;
 
     /**
      * Creates a new animation, which allows to show or hide a {@link DraggableView}.
@@ -53,7 +53,7 @@ public class DraggableViewAnimation extends Animation {
      *         The view, which should be animated, as an instance of the class {@link
      *         DraggableView}. The view may not be null
      * @param diff
-     *         The distance, the view should be vertically moved by, as a {@link Float} value. If
+     *         The distance, the view should be vertically moved by, as an {@link Integer} value. If
      *         the value is negative, the view's height will be increased, if it is positive, the
      *         view's height will be increased
      * @param duration
@@ -63,7 +63,7 @@ public class DraggableViewAnimation extends Animation {
      *         The listener, which should be notified about the animation's progress, as an instance
      *         of the type {@link AnimationListener}. The listener may not be null
      */
-    public DraggableViewAnimation(@NonNull final DraggableView view, final float diff,
+    public DraggableViewAnimation(@NonNull final DraggableView view, final int diff,
                                   final long duration, @NonNull final AnimationListener listener) {
         ensureNotNull(view, "The view may not be null");
         ensureNotNull(listener, "The animation listener may not be null");

@@ -249,14 +249,14 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
      * Animates the view to become show.
      *
      * @param diff
-     *         The distance the view has to be vertically resized by, as a {@link Float} value
+     *         The distance the view has to be vertically moved by, as an {@link Integer} value
      * @param animationSpeed
      *         The speed of the animation in pixels per milliseconds as a {@link Float} value
      * @param interpolator
      *         The interpolator, which should be used by the animation, as an instance of the type
      *         {@link Interpolator}. The interpolator may not be null
      */
-    private void animateShowView(final float diff, final float animationSpeed,
+    private void animateShowView(final int diff, final float animationSpeed,
                                  @NonNull final Interpolator interpolator) {
         animateView(diff, animationSpeed, createAnimationListener(true, false), interpolator);
     }
@@ -265,7 +265,7 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
      * Animates the view to become hidden.
      *
      * @param diff
-     *         The distance the view has to be vertically resized by, as a {@link Float} value
+     *         The distance the view has to be vertically moved by, as an {@link Integer} value
      * @param animationSpeed
      *         The speed of the animation in pixels per milliseconds as a {@link Float} value
      * @param interpolator
@@ -274,7 +274,7 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
      * @param cancel
      *         True, if the view should be canceled, false otherwise
      */
-    private void animateHideView(final float diff, final float animationSpeed,
+    private void animateHideView(final int diff, final float animationSpeed,
                                  @NonNull final Interpolator interpolator, final boolean cancel) {
         animateView(diff, animationSpeed, createAnimationListener(false, cancel), interpolator);
     }
@@ -283,7 +283,7 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
      * Animates the view to become shown or hidden.
      *
      * @param diff
-     *         The distance the view has to be vertically resized by, as a {@link Float} value
+     *         The distance the view has to be vertically moved by, as an {@link Integer} value
      * @param animationSpeed
      *         The speed of the animation in pixels per millisecond as a {@link Float} value
      * @param animationListener
@@ -293,7 +293,7 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
      *         The interpolator, which should be used by the animation, as an instance of the type
      *         {@link Interpolator}. The interpolator may not be null
      */
-    private void animateView(final float diff, final float animationSpeed,
+    private void animateView(final int diff, final float animationSpeed,
                              @NonNull final AnimationListener animationListener,
                              @NonNull final Interpolator interpolator) {
         if (!isDragging() && !isAnimationRunning()) {
@@ -310,12 +310,12 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
      * on a specific distance and speed.
      *
      * @param diff
-     *         The distance, the view has to be vertically resized by, as a {@link Float} value
+     *         The distance, the view has to be vertically moved by, as an {@link Integer} value
      * @param animationSpeed
      *         The speed of the animation in pixels per millisecond as a {@link Float} value
      * @return The duration of the animation in milliseconds as an {@link Integer} value
      */
-    private int calculateAnimationDuration(final float diff, final float animationSpeed) {
+    private int calculateAnimationDuration(final int diff, final float animationSpeed) {
         return Math.round(Math.abs(diff) / animationSpeed);
     }
 
