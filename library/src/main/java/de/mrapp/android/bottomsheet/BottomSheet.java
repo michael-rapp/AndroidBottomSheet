@@ -14,6 +14,7 @@
  */
 package de.mrapp.android.bottomsheet;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ComponentName;
@@ -26,6 +27,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
@@ -43,6 +45,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
@@ -1057,7 +1061,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Creates a bottom sheet with the arguments, which have been supplied to the builder.
          * Calling this method does not display the bottom sheet.
          *
-         * @return The bottom sheet, which has been create as an instance of the class {@link
+         * @return The bottom sheet, which has been created as an instance of the class {@link
          * BottomSheet}
          */
         public final BottomSheet create() {
@@ -1096,12 +1100,26 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Creates a bottom sheet with the arguments, which have been supplied to the builder and
          * immediately displays it.
          *
-         * @return The bottom sheet, which has been shown, as an instance of the class {@link
+         * @return The bottom sheet, which has been created, as an instance of the class {@link
          * BottomSheet}
          */
         public final BottomSheet show() {
             BottomSheet bottomSheet = create();
             bottomSheet.show();
+            return bottomSheet;
+        }
+
+        /**
+         * Creates a bottom sheet with the arguments, which have been supplied to the builder and
+         * immediately maximizes it.
+         *
+         * @return The bottom sheet, which has been created, as an instance of the class {@link
+         * BottomSheet}
+         */
+        @TargetApi(Build.VERSION_CODES.FROYO)
+        public final BottomSheet maximize() {
+            BottomSheet bottomSheet = create();
+            bottomSheet.maximize();
             return bottomSheet;
         }
 
@@ -1178,6 +1196,17 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     private Style style;
 
     /**
+     * True, if the bottom sheet should be maximized immediatiely after it has been shown, false
+     * otherwise.
+     */
+    private boolean maximize;
+
+    /**
+     * The listener, which is notified, when the bottom sheet has been shown.
+     */
+    private OnShowListener onShowListener;
+
+    /**
      * The listener, which is notified, when an item of the bottom sheet has been clicked.
      */
     private OnItemClickListener itemClickListener;
@@ -1231,6 +1260,11 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
                             @NonNull final Style style, final int width) {
         this.style = style;
         this.width = width;
+        this.maximize = false;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+            super.setOnShowListener(createOnShowListener());
+        }
 
         if (items != null) {
             adapter = new DividableGridAdapter(getContext(), style, width);
@@ -1253,6 +1287,32 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
         return layoutParams;
+    }
+
+    /**
+     * Creates and returns a listener, which allows to immediately maximize the bottom sheet after
+     * it has been shown.
+     *
+     * @return The listener, which has been created, as an instance of the type {@link
+     * OnShowListener}
+     */
+    @TargetApi(Build.VERSION_CODES.FROYO)
+    private OnShowListener createOnShowListener() {
+        return new OnShowListener() {
+
+            @Override
+            public void onShow(final DialogInterface dialog) {
+                if (onShowListener != null) {
+                    onShowListener.onShow(dialog);
+                }
+
+                if (maximize) {
+                    maximize = false;
+                    rootView.maximize(new DecelerateInterpolator());
+                }
+            }
+
+        };
     }
 
     /**
@@ -2183,6 +2243,21 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     }
 
     /**
+     * Maximizes the bottom sheet.
+     */
+    @TargetApi(Build.VERSION_CODES.FROYO)
+    public final void maximize() {
+        if (!isMaximized()) {
+            if (!isShowing()) {
+                maximize = true;
+                show();
+            } else {
+                rootView.maximize(new AccelerateDecelerateInterpolator());
+            }
+        }
+    }
+
+    /**
      * Returns the style, which is used to display the bottom sheet's items.
      *
      * @return style The style, which is used to display the bottom sheet's items, as a value of the
@@ -2241,6 +2316,11 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     public final void setCanceledOnTouchOutside(final boolean canceledOnTouchOutside) {
         super.setCanceledOnTouchOutside(canceledOnTouchOutside);
         this.canceledOnTouchOutside = canceledOnTouchOutside;
+    }
+
+    @Override
+    public final void setOnShowListener(@Nullable final OnShowListener listener) {
+        this.onShowListener = listener;
     }
 
     @Override

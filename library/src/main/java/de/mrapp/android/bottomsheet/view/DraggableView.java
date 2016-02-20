@@ -528,6 +528,15 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
         return maximized;
     }
 
+    /**
+     * Maximizes the view.
+     */
+    public final void maximize(final Interpolator interpolator) {
+        if (!isMaximized()) {
+            animateShowView(-(getTopMargin() - minMargin), animationSpeed, interpolator);
+        }
+    }
+
     @Override
     public final boolean dispatchTouchEvent(final MotionEvent event) {
         boolean handled = false;
