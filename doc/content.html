@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+    <head>
+        <title>AndroidBottomSheet &#150; Documentation: Content</title>
+        <link rel=stylesheet type=text/css href=style.css />
+        <link rel="icon" type="image/png" href="images/favicon.png" />
+    </head>
+    
+    <body>
+        <div class="content">
+            <div class="header">
+                <h1>AndroidBottomSheet &#150; Documentation</h1>
+                <h2>Documentation of the Android-library "AndroidBottomSheet".</h2>
+            </div>
+
+            <div class="navigation">
+                <div class="navigation-item"><a href="index.html">GENERAL</a></div>
+                <div class="navigation-item-selected"><a href="content.html">CONTENT</a></div>
+                <div class="navigation-item"><a href="examples.html">EXAMPLES</a></div>
+            </div>
+
+            <div class="text">
+                <h3>Content</h3>
+        
+                <h4>Table of contents</h4>
+
+                <ol class="table-of-contents">
+                    <li><a href="content.html#implementation-details">Implementation details</a></li>
+                    <li><a href="content.html#specifying-title-and-icon">Specifying a title and icon</a></li>
+                    <li><a href="content.html#adding-items">Adding items</a></li>
+		    <li><a href="content.html#using-different-styles">Using different styles</a></li>
+                    <li><a href="content.html#showing-suitable-applications-for-handling-an-intent">Showing suitable applications for handling an Intent</a></li>
+                    <li><a href="content.html#using-custom-views">Using custom views</a></li>
+                    <li><a href="content.html#creating-and-showing-the-bottom-sheet">Creating and showing the bottom sheet</a></li>
+                </ol>
+
+                <h4><a name="implementation-details">1 Implementation details</a></h4>
+
+                <p>The bottom sheets, which can be created using the library, are implemented in the class <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.html" target="_blank" class="code">BottomSheet</a>. In order to create instances of this class, the builder <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.Builder.html" target="_blank" class="code">BottomSheet.Builder</a> has to be used. It allows to specify the properties of the bottom sheet, such as its title, icon and items, and allows to create and show it afterwards. The class <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.html" target="_blank" class="code">BottomSheet</a> is extended from the Android SDK's class <a href="http://developer.android.com/reference/android/app/Dialog.html" target="_blank" class="code">Dialog</a> and therefore offers the same methods as its base class. This includes methods, which allow to register listeners to be notified, when a bottom sheet has been shown, canceled or dismissed. Additionaly, the classes' <tt>setOnMaximizeListener</tt>-method allows to register a listener, which implements the interface <a href="javadoc/de/mrapp/android/bottomsheet/OnMaximizeListener.html" target="_blank" class="code">OnMaximizeListener</a>, in order to be notified, when the bottom sheet has been maximized by the user.</p>
+
+                <h4><a name="specifying-title-and-icon">2 Specifying a title and icon</a></h4>
+
+                <p>In order to create a bottom sheet, an instance of the class <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.Builder.html" target="_blank" class="code">BottomSheet.Builder</a> has to be created at first. The builder therefore provides the constructor <tt>Builder(Context)</tt>, which expects an instance of the class <a href="http://developer.android.com/reference/android/content/Context.html" target="_blank" class="code">Context</a> as a parameter.</p>
+
+                <p>To specify the title of the bottom sheet, which should be created by the builder, the following two methods can be used. One of them allows to pass the title as an instance of the class <a href="http://developer.android.com/reference/java/lang/CharSequence.html" target="_blank" class="code">CharSequence</a>, the other one expects the resource ID of a string resource as a parameter.</p>
+
+                <p class="center"><tt>setTitle(CharSequence):Builder</tt></p>
+                <p class="center"><tt>setTitle(int):Builder</tt></p>
+
+                <p>To show an icon to the left of the bottom sheet's title, the following three methods can be used. The icon is also shown if no title is specified.</p>
+
+                <p class="center"><tt>setIcon(Drawable):Builder</tt></p>
+                <p class="center"><tt>setIcon(int):Builder</tt></p>
+                <p class="center"><tt>setIconAttribute(int):Builder</tt></p>
+
+                <p>The <tt>setIcon</tt>-methods shown above allow to specify the icon by either passing an instance of the class <a href="http://developer.android.com/reference/android/graphics/drawable/Drawable.html" target="_blank" class="code">Drawable</a> or the resource ID of a drawable resource as a parameter. The <tt>setIconAttribute</tt>-method allows to pass an attribute of the theme, which is used by the bottom sheet, and which specifies a drawable. An example of such an attribute is <tt>android.R.attr.alertDialogIcon</tt>. For further information on themes, see the respective section below.</p>
+
+        <h4><a name="adding-items">3 Adding items</a></h4>
+
+        <p>A bottom sheet is intented to display different actions, which can be clicked by the user, as items. The builder <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.Builder.html" target="_blank" class="code">BottomSheet.Builder</a> offers various methods, which allow to add such items to a bottom sheet. All items should consist of an icon and a title. Although specifying icons is optional, it is recommended by the Material design guidelines. The following methods are provided by the class <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.Builder.html" target="_blank" class="code">BottomSheet.Builder</a> in order to add items to a bottom sheet. It is either possible to specify the title and icon as instances of the classes <a href="http://developer.android.com/reference/java/lang/CharSequence.html" target="_blank" class="code">CharSequence</a> and <a href="http://developer.android.com/reference/android/graphics/drawable/Drawable.html" target="_blank" class="code">Drawable</a>, or to pass resource IDs, which correspond to string and drawable resources, to the methods instead.</p>
+
+                <p class="center"><tt>addItem(CharSequence):Builder</tt></p>
+                <p class="center"><tt>addItem(CharSequence, Drawable):Builder</tt></p>
+                <p class="center"><tt>addItem(int):Builder</tt></p>
+                <p class="center"><tt>addItem(int, int):Builder</tt></p>
+
+        <p>Besides adding items to a bottom sheet, it is also possible to create visually separated sections of items by adding dividers. Such dividers are horizontal lines, which optionally contain a title. In order to add dividers to a bottom sheet, the following methods of the class <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.Builder.html" target="_blank" class="code">BottomSheet.Builder</a> can be used. A divider's title can either be specified as an instance of the class <a href="http://developer.android.com/reference/java/lang/CharSequence.html" target="_blank" class="code">CharSequence</a>, or by passing the resource ID of a string resource to the respective method.</p>
+
+                <p class="center"><tt>addDivider():Builder</tt></p>
+                <p class="center"><tt>addDivider(CharSequence):Builder</tt></p>
+   
+        <p>In order to observe, when an item has been clicked by the user, a listener, which implements the interface <a href="http://developer.android.com/reference/android/widget/AdapterView.OnItemClickListener.html" target="_blank" class="code">OnItemClickListener</a>, can be set by using the <tt>setOnItemClickListener</tt>-method of a <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.Builder.html" target="_blank" class="code">BottomSheet.Builder</a>. When an item has been clicked by the user, the bottom sheet becomes hidden and the listener's <tt>onItemClick</tt>-method is called. It is also possible to be notified, when an item has been long-clicked by pressing an item for a short period of time, by setting a listener, which implements the interface <a href="http://developer.android.com/reference/android/widget/AdapterView.OnItemLongClickListener.html" target="_blank" class="code">OnItemLongClickListener</a>. In order to register such a listener, the <tt>setOnItemLongClickListener</tt>-method has to be used.</p>
+
+        <h4><a name="using-different-styles">4 Using different styles</a></h4>
+
+        <p>The library provides three predefined styles, which can be used in order to display a bottom sheet's items. They can be arranged as a list, which is the default style, as a two-columned list or as a grid. These different styles are represented by the values of the enum <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.Style.html" target="_blank" class="code">BottomSheet.Style</a>. In order to apply a style, the respective enum value has to be passed to the <tt>setStyle</tt>-method of a <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.Builder.html" target="_blank" class="code">BottomSheet.Builder</a>. When displaying the items as a list or two-columned list, the items' icons should have a size of 24dp. When using a grid instead, the icons' size should be 48dp.</p>
+
+       <p>Furthermore, it is possible to specify the width of a bottom sheet by using the <tt>setWidth</tt>-method. On smartphones the bottom sheet always takes up the whole available horizontal space, when in portrait mode. Because of the limited space, even when displaying the bottom sheet's items as a two-columned list, they are arranged using a single column on smartphones in portrait mode. The following image shows the appearance of a bottom sheet, when its items are arranged as a two-columned list, respectively a grid:</p>
+
+                 <p><center><a href="images/example-columns.png" target="_blank".><img src="images/example-columns.png" alt="Bottom sheet displaying its items as a two-columned list"></center></a></p>
+
+                 <p><center><a href="images/example-grid.png" target="_blank".><img src="images/example-grid.png" alt="Bottom sheet displaying its items as a grid"></center></a></p>
+
+        <h4><a name="showing-suitable-applications-for-handling-an-intent">5 Showing suitable applications for handling an Intent</a></h4>
+
+                <p>Instead of manually adding items to a bottom sheet, it is also possible to show the applications, which are suited to handle a specific <a href="http://developer.android.com/reference/android/content/Intent.html" target="_blank" class="code">Intent</a>. This causes the applications' titles to be shown together with their icons as the items of the bottom sheet. When one of the items is clicked by the user, the application is launched by passing the given <a href="http://developer.android.com/reference/android/content/Intent.html" target="_blank" class="code">Intent</a> to it. In order to specify an <a href="http://developer.android.com/reference/android/content/Intent.html" target="_blank" class="code">Intent</a>, the method <tt>setIntent(Activity, Intent):Builder</tt> of the class <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.Builder.html" target="_blank" class="code">BottomSheet.Builder</a> has to be used. If items have already been added, they will be removed by calling this method. The following screenshots illustrate the appearance of a bottom view, which displays possible receivers of an <a href="http://developer.android.com/reference/android/content/Intent.html" target="_blank" class="code">Intent</a>, when either displaying the items as a list or as a grid:</p>
+
+                 <p><center><a href="images/example-intent.png" target="_blank".><img src="images/example-intent.png" alt="Bottom sheet displaying possible receivers of an Intent"></center></a></p>
+
+		<h4><a name="modifying-the-appearance">6 Modifying the bottom sheet's appearance</a></h4>
+
+		<p>The class <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.Builder.html" target="_blank" class="code">BottomSheet.Builder</a> provides various methods, which can be used to customize the appearance of bottom sheets. The following table gives an overview of these methods and shows the default values, which are used when not overridden.</p>
+
+		<table>
+                    <tr>
+                        <th>Setter methods</th>
+                        <th>Explaination</th>
+                        <th>Default value</th>
+			<th>Restrictions</th>
+                    </tr>
+                    <tr>
+                        <td><tt>setTitleColor(int):Builder</tt></td>
+                        <td>Sets the color of the bottom sheet's title.</td>
+                        <td><center><tt>android.R.textColorSecondary</center></td>
+			<td><center>Must be a valid color, not a resource ID.</center></td>
+                    </tr>
+                    <tr>
+                        <td><tt>setItemColor(int):Builder</tt></td>
+                        <td>Sets the color of the bottom sheet's items.</td>
+                        <td><center><tt>android.R.textColorPrimary</tt></center></td>
+			<td><center>Must be a valid color, not a resource ID.</center></td>
+                    </tr>
+                    <tr>
+                        <td><tt>setBackground(Drawable):Builder</br>setBackground(int):Builder</br>setBackgroundColor(int):Builder</tt></td>
+                        <td>Sets the bottom sheet's background.</td>
+                        <td><center><tt>android.R.background</tt></center></td>
+			<td><center>When specified via a resource ID, the resource ID must correspond to a valid drawable resource.</center></td>
+                    </tr>
+                    <tr>
+                        <td><tt>setDividerColor(int):Builder</tt></td>
+                        <td>Sets the color of the bottom sheet's dividers.</td>
+                        <td><center><tt>R.color.divider_light</tt> or <tt>R.color.divider_dark</tt> depending on the theme</center></td>
+			<td><center>Must be a valid color, not a resource ID.</center></td>
+                    </tr>
+                    <tr>
+                        <td><tt>setDimAmount(float):Builder</tt></td>
+                        <td>Sets the transparency of the overlay, which is used to darken the area outside the bottom sheet.</td>
+                        <td><center><tt>0.25</tt></center></td>
+			<td><center>Must be between 0 (fully transparent) and 1 (fully opaque).</center></td>
+                    </tr>
+		</table>
+
+		<p>If a bottom sheet, which is created by the class <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.Builder.html" target="_blank" class="code">BottomSheet.Builder</a>, should use a dark theme, instead of the default light one, the theme's resource ID can be passed to the builder's constructor. By default, the theme <tt>R.style.BottomSheet_Light</tt> is used. If the dark theme should be used, the resource ID <tt>R.style.BottomSheet</tt> has to be passed to the constructor. The screenshot below illustrates the appearance of a bottom sheet, which uses the dark theme:</p>
+
+                 <p><center><a href="images/example-dark.png" target="_blank".><img src="images/example-dark.png" alt="Bottom sheet using the dark theme"></center></a></p>
+
+        <p>Besides using the predefined themes, it is also possible to extend these themes in an app's <tt>style.xml</tt> by specifying custom theme attributes. If the light theme should be used as a starting point, the new theme's parent must be <tt>@style/BottomSheet.Light</tt>, if the dark theme should be used instead, the parent must be set to <tt>@style/BottomSheet</tt>. The following table shows all available theme attributes:</p>
+
+		<table>
+                    <tr>
+                        <th>Theme attribute</th>
+                        <th>Explaination</th>
+                        <th>Format</th>
+                    </tr>
+                    <tr>
+                        <td><tt>bottomSheetTitleColor</tt></td>
+                        <td>Specifies the color of the bottom sheet's title.</td>
+                        <td><center><tt>color</tt></center></td>
+                    </tr>
+                    <tr>
+                        <td><tt>bottomSheetItemColor</tt></td>
+                        <td>Specifies the color of the bottom sheet's items.</td>
+                        <td><center><tt>color</tt></center></td>
+                    </tr>
+                    <tr>
+                        <td><tt>bottomSheetDividerColor</tt></td>
+                        <td>Specifies the color of the bottom sheet's dividers.</td>
+                        <td><center><tt>color</tt></center></td>
+                    </tr>
+                    <tr>
+                        <td><tt>bottomSheetDimAmount</tt></td>
+                        <td>Specifies the dim amount of the bottom sheet.</td>
+                        <td><center><tt>fraction</tt></center></td>
+                    </tr>
+                    <tr>
+                        <td><tt>bottomSheetBackground</tt></td>
+                        <td>Specifies the bottom sheet's background.</td>
+                        <td><center><tt>color|reference</tt></center></td>
+                    </tr>
+		</table>
+
+                <h4><a name="using-custom-views">7 Using custom views</a></h4>
+
+                <p>If the bottom sheet, which is created by a <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.Builder.html" target="_blank" class="code">BottomSheet.Builder</a> should be used to display a custom view, the following methods can be used to replace the bottom sheet's default content.</p>
+
+                <p class="center"><tt>setCustomTitle(View):Builder</tt></p>
+                <p class="center"><tt>setView(int):Builder	</tt></p>
+                <p class="center"><tt>setView(View):Builder</tt></p>
+
+                <p>The <tt>setCustomTitle</tt>-method causes the child view, which is used to show the bottom sheet's title and icon, to be replaced by a specific custom view. If the custom view contains a <a href="http://developer.android.com/reference/android/widget/TextView.html" target="_blank" class="code">TextView</a> with the ID <tt>android.R.id.title</tt>, the bottom sheet's title will be shown by using this view. Otherwise, the bottom sheet's title will not be shown and the custom view can be used for any other purpose. When the <tt>setView</tt> methods are used to specify a custom content view by passing the view itself or the resource ID of the appropriate layout resource, the <a href="http://developer.android.com/reference/android/widget/GridView.html" target="_blank" class="code">GridView</a>, which is used to show the bottom sheet's list items, will be replaced. If the custom view contains a <a href="http://developer.android.com/reference/android/widget/GridView.html" target="_blank" class="code">GridView</a> with the ID <tt>R.id.bottom_sheet_grid_view</tt>, this view will be used to show the bottom sheet's items. Otherwise, the items can not be shown.</p>
+
+                <h4><a name="creating-and-showing-the-bottom-sheet">8 Creating and showing the bottom sheet</a></h4>
+
+                <p>Once an instance of the class <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.Builder.html" target="_blank" class="code">BottomSheet.Builder</a> has been configured by using the setter methods discussed in the previous sections of this documentation, the builder's method <tt>create():BottomSheet</tt> can be used to create the bottom sheet as an instance of the class <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.html" target="_blank" class="code">BottomSheet</a>. Such an instance can be shown by calling its <tt>show</tt>-method. A shorter way of showing the bottom sheet, which is created by a <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.Builder.html" target="_blank" class="code">BottomSheet.Builder</a>, is to call the builder's <tt>show</tt>-method. This method implicitly calls the <tt>create</tt>-method to create the bottom sheet, as well as the bottom sheet's <tt>show</tt>-method to show the bottom sheet on the screen. After a <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.html" target="_blank" class="code">BottomSheet</a> has been shown using its <tt>show</tt>-method, some of its attributes can still be changed. The class therefore provides a subset of the methods, which are also provided by the builder. Additionaly getter methods, which allow to retrieve a bottom sheet's attributes, are also provided. By default, if the content of a bottom sheet extends a specific height, it is shown in a minimized way, which causes only a few of its item to be visible. By dragging the bottom sheet, it can be expanded to display the whole content. If the a bottom sheet should be maximized by default, the <tt>maximize</tt>-method of the <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.html" target="_blank" class="code">BottomSheet</a> or <a href="javadoc/de/mrapp/android/bottomsheet/BottomSheet.Builder.html" target="_blank" class="code">BottomSheet.Builder</a> instance can be used instead of the <tt>show</tt>-method.</p>
+
+                <h4>External references:</h4>
+                <div class="reference"><a name="reference1" class="reference">[1]</a><a href="http://developer.android.com/reference/android/app/Dialog.html" target="_blank">http://developer.android.com/reference/android/app/Dialog.html</a> &#150; Class Dialog</div>
+
+                <div class="reference"><a name="reference2" class="reference">[2]</a><a href="http://developer.android.com/reference/android/content/Context.html" target="_blank">http://developer.android.com/reference/android/content/Context.html</a> &#150; Class Context</div>
+
+                <div class="reference"><a name="reference3" class="reference">[3]</a><a href="http://developer.android.com/reference/java/lang/CharSequence.html" target="_blank">http://developer.android.com/reference/java/lang/CharSequence.html</a> &#150; Class CharSequence</div>
+
+                <div class="reference"><a name="reference4" class="reference">[4]</a><a href="http://developer.android.com/reference/android/graphics/drawable/Drawable.html" target="_blank">http://developer.android.com/reference/android/graphics/drawable/Drawable.html</a> &#150; Class CharSequence</div>
+
+                <div class="reference"><a name="reference5" class="reference">[5]</a><a href="http://developer.android.com/reference/android/widget/AdapterView.OnItemClickListener.html" target="_blank">http://developer.android.com/reference/android/widget/AdapterView.OnItemClickListener.html</a> &#150; Class OnItemClickListener</div>
+
+                <div class="reference"><a name="reference6" class="reference">[6]</a><a href="http://developer.android.com/reference/android/widget/AdapterView.OnItemLongClickListener.html" target="_blank">http://developer.android.com/reference/android/widget/AdapterView.OnItemLongClickListener.html</a> &#150; Class OnItemLongClickListener</div>
+
+                <div class="reference"><a name="reference7" class="reference">[7]</a><a href="http://developer.android.com/reference/android/content/Intent.html" target="_blank">http://developer.android.com/reference/android/content/Intent.html</a> &#150; Class TextView</div>
+
+                <div class="reference"><a name="reference8" class="reference">[8]</a><a href="http://developer.android.com/reference/android/widget/TextView.html" target="_blank">http://developer.android.com/reference/android/widget/TextView.html</a> &#150; Class TextView</div>
+
+            </div>
+
+            <div class="copyright">
+                &#169; Copyright 2016, Michael Rapp. All rights reserved.
+            </div>
+        </div>
+    </body>
+</html>

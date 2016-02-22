@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+    <head>
+        <title>AndroidBottomSheet &#150; Documentation: General</title>
+        <link rel=stylesheet type=text/css href=style.css />
+        <link rel="icon" type="image/png" href="images/favicon.png" />
+    </head>
+    
+    <body>
+        <div class="content">
+            <div class="header">
+                <h1>AndroidBottomSheet &#150; Documentation</h1>
+                <h2>Documentation of the Android-library "AndroidBottomSheet".</h2>
+            </div>
+
+            <div class="navigation">
+                <div class="navigation-item-selected"><a href="index.html">GENERAL</a></div>
+                <div class="navigation-item"><a href="content.html">CONTENT</a></div>
+                <div class="navigation-item"><a href="examples.html">EXAMPLES</a></div>
+            </div>
+
+            <div class="text">
+                 <h3>General</h3>
+
+                 <h4>About</h4>
+
+                 <p>"AndroidBottomSheet" is an Android-library, which provides a bottom sheet as proposed by Android's Material design guidelines (see <a href="http://www.google.com/design/spec/components/bottom-sheets.html">here</a> for further details), which even works on pre-Lollipop devices. A bottom sheet is supposed to contain menu items, which can be clicked by the user. By default only a few items are shown, but by dragging the bottom sheet, it can be expanded to display all items. The following screenshot shows the appearance of a bottom sheet, which has been created by using the library:</p>
+
+                 <p><center><a href="images/example.png" target="_blank".><img src="images/example.png" alt="Example"></center></a></p>
+
+                 <p>The aim of this documentation is to offer an overview of the project's source code and to explain, how the interface, which is provided by the library, can be used and how the underlying implementations are supposed to work.</p>            
+
+                <p>The library provides the following features:</p>
+
+                <ul>
+                    <li>The library provides a builder, which allows to create bottom sheets by specifying a title, icon, items etc.</li>
+                    <li>A bottom sheet's items can be displayed as a list, as a two-columned list or as a grid.</li>
+                    <li>It is possible to separate a bottom sheet's items by adding dividers (with optional titles).</li>
+                    <li>The library offers a possibility to display all applications, which are suited for handling an <tt>Intent</tt>, as a bottom sheet's items</li>
+                    <li>The items of a bottom sheet can be enabled/disabled individually.</li>
+                    <li>As an alternative to displaying items, a bottom sheet's items can be be replaced with a custom view.</li>
+                    <li>The library comes with a dark theme in addition to the default light theme. Both themes can be modified by using theme attributes.</li>
+                </ul>
+
+                <h4>License Agreement</h4>
+
+                <p>This project is distributed under the GNU Lesser Public License version 3.0 (GLPLv3). For further information about this license agreement's content please refer to its full version, which is available at <a href="http://www.gnu.org/licenses/lgpl.txt">http://www.gnu.org/licenses/lgpl.txt</a>.</p>
+
+                <h4>Download</h4>
+
+                <p>The latest release of this library can be downloaded as a zip archive from the download section of the project's Github page, which is available <a href="https://github.com/michael-rapp/AndroidBottomSheet/releases">here</a>. Furthermore, the library's source code is available as a Git repository, which can be cloned using the URL <a href="https://github.com/michael-rapp/AndroidBottomSheet.git">https://github.com/michael-rapp/AndroidBottomSheet.git</a>.</p>
+
+                <p>Alternatively, the library can be added to your Android app as a Gradle dependency by adding the following to the module's <tt>build.gradle</tt> file:</p>
+
+		<div class="xml-block"><font color='black'>
+dependencies {
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;compile 'com.github.michael-rapp:android-bottom-sheet:1.0.0'
+<br/>}
+                </font></div>
+
+                <h4>Contact information</h4>
+
+                <p>For personal feedback or questions feel free to contact me via the mail address, which is mentioned on my <a href="https://github.com/michael-rapp">Github profile</a>. If you have found any bugs or want to post a feature request, please use the <a href="https://github.com/michael-rapp/AndroidMaterialDialog/issues">bugtracker</a> to report them.</p>           
+            </div>
+
+            <div class="copyright">
+                &#169; Copyright 2016, Michael Rapp. All rights reserved.
+            </div>
+        </div>
+    </body>
+</html>

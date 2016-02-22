@@ -1,0 +1,68 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+    <head>
+        <title>AndroidBottomSheet &#150; Documentation: Examples</title>
+        <link rel=stylesheet type=text/css href=style.css />
+        <link rel="icon" type="image/png" href="images/favicon.png" />
+    </head>
+    
+    <body>
+        <div class="content">
+            <div class="header">
+                <h1>AndroidBottomSheet &#150; Documentation</h1>
+                <h2>Documentation of the Android-library "AndroidBottomSheet".</h2>
+            </div>
+
+            <div class="navigation">
+                <div class="navigation-item"><a href="index.html">GENERAL</a></div>
+                <div class="navigation-item"><a href="content.html">CONTENT</a></div>
+                <div class="navigation-item-selected"><a href="examples.html">EXAMPLES</a></div>
+            </div>
+
+            <div class="text">
+                 <h3>Examples</h3>
+
+                 <p>The following example provides a quick overview on how to use the library "AndroidMaterialDialog".</p>
+
+                <h4>Creating a typical bottom sheet</h4>
+
+                <p>The code below shows how to create and show a typical bottom sheet, which contains a title as well as multiple items and dividers. The <tt>this</tt> parameter, which is passed to the builder's constructor in the example below, must be a <tt>Context</tt>, e.g. an <tt>Activity</tt>. By calling the builder's <tt>setOnItemClickListener</tt>-method, a listener can be registered to be notified, when one of the bottom sheet's items has been clicked.</p>
+
+                <div class="code-block">BottomSheet.Builder builder = <strong><font color='#7f0055'>new</font></strong> BottomSheet.Builder(<strong><font color='#7f0055'>this</font></strong>);
+<br/>builder.setTitle(R.string.bottom_sheet_title);
+<br/>builder.addItem(R.string.item1_title, R.drawable.item1_icon);
+<br/>builder.addItem(R.string.item2_title, R.drawable.item2_icon);
+<br/>builder.addDivider();
+<br/>builder.addItem(R.string.item3_title, R.drawable.item3_icon);
+<br/>builder.addItem(R.string.item4_title, R.drawable.item4_icon);
+<br/>builder.addDivider(R.string.divider_title);
+<br/>builder.addItem(R.string.item5_title, R.drawable.item5_icon);
+<br/>builder.addItem(R.string.item6_title, R.drawable.item6_icon);
+<br/>BottomSheet bottomSheet = builder.create();
+<br/>bottomSheet.show();</div>
+
+                <h4>Displaying suitable applications for handling an Intent</h4>
+
+                <p>Instead of manually specifying the items of a bottom sheet, it is also possible to display the applications, which are suited for handling a specific <tt>Intent</tt>. This is possible by using the <tt>setIntent</tt>-method as shown in the example code below. The <tt>this</tt> parameter, which is passed to the <tt>setIntent</tt>-method has to be an <tt>Activity</tt>.</p>
+
+                <div class="code-block">BottomSheet.Builder builder = <strong><font color='#7f0055'>new</font></strong> BottomSheet.Builder(<strong><font color='#7f0055'>this</font></strong>);
+<br/>Intent intent = new Intent();
+<br/>intent.setAction(Intent.ACTION_SEND);
+<br/>intent.putExtra(Intent.EXTRA_TEXT, <font color='#0000ff'>"This is my text to send."</font>);
+<br/>intent.setType(<font color='#0000ff'>"text/plain"</font>);
+<br/>builder.setIntent(<strong><font color='#7f0055'>this</font></strong>, intent);</div>
+
+                <h4>Using the dark theme</h4>
+
+                <p>By default the bottom sheet uses a light theme, which can be referenced by using the resource id <tt>R.style.BottomSheet_Light</tt>. If a dark theme should be used instead, the resource id <tt>R.style.BottomSheet</tt> has to be passed to the builder's constructor like shown below.</p>
+
+                <div class="code-block">BottomSheet.Builder builder = <strong><font color='#7f0055'>new</font></strong> BottomSheet.Builder(<strong><font color='#7f0055'>this</font></strong>, R.style.BottomSheet);</div>
+
+            <div class="copyright">
+                &#169; Copyright 2016, Michael Rapp. All rights reserved.
+            </div>
+        </div>
+    </body>
+</html>

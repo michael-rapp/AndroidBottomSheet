@@ -1,0 +1,258 @@
+@font-face {
+    font-family: 'PT Sans'; 
+    src: url('fonts/PTS55F.ttf');
+}
+
+@font-face {
+    font-family: 'Oswald';
+    src: url('fonts/Oswald-Light.otf');
+}
+
+body {
+    width:100%;
+    max-width:960px;
+    height:100%; 
+    margin:0 auto;
+    background-color: #dddddd;
+    font-family: 'PT Sans';
+    font-size: 15px;
+    color: #333333;
+}
+
+h1 {
+    background: transparent url('images/logo.png') no-repeat;
+    padding-left: 64px;
+    color: #dd4b39;
+    font-size: 38px;
+    font-weight: normal;
+}
+
+h2 {
+    font-size: 18px;
+    font-weight: normal;
+    color: #000000;
+}
+
+h3 {
+    color: #2288bb;
+    font-size: 28px;
+    font-weight: normal;
+}
+
+h4 {
+    font-size: 20px;
+}
+
+h4 a:hover {
+    color: #333333;
+}
+
+h5 {
+    font-size: 16px;
+}
+
+h5 a:hover {
+    color: #333333;
+}
+
+a:link {
+    color: #2288bb;
+}
+
+a:visited {
+    color: #666666;
+}
+
+a:hover {
+    color: #33aaff;
+}
+
+tt {
+    font-size: 14px;
+}
+
+th, td {
+    border: 1px solid #ffffff;
+    background: #f0f0f0;
+    padding: 4px;
+}
+
+p {
+    text-align: justify;
+}
+
+p.center {
+    text-align: center;
+}
+
+p.package-declaration {
+    margin-top: -8px;
+    font-size: 90%;
+}
+
+p.package-declaration a {
+    margin-left: 12px;
+    font-style: normal;
+}
+
+li {
+    margin: 0 0 16px 0;
+    text-align: justify;
+}
+
+dl.image {
+    margin: 38px 24px 38px 24px;
+}
+
+dl.image dd {
+    margin: 16px 0 0 0;
+    font-style: italic;
+}
+
+dl.image dd b {
+    margin-right: 12px;
+}
+
+ol.table-of-contents li {
+    margin: 16px 0 8px 0;
+}
+
+ol.table-of-contents ul li {
+    margin: 0 0 4px -16px;
+}
+
+.code-block, .xml-block, .hint-box, .warning-box {
+    background-color: #efefef;
+    border-color: #dddddd;
+    border-style: solid;
+    border-width: 1px;
+    margin: 16px 0 16px 0;
+    padding: 6px 8px 6px 8px;
+}
+
+.code-block, .xml-block, .code {
+    font-family: monospace;
+    font-size: 95%;
+}
+
+.xml-block {
+    color: #97048d;
+}
+
+.hint-box, .warning-box {
+    text-align: justify;
+    padding-left: 72px;
+    background-repeat: no-repeat;
+    background-position: 8px center;
+}
+
+.hint-box {
+    background-image:url('images/hint.png');
+}
+
+.warning-box {
+    background-image:url('images/warning.png');
+}
+
+.reference {
+    margin-bottom: 12px;
+    margin-left: 16px;
+}
+
+a.reference {
+    margin-right: 12px;
+    color: #333333;
+}
+
+.content {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    background-color: #ffffff;
+    padding-left: 48px;
+    padding-right: 48px;
+    padding-top: 16px;
+    padding-bottom: 0px;
+}
+
+.text {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.navigation {
+    font-size: 0;
+    background: #eeeeee;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #dddddd;
+}
+
+.navigation-item {
+    font-size: 13px;
+    font-family: 'Oswald';
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+    font-weight: bold;   
+    display: inline-block;
+    border-left-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    border-right-width: 1px;
+    border-style: solid;
+    border-color: #dddddd;
+    text-align: center;
+}
+
+.navigation-item:hover {
+    background: #dd4b39;
+}
+
+.navigation-item a {
+    color: #000000;
+    text-decoration: none;
+}
+
+.navigation-item:hover a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.navigation-item-selected {
+    font-size: 13px;
+    font-family: 'Oswald';
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 16px;
+    padding-right: 16px;
+    font-weight: bold;   
+    display: inline-block;
+    border-left-width: 0;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    border-right-width: 1px;
+    border-style: solid;
+    border-color: #dddddd;
+    text-align: center;
+    background: #dd4b39;
+    color: #ffffff;
+}
+
+.navigation-item-selected a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.copyright {
+    font-size: 14px;
+    border-color: #dddddd;
+    border-style: dashed;
+    border-top-width: 1px;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    text-align: center;
+    padding: 48px;
+    margin-top: 24px;
+}
