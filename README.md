@@ -24,7 +24,7 @@ The latest release of this library can be downloaded as a zip archive from the d
 
 Alternatively, the library can be added to your Android app as a Gradle dependency by adding the following to the respective module's `build.gradle` file:
 
-```
+```groovy
 dependencies {
     compile 'com.github.michael-rapp:android-bottom-sheet:1.0.0'
 }
@@ -34,7 +34,7 @@ dependencies {
 
 The code below shows how to create and show a bottom sheet by using the library's `BottomSheet.Builder`. The bottom sheet contains a title as well as multiple items and dividers. The `this` parameter, which is passed to the builder's constructor in the example below, must be a `Context`, e.g. an `Activity`. By calling the builder's `setOnItemClickListener`-method, a listener can be registered to be notified, when one of the bottom sheet's items has been clicked.
 
-```
+```java
 BottomSheet.Builder builder = new BottomSheet.Builder(this); 
 builder.setTitle(R.string.bottom_sheet_title);
 builder.addItem(R.string.item1_title, R.drawable.item1_icon);
@@ -53,7 +53,7 @@ bottomSheet.show();
 
 Instead of manually specifying the items of a bottom sheet, it is also possible to display the applications, which are suited for handling a specific `Intent`. This is possible by using the `setIntent`-method as shown in the example code below. The `this` parameter, which is passed to the `setIntent`-method has to be an `Activity`. 
 
-```
+```java
 BottomSheet.Builder builder = new BottomSheet.Builder(this);
 Intent intent = new Intent();
 intent.setAction(Intent.ACTION_SEND);
@@ -70,7 +70,7 @@ The image below illustrates the appearance of bottom sheets, which show applicat
 
 By default the bottom sheet uses a light theme, which can be referenced by using the resource id `R.style.BottomSheet_Light`. If a dark theme should be used instead, the resource id `R.style.BottomSheet` has to be passed to the builder's constructor like shown below. 
 
-```
+```java
 BottomSheet.Builder builder = new BottomSheet.Builder(this, R.style.BottomSheet);
 ```
 
