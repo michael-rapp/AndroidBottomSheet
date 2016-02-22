@@ -25,6 +25,8 @@ not, see <http://www.gnu.org/licenses/>.
     <string name="show_bottom_sheet_preference_title">Show bottom sheet</string>
     <string name="show_custom_bottom_sheet_preference_key">show_custom_bottom_sheet_preference_key</string>
     <string name="show_custom_bottom_sheet_preference_title">Show bottom sheet with custom content</string>
+    <string name="show_intent_bottom_sheet_preference_key">show_intent_bottom_sheet_preference</string>
+    <string name="show_intent_bottom_sheet_preference_title">Show bottom sheet with intent</string>
     <string name="bottom_sheet_style_preference_category_title">Style</string>
     <string name="bottom_sheet_style_preference_key">style_preference_key</string>
     <string name="bottom_sheet_style_preference_title">Style</string>

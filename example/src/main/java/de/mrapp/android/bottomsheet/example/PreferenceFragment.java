@@ -14,6 +14,7 @@
  */
 package de.mrapp.android.bottomsheet.example;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -81,11 +82,22 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
     /**
      * Initializes the preference, which allows to show a bottom sheet with custom content.
      */
-    private void initializeShowCustomBottmSheetPreference() {
+    private void initializeShowCustomBottomSheetPreference() {
         Preference showCustomBottomSheetPreference =
                 findPreference(getString(R.string.show_custom_bottom_sheet_preference_key));
         showCustomBottomSheetPreference
                 .setOnPreferenceClickListener(createShowCustomBottomSheetPreferenceListener());
+    }
+
+    /**
+     * Initializes the preference, which allows to display the applications, which are suited for
+     * handling an intent.
+     */
+    private void initializeShowIntentBottmSheetPreference() {
+        Preference showIntentBottomSheetPreference =
+                findPreference(getString(R.string.show_intent_bottom_sheet_preference_key));
+        showIntentBottomSheetPreference
+                .setOnPreferenceClickListener(createShowIntentBottomSheetPreferenceListener());
     }
 
     /**
@@ -101,6 +113,31 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
             public boolean onPreferenceClick(final Preference preference) {
                 BottomSheet.Builder builder = createBottomSheetBuilder();
                 addItems(builder);
+                builder.show();
+                return true;
+            }
+
+        };
+    }
+
+    /**
+     * Creates and returns a listener, which allows to show a bottom sheet, which displays the
+     * application, which are suited for handling an intent.
+     *
+     * @return The listener, which has been created, as an instance of the type {@link
+     * OnPreferenceClickListener}
+     */
+    private OnPreferenceClickListener createShowIntentBottomSheetPreferenceListener() {
+        return new OnPreferenceClickListener() {
+
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                BottomSheet.Builder builder = createBottomSheetBuilder();
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+                intent.setType("text/plain");
+                builder.setIntent(getActivity(), intent);
                 builder.show();
                 return true;
             }
@@ -378,7 +415,8 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
         addPreferencesFromResource(R.xml.preferences);
         initializeThemePreference();
         initializeShowBottomSheetPreference();
-        initializeShowCustomBottmSheetPreference();
+        initializeShowCustomBottomSheetPreference();
+        initializeShowIntentBottmSheetPreference();
     }
 
 }

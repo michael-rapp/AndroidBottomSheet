@@ -24,6 +24,10 @@ not, see <http://www.gnu.org/licenses/>.
         <Preference
             android:key="@string/show_custom_bottom_sheet_preference_key"
             android:title="@string/show_custom_bottom_sheet_preference_title"/>
+
+        <Preference
+            android:key="@string/show_intent_bottom_sheet_preference_key"
+            android:title="@string/show_intent_bottom_sheet_preference_title"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/bottom_sheet_style_preference_category_title">
