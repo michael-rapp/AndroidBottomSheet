@@ -1,5 +1,13 @@
 # AndroidBottomSheet - RELEASE NOTES
 
+## Version 1.0.1 (Feb. 25th 2016)
+
+A minor release, which introduces the following changes:
+
+- The library is from now on distributed under the Apache License version 2.0. 
+- Updated dependency "AndroidUtil" to version 1.4.3.
+- Updated AppCompat support library to version 23.2.0.
+
 ## Version 1.0.0 (Feb. 22th 2016)
 
 The first stable release, which provides a bottom sheet as a proposed by Android's Material design guidelines. The implementation initially provides the following features:
