@@ -126,7 +126,7 @@ public class DividableGridAdapter extends BaseAdapter {
     /**
      * A list, which contains the items of the adapter.
      */
-    private List<AbstractItem> items;
+    private final List<AbstractItem> items;
 
     /**
      * A list, which contains the items of the adapter including placeholders.

@@ -222,7 +222,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         /**
          * The items of the bottom sheet, which is created by the builder.
          */
-        private List<AbstractItem> items = new LinkedList<>();
+        private final List<AbstractItem> items = new LinkedList<>();
 
         /**
          * The activity, which should be used to start the apps, which are added as items to the
@@ -404,7 +404,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
                                      @NonNull final ViewGroup titleContainer) {
             View titleView = titleContainer.findViewById(android.R.id.title);
 
-            if (titleView != null && titleView instanceof TextView) {
+            if (titleView instanceof TextView) {
                 TextView titleTextView = (TextView) titleView;
 
                 if (titleColor != -1) {
@@ -1821,7 +1821,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
 
             View titleView = titleContainer.findViewById(android.R.id.title);
 
-            if (titleView != null && titleView instanceof TextView) {
+            if (titleView instanceof TextView) {
                 titleTextView = (TextView) titleView;
                 titleTextView.setTextColor(titleColor);
 
@@ -2475,8 +2475,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         titleContainer = (ViewGroup) findViewById(R.id.title_container);
         View titleView = findViewById(android.R.id.title);
         contentContainer = (ViewGroup) findViewById(R.id.content_container);
-        titleTextView =
-                (titleView != null && titleView instanceof TextView) ? (TextView) titleView : null;
+        titleTextView = (titleView instanceof TextView) ? (TextView) titleView : null;
         gridView = (DividableGridView) findViewById(R.id.bottom_sheet_grid_view);
 
         if (gridView != null) {
