@@ -312,10 +312,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         private void obtainDimAmount() {
             TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(themeResourceId,
                     new int[]{R.attr.bottomSheetDimAmount});
-            float dimAmount = typedArray.getFraction(0, 1, 1, -1);
+            float dimAmountLocal = typedArray.getFraction(0, 1, 1, -1);
 
-            if (dimAmount != -1) {
-                setDimAmount(dimAmount);
+            if (dimAmountLocal != -1) {
+                setDimAmount(dimAmountLocal);
             }
         }
 
@@ -325,10 +325,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         private void obtainDragSensitivity() {
             TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(themeResourceId,
                     new int[]{R.attr.bottomSheetDragSensitivity});
-            float dragSensitivity = typedArray.getFraction(0, 1, 1, -1);
+            float dragSensitivityLocal = typedArray.getFraction(0, 1, 1, -1);
 
-            if (dragSensitivity != -1) {
-                setDragSensitivity(dragSensitivity);
+            if (dragSensitivityLocal != -1) {
+                setDragSensitivity(dragSensitivityLocal);
             }
         }
 
@@ -368,27 +368,27 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          *         DraggableView}
          */
         private void inflateTitleView(@NonNull final DraggableView root) {
-            ViewGroup titleContainer = (ViewGroup) root.findViewById(R.id.title_container);
+            ViewGroup titleContainerLocal = (ViewGroup) root.findViewById(R.id.title_container);
 
             if (customTitleView != null) {
-                titleContainer.setVisibility(View.VISIBLE);
-                titleContainer.addView(customTitleView, ViewGroup.LayoutParams.MATCH_PARENT,
+                titleContainerLocal.setVisibility(View.VISIBLE);
+                titleContainerLocal.addView(customTitleView, ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
             } else {
-                View.inflate(context, R.layout.bottom_sheet_title, titleContainer);
+                View.inflate(context, R.layout.bottom_sheet_title, titleContainerLocal);
 
                 if (style == Style.LIST) {
                     int padding = getContext().getResources().getDimensionPixelSize(
                             R.dimen.bottom_sheet_list_item_horizontal_padding);
-                    titleContainer.setPadding(padding, 0, padding, 0);
+                    titleContainerLocal.setPadding(padding, 0, padding, 0);
                 } else {
                     int padding = getContext().getResources().getDimensionPixelSize(
                             R.dimen.bottom_sheet_grid_item_horizontal_padding);
-                    titleContainer.setPadding(padding, 0, padding, 0);
+                    titleContainerLocal.setPadding(padding, 0, padding, 0);
                 }
             }
 
-            initializeTitle(root, titleContainer);
+            initializeTitle(root, titleContainerLocal);
         }
 
         /**
@@ -405,20 +405,20 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             View titleView = titleContainer.findViewById(android.R.id.title);
 
             if (titleView != null && titleView instanceof TextView) {
-                TextView titleTextView = (TextView) titleView;
+                TextView titleTextViewLocal = (TextView) titleView;
 
                 if (titleColor != -1) {
-                    titleTextView.setTextColor(titleColor);
+                    titleTextViewLocal.setTextColor(titleColor);
                 }
 
                 if (!TextUtils.isEmpty(title) || icon != null) {
                     titleContainer.setVisibility(View.VISIBLE);
-                    titleTextView.setText(title);
+                    titleTextViewLocal.setText(title);
                     root.setPadding(root.getPaddingLeft(), 0, root.getPaddingRight(),
                             root.getPaddingBottom());
 
                     if (icon != null) {
-                        titleTextView
+                        titleTextViewLocal
                                 .setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
                     }
 
@@ -437,20 +437,20 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * class {@link GridView} or null, if no grid view is contained by the bottom sheet
          */
         private GridView inflateContentView(@NonNull final DraggableView root) {
-            ViewGroup contentContainer = (ViewGroup) root.findViewById(R.id.content_container);
+            ViewGroup contentContainerLocal = (ViewGroup) root.findViewById(R.id.content_container);
 
             if (customView != null) {
-                contentContainer.setVisibility(View.VISIBLE);
-                contentContainer.addView(customView, ViewGroup.LayoutParams.MATCH_PARENT,
+                contentContainerLocal.setVisibility(View.VISIBLE);
+                contentContainerLocal.addView(customView, ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
             } else if (customViewId != -1) {
-                contentContainer.setVisibility(View.VISIBLE);
-                View.inflate(context, customViewId, contentContainer);
+                contentContainerLocal.setVisibility(View.VISIBLE);
+                View.inflate(context, customViewId, contentContainerLocal);
             } else {
-                View.inflate(context, R.layout.bottom_sheet_grid_view, contentContainer);
+                View.inflate(context, R.layout.bottom_sheet_grid_view, contentContainerLocal);
             }
 
-            return initializeContent(contentContainer);
+            return initializeContent(contentContainerLocal);
         }
 
         /**
@@ -463,10 +463,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * class {@link GridView} or null, if no grid view is contained by the bottom sheet
          */
         private GridView initializeContent(@NonNull final ViewGroup contentContainer) {
-            GridView gridView =
+            GridView gridViewLocal =
                     (GridView) contentContainer.findViewById(R.id.bottom_sheet_grid_view);
 
-            if (gridView != null) {
+            if (gridViewLocal != null) {
                 contentContainer.setVisibility(View.VISIBLE);
 
                 if (style == Style.GRID) {
@@ -474,21 +474,21 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
                             R.dimen.bottom_sheet_grid_item_horizontal_padding);
                     int paddingBottom = getContext().getResources()
                             .getDimensionPixelSize(R.dimen.bottom_sheet_grid_padding_bottom);
-                    gridView.setPadding(horizontalPadding, 0, horizontalPadding, paddingBottom);
-                    gridView.setNumColumns(GridView.AUTO_FIT);
-                    gridView.setColumnWidth(getContext().getResources()
+                    gridViewLocal.setPadding(horizontalPadding, 0, horizontalPadding, paddingBottom);
+                    gridViewLocal.setNumColumns(GridView.AUTO_FIT);
+                    gridViewLocal.setColumnWidth(getContext().getResources()
                             .getDimensionPixelSize(R.dimen.bottom_sheet_grid_item_size));
                 } else {
                     int paddingBottom = getContext().getResources()
                             .getDimensionPixelSize(R.dimen.bottom_sheet_list_padding_bottom);
-                    gridView.setPadding(0, 0, 0, paddingBottom);
-                    gridView.setNumColumns(style == Style.LIST_COLUMNS &&
+                    gridViewLocal.setPadding(0, 0, 0, paddingBottom);
+                    gridViewLocal.setNumColumns(style == Style.LIST_COLUMNS &&
                             (getDeviceType(getContext()) == DeviceType.TABLET ||
                                     getOrientation(getContext()) == Orientation.LANDSCAPE) ? 2 : 1);
                 }
             }
 
-            return gridView;
+            return gridViewLocal;
         }
 
         /**
@@ -1089,9 +1089,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         public final BottomSheet create() {
             DraggableView root = inflateLayout();
             inflateTitleView(root);
-            GridView gridView = inflateContentView(root);
+            GridView gridViewLocal = inflateContentView(root);
             BottomSheet bottomSheet =
-                    new BottomSheet(context, themeResourceId, gridView != null ? items : null,
+                    new BottomSheet(context, themeResourceId, gridViewLocal != null ? items : null,
                             style, width);
             bottomSheet.requestWindowFeature(Window.FEATURE_NO_TITLE);
             FrameLayout.LayoutParams layoutParams =
