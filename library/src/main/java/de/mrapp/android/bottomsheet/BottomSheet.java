@@ -24,6 +24,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -36,9 +37,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,16 +53,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import de.mrapp.android.bottomsheet.adapter.DividableGridAdapter;
-import de.mrapp.android.bottomsheet.model.AbstractItem;
 import de.mrapp.android.bottomsheet.model.Divider;
 import de.mrapp.android.bottomsheet.model.Item;
 import de.mrapp.android.bottomsheet.view.DividableGridView;
@@ -99,159 +97,50 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     public static class Builder {
 
         /**
-         * The context, which is used by the builder.
+         * The bottom sheet, which is created by the builder.
          */
-        private final Context context;
+        private BottomSheet bottomSheet;
 
         /**
-         * The resource id of the theme, which should be used by the bottom sheet, which is created
-         * by the builder.
+         * Initializes the builder.
+         *
+         * @param context
+         *         The context, which should be used by the builder, as an instance of the class
+         *         {@link Context}. The context may not be null
+         * @param themeResourceId
+         *         The resource id of the theme, which should be used by the dialog, as an {@link
+         *         Integer} value, or -1, if the default theme should be used
          */
-        private final int themeResourceId;
-
-        /**
-         * True, if the bottom sheet, which is created by the builder, should be cancelable, false
-         * otherwise.
-         */
-        private boolean cancelable = true;
-
-        /**
-         * The style of the bottom sheet, which is created by the builder.
-         */
-        private Style style = Style.LIST;
-
-        /**
-         * The listener, which should be notified, when an item of the bottom sheet, which is
-         * created by the builder, has been clicked.
-         */
-        private OnItemClickListener itemClickListener;
-
-        /**
-         * The listener, which should be notified, when an item of the bottom sheet, which is
-         * created by the builder, has been long-clicked.
-         */
-        private OnItemLongClickListener itemLongClickListener;
-
-        /**
-         * The listener, which should be notified, when the bottom sheet, which is created by the
-         * builder, has been maximized.
-         */
-        private OnMaximizeListener maximizeListener;
-
-        /**
-         * The listener, which should be notified, when the bottom sheet, which is created by the
-         * builder, is canceled.
-         */
-        private OnCancelListener cancelListener;
-
-        /**
-         * The listener, which should be notified, when the bottom sheet, which is created by the
-         * builder, is dismissed.
-         */
-        private OnDismissListener dismissListener;
-
-        /**
-         * The listener, which should be notified, if a key is dispatched to the bottom sheet, which
-         * is created by the builder.
-         */
-        private OnKeyListener keyListener;
-
-        /**
-         * The title of the bottom sheet, which is created by the builder.
-         */
-        private CharSequence title;
-
-        /**
-         * The icon of the bottom sheet, which is created by the builder.
-         */
-        private Drawable icon;
-
-        /**
-         * The color of the title of the bottom sheet, which is created by the builder.
-         */
-        private int titleColor = -1;
-
-        /**
-         * The color of the items of the bottom sheet, which is created by the builder.
-         */
-        private int itemColor = -1;
-
-        /**
-         * The color of the dividers of the bottom sheet, which is created by the builder.
-         */
-        private int dividerColor = -1;
-
-        /**
-         * The background of the bottom sheet, which is created by the builder.
-         */
-        private Drawable background;
-
-        /**
-         * The custom content view of the bottom sheet, which is created by the builder.
-         */
-        private View customView;
-
-        /**
-         * The resource id of the custom content view of the bottom sheet, which is created by the
-         * builder.
-         */
-        private int customViewId = -1;
-
-        /**
-         * The custom title view of the bottom sheet, which is created by the builder.
-         */
-        private View customTitleView;
-
-        /**
-         * The sensitivity, which specifies the distance after which dragging has an effect on the
-         * bottom sheet
-         */
-        private float dragSensitivity;
-
-        /**
-         * The dim amount, which is used to darken the area around the bottom sheet, which is
-         * created by the builder.
-         */
-        private float dimAmount;
-
-        /**
-         * The width of the bottom sheet, which is created by the builder, in pixels.
-         */
-        private int width;
-
-        /**
-         * The items of the bottom sheet, which is created by the builder.
-         */
-        private final List<AbstractItem> items = new LinkedList<>();
-
-        /**
-         * The activity, which should be used to start the apps, which are added as items to the
-         * bottom sheet, which is created by the builder.
-         */
-        private Activity activity;
-
-        /**
-         * The intent, the apps, which are added as items to the bottom sheet, which is created by
-         * the builder, should handle.
-         */
-        private Intent intent;
+        private void initialize(@NonNull final Context context,
+                                @StyleRes final int themeResourceId) {
+            int themeId = themeResourceId != -1 ? themeResourceId : R.style.BottomSheet_Light;
+            bottomSheet = new BottomSheet(context, themeId);
+            bottomSheet.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            bottomSheet.setCanceledOnTouchOutside(true);
+            bottomSheet.setCancelable(true);
+            obtainStyledAttributes(themeId);
+        }
 
         /**
          * Obtains all relevant attributes from the current theme.
          */
-        private void obtainStyledAttributes() {
-            obtainBackground();
-            obtainTitleColor();
-            obtainItemColor();
-            obtainDividerColor();
-            obtainDimAmount();
-            obtainDragSensitivity();
+        private void obtainStyledAttributes(@StyleRes final int themeResourceId) {
+            obtainBackground(themeResourceId);
+            obtainTitleColor(themeResourceId);
+            obtainItemColor(themeResourceId);
+            obtainDividerColor(themeResourceId);
+            obtainDimAmount(themeResourceId);
+            obtainDragSensitivity(themeResourceId);
         }
 
         /**
          * Obtains the background from the current theme.
+         *
+         * @param themeResourceId
+         *         The resource id of the theme, the background should be obtained from, as an
+         *         {@link Integer} value
          */
-        private void obtainBackground() {
+        private void obtainBackground(@StyleRes final int themeResourceId) {
             TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(themeResourceId,
                     new int[]{R.attr.bottomSheetBackground});
             int color = typedArray.getColor(0, -1);
@@ -269,8 +158,12 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
 
         /**
          * Obtains the title color from the current theme.
+         *
+         * @param themeResourceId
+         *         The resource id of the theme, the title color should be obtained from, as an
+         *         {@link Integer} value
          */
-        private void obtainTitleColor() {
+        private void obtainTitleColor(@StyleRes final int themeResourceId) {
             TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(themeResourceId,
                     new int[]{R.attr.bottomSheetTitleColor});
             int color = typedArray.getColor(0, -1);
@@ -282,8 +175,12 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
 
         /**
          * Obtains the divider color from the current theme.
+         *
+         * @param themeResourceId
+         *         The resource id of the theme, the divider color should be obtained from, as an
+         *         {@link Integer} value
          */
-        private void obtainDividerColor() {
+        private void obtainDividerColor(@StyleRes final int themeResourceId) {
             TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(themeResourceId,
                     new int[]{R.attr.bottomSheetDividerColor});
             int color = typedArray.getColor(0, -1);
@@ -295,8 +192,12 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
 
         /**
          * Obtains the item color from the current theme.
+         *
+         * @param themeResourceId
+         *         The resource id of the theme, the item color should be obtained from, as an
+         *         {@link Integer} value
          */
-        private void obtainItemColor() {
+        private void obtainItemColor(@StyleRes final int themeResourceId) {
             TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(themeResourceId,
                     new int[]{R.attr.bottomSheetItemColor});
             int color = typedArray.getColor(0, -1);
@@ -308,188 +209,36 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
 
         /**
          * Obtains the dim amount from the current theme.
+         *
+         * @param themeResourceId
+         *         The resource id of the theme, the dim amount should be obtained from, as an
+         *         {@link Integer} value
          */
-        private void obtainDimAmount() {
+        private void obtainDimAmount(@StyleRes final int themeResourceId) {
             TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(themeResourceId,
                     new int[]{R.attr.bottomSheetDimAmount});
-            float dimAmountLocal = typedArray.getFraction(0, 1, 1, -1);
+            float dimAmount = typedArray.getFraction(0, 1, 1, -1);
 
-            if (dimAmountLocal != -1) {
-                setDimAmount(dimAmountLocal);
+            if (dimAmount != -1) {
+                setDimAmount(dimAmount);
             }
         }
 
         /**
          * Obtains the drag sensitivity from the current theme.
+         *
+         * @param themeResourceId
+         *         The resource id of the theme, the drag sensitivity should be obtained from, as an
+         *         {@link Integer} value
          */
-        private void obtainDragSensitivity() {
+        private void obtainDragSensitivity(@StyleRes final int themeResourceId) {
             TypedArray typedArray = getContext().getTheme().obtainStyledAttributes(themeResourceId,
                     new int[]{R.attr.bottomSheetDragSensitivity});
-            float dragSensitivityLocal = typedArray.getFraction(0, 1, 1, -1);
+            float dragSensitivity = typedArray.getFraction(0, 1, 1, -1);
 
-            if (dragSensitivityLocal != -1) {
-                setDragSensitivity(dragSensitivityLocal);
+            if (dragSensitivity != -1) {
+                setDragSensitivity(dragSensitivity);
             }
-        }
-
-        /**
-         * Inflates the bottom sheet's layout.
-         *
-         * @return The root view of the layout, which has been inflated, as an instance of the class
-         * {@link DraggableView}
-         */
-        @SuppressWarnings("deprecation")
-        private DraggableView inflateLayout() {
-            DraggableView root = (DraggableView) View.inflate(context, R.layout.bottom_sheet, null);
-
-            if (background != null) {
-                root.setBackgroundDrawable(background);
-            }
-
-            if (style == Style.LIST) {
-                int paddingTop = getContext().getResources()
-                        .getDimensionPixelSize(R.dimen.bottom_sheet_list_padding_top);
-                root.setPadding(0, paddingTop, 0, 0);
-            } else {
-                int paddingTop = getContext().getResources()
-                        .getDimensionPixelSize(R.dimen.bottom_sheet_grid_padding_top);
-                root.setPadding(0, paddingTop, 0, 0);
-            }
-
-            return root;
-        }
-
-        /**
-         * Inflates the bottom sheet's title view, which may either be the default view or a custom
-         * view, if one has been set before.
-         *
-         * @param root
-         *         The root view of the bottom sheet's layout as an instance of the class {@link
-         *         DraggableView}
-         */
-        private void inflateTitleView(@NonNull final DraggableView root) {
-            ViewGroup titleContainerLocal = (ViewGroup) root.findViewById(R.id.title_container);
-
-            if (customTitleView != null) {
-                titleContainerLocal.setVisibility(View.VISIBLE);
-                titleContainerLocal.addView(customTitleView, ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT);
-            } else {
-                View.inflate(context, R.layout.bottom_sheet_title, titleContainerLocal);
-
-                if (style == Style.LIST) {
-                    int padding = getContext().getResources().getDimensionPixelSize(
-                            R.dimen.bottom_sheet_list_item_horizontal_padding);
-                    titleContainerLocal.setPadding(padding, 0, padding, 0);
-                } else {
-                    int padding = getContext().getResources().getDimensionPixelSize(
-                            R.dimen.bottom_sheet_grid_item_horizontal_padding);
-                    titleContainerLocal.setPadding(padding, 0, padding, 0);
-                }
-            }
-
-            initializeTitle(root, titleContainerLocal);
-        }
-
-        /**
-         * Initializes the bottom sheet's title and icon.
-         *
-         * @param root
-         *         The root view of the bottom sheet's layout as an instance of the class {@link
-         *         DraggableView}
-         * @param titleContainer
-         *         The parent view of the title view as an instance of the class {@link ViewGroup}
-         */
-        private void initializeTitle(@NonNull final DraggableView root,
-                                     @NonNull final ViewGroup titleContainer) {
-            View titleView = titleContainer.findViewById(android.R.id.title);
-
-            if (titleView instanceof TextView) {
-                TextView titleTextViewLocal = (TextView) titleView;
-
-                if (titleColor != -1) {
-                    titleTextViewLocal.setTextColor(titleColor);
-                }
-
-                if (!TextUtils.isEmpty(title) || icon != null) {
-                    titleContainer.setVisibility(View.VISIBLE);
-                    titleTextViewLocal.setText(title);
-                    root.setPadding(root.getPaddingLeft(), 0, root.getPaddingRight(),
-                            root.getPaddingBottom());
-
-                    if (icon != null) {
-                        titleTextViewLocal
-                                .setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                    }
-
-                }
-            }
-        }
-
-        /**
-         * Inflates the bottom sheet's content view, which may either be the default view or a
-         * custom view, if one has been set before.
-         *
-         * @param root
-         *         The root view of the bottom sheet's layout as an instance of the class {@link
-         *         DraggableView}
-         * @return The grid view, which is contained by the bottom sheet, as an instance of the
-         * class {@link GridView} or null, if no grid view is contained by the bottom sheet
-         */
-        private GridView inflateContentView(@NonNull final DraggableView root) {
-            ViewGroup contentContainerLocal = (ViewGroup) root.findViewById(R.id.content_container);
-
-            if (customView != null) {
-                contentContainerLocal.setVisibility(View.VISIBLE);
-                contentContainerLocal.addView(customView, ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT);
-            } else if (customViewId != -1) {
-                contentContainerLocal.setVisibility(View.VISIBLE);
-                View.inflate(context, customViewId, contentContainerLocal);
-            } else {
-                View.inflate(context, R.layout.bottom_sheet_grid_view, contentContainerLocal);
-            }
-
-            return initializeContent(contentContainerLocal);
-        }
-
-        /**
-         * Initializes the bottom sheet's content.
-         *
-         * @param contentContainer
-         *         The parent view of the content view as an instance of the class  {@link
-         *         ViewGroup}
-         * @return The grid view, which is contained by the bottom sheet, as an instance of the
-         * class {@link GridView} or null, if no grid view is contained by the bottom sheet
-         */
-        private GridView initializeContent(@NonNull final ViewGroup contentContainer) {
-            GridView gridViewLocal =
-                    (GridView) contentContainer.findViewById(R.id.bottom_sheet_grid_view);
-
-            if (gridViewLocal != null) {
-                contentContainer.setVisibility(View.VISIBLE);
-
-                if (style == Style.GRID) {
-                    int horizontalPadding = getContext().getResources().getDimensionPixelSize(
-                            R.dimen.bottom_sheet_grid_item_horizontal_padding);
-                    int paddingBottom = getContext().getResources()
-                            .getDimensionPixelSize(R.dimen.bottom_sheet_grid_padding_bottom);
-                    gridViewLocal
-                            .setPadding(horizontalPadding, 0, horizontalPadding, paddingBottom);
-                    gridViewLocal.setNumColumns(GridView.AUTO_FIT);
-                    gridViewLocal.setColumnWidth(getContext().getResources()
-                            .getDimensionPixelSize(R.dimen.bottom_sheet_grid_item_size));
-                } else {
-                    int paddingBottom = getContext().getResources()
-                            .getDimensionPixelSize(R.dimen.bottom_sheet_list_padding_bottom);
-                    gridViewLocal.setPadding(0, 0, 0, paddingBottom);
-                    gridViewLocal.setNumColumns(style == Style.LIST_COLUMNS &&
-                            (getDeviceType(getContext()) == DeviceType.TABLET ||
-                                    getOrientation(getContext()) == Orientation.LANDSCAPE) ? 2 : 1);
-                }
-            }
-
-            return gridViewLocal;
         }
 
         /**
@@ -516,12 +265,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          *         {@link Integer} value. The resource id must correspond to a valid theme
          */
         public Builder(@NonNull final Context context, @StyleRes final int themeResourceId) {
-            ensureNotNull(context, "The context may not be null");
-            this.themeResourceId =
-                    themeResourceId == -1 ? R.style.BottomSheet_Light : themeResourceId;
-            this.context = new ContextThemeWrapper(context, themeResourceId);
-            this.width = getContext().getResources().getDimensionPixelSize(R.dimen.default_width);
-            obtainStyledAttributes();
+            initialize(context, themeResourceId);
         }
 
         /**
@@ -531,7 +275,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Context}
          */
         public final Context getContext() {
-            return context;
+            return bottomSheet.getContext();
         }
 
         /**
@@ -545,7 +289,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setCancelable(final boolean cancelable) {
-            this.cancelable = cancelable;
+            bottomSheet.setCancelable(cancelable);
             return this;
         }
 
@@ -553,14 +297,13 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Sets the style of the bottom sheet, which is created by the builder.
          *
          * @param style
-         *         The style, which should be set, as a value of the enum {@link Style}. The value
-         *         may either be <code>List</code> or <code>GRID</code>
+         *         The style, which should be set, as a value of the enum {@link Style}. The style
+         *         may either be <code>LIST</code>, <code>LIST_COLUMNS</code> or <code>GRID</code>
          * @return The builder, the method has been called upon, as an instance of the class {@link
          * Builder}
          */
         public final Builder setStyle(@NonNull final Style style) {
-            ensureNotNull(style, "The style may not be null");
-            this.style = style;
+            bottomSheet.setStyle(style);
             return this;
         }
 
@@ -575,7 +318,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setOnItemClickListener(@Nullable final OnItemClickListener listener) {
-            this.itemClickListener = listener;
+            bottomSheet.setOnItemClickListener(listener);
             return this;
         }
 
@@ -591,7 +334,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          */
         public final Builder setOnItemLongClickListener(
                 @Nullable final OnItemLongClickListener listener) {
-            this.itemLongClickListener = listener;
+            bottomSheet.setOnItemLongClickListener(listener);
             return this;
         }
 
@@ -606,7 +349,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setOnMaximizeListener(@Nullable final OnMaximizeListener listener) {
-            this.maximizeListener = listener;
+            bottomSheet.setOnMaximizeListener(listener);
             return this;
         }
 
@@ -626,7 +369,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * @see #setOnDismissListener(android.content.DialogInterface.OnDismissListener)
          */
         public Builder setOnCancelListener(@Nullable final OnCancelListener listener) {
-            this.cancelListener = listener;
+            bottomSheet.setOnCancelListener(listener);
             return this;
         }
 
@@ -641,7 +384,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setOnDismissListener(@Nullable final OnDismissListener listener) {
-            this.dismissListener = listener;
+            bottomSheet.setOnDismissListener(listener);
             return this;
         }
 
@@ -656,7 +399,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setOnKeyListener(@Nullable final OnKeyListener listener) {
-            this.keyListener = listener;
+            bottomSheet.setOnKeyListener(listener);
             return this;
         }
 
@@ -670,7 +413,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setTitleColor(@ColorInt final int color) {
-            this.titleColor = color;
+            bottomSheet.setTitleColor(color);
             return this;
         }
 
@@ -684,7 +427,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setItemColor(@ColorInt final int color) {
-            this.itemColor = color;
+            bottomSheet.setItemColor(color);
             return this;
         }
 
@@ -698,7 +441,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setDividerColor(@ColorInt final int color) {
-            this.dividerColor = color;
+            bottomSheet.setDividerColor(color);
             return this;
         }
 
@@ -712,7 +455,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setBackground(@Nullable final Drawable background) {
-            this.background = background;
+            bottomSheet.setBackground(background);
             return this;
         }
 
@@ -725,9 +468,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * @return The builder, the method has been called upon, as an instance of the class {@link
          * Builder}
          */
-        @SuppressWarnings("deprecation")
         public final Builder setBackground(@DrawableRes final int resourceId) {
-            this.background = context.getResources().getDrawable(resourceId);
+            bottomSheet.setBackground(resourceId);
             return this;
         }
 
@@ -741,7 +483,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setBackgroundColor(@ColorInt final int color) {
-            this.background = color != -1 ? new ColorDrawable(color) : null;
+            bottomSheet.setBackgroundColor(color);
             return this;
         }
 
@@ -755,7 +497,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setTitle(@Nullable final CharSequence title) {
-            this.title = title;
+            bottomSheet.setTitle(title);
             return this;
         }
 
@@ -769,7 +511,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setTitle(@StringRes final int resourceId) {
-            return setTitle(context.getText(resourceId));
+            bottomSheet.setTitle(resourceId);
+            return this;
         }
 
         /**
@@ -782,7 +525,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setIcon(@Nullable final Drawable icon) {
-            this.icon = icon;
+            bottomSheet.setIcon(icon);
             return this;
         }
 
@@ -795,9 +538,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * @return The builder, the method has been called upon, as an instance of the class {@link
          * Builder}
          */
-        @SuppressWarnings("deprecation")
         public final Builder setIcon(@DrawableRes final int resourceId) {
-            return setIcon(context.getResources().getDrawable(resourceId));
+            bottomSheet.setIcon(resourceId);
+            return this;
         }
 
         /**
@@ -810,9 +553,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setIconAttribute(@AttrRes final int attributeId) {
-            TypedArray typedArray =
-                    context.getTheme().obtainStyledAttributes(new int[]{attributeId});
-            return setIcon(typedArray.getDrawable(0));
+            bottomSheet.setIconAttribute(attributeId);
+            return this;
         }
 
         /**
@@ -826,8 +568,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setView(@Nullable final View view) {
-            customView = view;
-            customViewId = 0;
+            bottomSheet.setView(view);
             return this;
         }
 
@@ -842,8 +583,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setView(@LayoutRes final int resourceId) {
-            customViewId = resourceId;
-            customView = null;
+            bottomSheet.setView(resourceId);
             return this;
         }
 
@@ -858,7 +598,22 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setCustomTitle(@Nullable final View view) {
-            customTitleView = view;
+            bottomSheet.setCustomTitle(view);
+            return this;
+        }
+
+        /**
+         * Sets the custom view, which should be used to show the title of the bottom sheet, which
+         * is created by the builder.
+         *
+         * @param resourceId
+         *         The resource id of the view, which should be set, as an {@link Integer} value.
+         *         The resource id must correspond to a valid layout resource
+         * @return The builder, the method has been called upon, as an instance of the class {@link
+         * Builder}
+         */
+        public final Builder setCustomTitle(@LayoutRes final int resourceId) {
+            bottomSheet.setCustomTitle(resourceId);
             return this;
         }
 
@@ -873,9 +628,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setDragSensitivity(final float dragSensitivity) {
-            ensureAtLeast(dragSensitivity, 0, "The drag sensitivity must be at least 0");
-            ensureAtMaximum(dragSensitivity, 1, "The drag sensitivity must be at maximum 1");
-            this.dragSensitivity = dragSensitivity;
+            bottomSheet.setDragSensitivity(dragSensitivity);
             return this;
         }
 
@@ -890,9 +643,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setDimAmount(final float dimAmount) {
-            ensureAtLeast(dimAmount, 0, "The dim amount must be at least 0");
-            ensureAtMaximum(dimAmount, 1, "The dim amount must be at least 1");
-            this.dimAmount = dimAmount;
+            bottomSheet.setDimAmount(dimAmount);
             return this;
         }
 
@@ -907,8 +658,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setWidth(final int width) {
-            ensureAtLeast(width, 1, "The width must be at least 1");
-            this.width = width;
+            bottomSheet.setWidth(width);
             return this;
         }
 
@@ -922,10 +672,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder addItem(@NonNull final CharSequence title) {
-            Item item = new Item(title);
-            items.add(item);
-            activity = null;
-            intent = null;
+            bottomSheet.addItem(title);
             return this;
         }
 
@@ -943,11 +690,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          */
         public final Builder addItem(@NonNull final CharSequence title,
                                      @Nullable final Drawable icon) {
-            Item item = new Item(title);
-            item.setIcon(icon);
-            items.add(item);
-            activity = null;
-            intent = null;
+            bottomSheet.addItem(title, icon);
             return this;
         }
 
@@ -961,10 +704,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder addItem(@StringRes final int titleId) {
-            Item item = new Item(getContext(), titleId);
-            items.add(item);
-            activity = null;
-            intent = null;
+            bottomSheet.addItem(titleId);
             return this;
         }
 
@@ -981,11 +721,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder addItem(@StringRes final int titleId, @DrawableRes final int iconId) {
-            Item item = new Item(getContext(), titleId);
-            item.setIcon(getContext(), iconId);
-            items.add(item);
-            activity = null;
-            intent = null;
+            bottomSheet.addItem(titleId, iconId);
             return this;
         }
 
@@ -996,9 +732,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder addDivider() {
-            items.add(new Divider());
-            activity = null;
-            intent = null;
+            bottomSheet.addDivider();
             return this;
         }
 
@@ -1010,11 +744,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          *         {@link CharSequence}, or null, if no title should be used
          */
         public final Builder addDivider(@Nullable final CharSequence title) {
-            Divider divider = new Divider();
-            divider.setTitle(title);
-            items.add(divider);
-            activity = null;
-            intent = null;
+            bottomSheet.addDivider(title);
             return this;
         }
 
@@ -1028,11 +758,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder addDivider(@StringRes final int titleId) {
-            Divider divider = new Divider();
-            divider.setTitle(getContext(), titleId);
-            items.add(divider);
-            activity = null;
-            intent = null;
+            bottomSheet.addDivider(titleId);
             return this;
         }
 
@@ -1047,12 +773,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Builder}
          */
         public final Builder setItemEnabled(final int index, final boolean enabled) {
-            AbstractItem item = items.get(index);
-
-            if (item instanceof Item) {
-                ((Item) item).setEnabled(enabled);
-            }
-
+            bottomSheet.setItemEnabled(index, enabled);
             return this;
         }
 
@@ -1072,11 +793,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          */
         public final Builder setIntent(@NonNull final Activity activity,
                                        @NonNull final Intent intent) {
-            ensureNotNull(activity, "The activity may not be null");
-            ensureNotNull(intent, "The intent may not be null");
-            this.items.clear();
-            this.activity = activity;
-            this.intent = intent;
+            bottomSheet.setIntent(activity, intent);
             return this;
         }
 
@@ -1088,35 +805,6 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * BottomSheet}
          */
         public final BottomSheet create() {
-            DraggableView root = inflateLayout();
-            inflateTitleView(root);
-            GridView gridViewLocal = inflateContentView(root);
-            BottomSheet bottomSheet =
-                    new BottomSheet(context, themeResourceId, gridViewLocal != null ? items : null,
-                            style, width);
-            bottomSheet.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            FrameLayout.LayoutParams layoutParams =
-                    new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                            FrameLayout.LayoutParams.MATCH_PARENT);
-            layoutParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
-            bottomSheet.setContentView(root, layoutParams);
-            bottomSheet.setOnItemClickListener(itemClickListener);
-            bottomSheet.setOnItemLongClickListener(itemLongClickListener);
-            bottomSheet.setOnMaximizeListener(maximizeListener);
-            bottomSheet.setOnCancelListener(cancelListener);
-            bottomSheet.setOnDismissListener(dismissListener);
-            bottomSheet.setOnKeyListener(keyListener);
-            bottomSheet.setCancelable(cancelable);
-            bottomSheet.setCanceledOnTouchOutside(true);
-            bottomSheet.setDragSensitivity(dragSensitivity);
-            bottomSheet.setDimAmount(dimAmount);
-            bottomSheet.setItemColor(itemColor);
-            bottomSheet.setDividerColor(dividerColor);
-
-            if (activity != null && intent != null) {
-                bottomSheet.setIntent(activity, intent);
-            }
-
             return bottomSheet;
         }
 
@@ -1128,7 +816,6 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * BottomSheet}
          */
         public final BottomSheet show() {
-            BottomSheet bottomSheet = create();
             bottomSheet.show();
             return bottomSheet;
         }
@@ -1142,7 +829,6 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          */
         @TargetApi(Build.VERSION_CODES.FROYO)
         public final BottomSheet maximize() {
-            BottomSheet bottomSheet = create();
             bottomSheet.maximize();
             return bottomSheet;
         }
@@ -1190,24 +876,24 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     private DraggableView rootView;
 
     /**
-     * The parent view of the text view, which is used to show the title of the bottom sheet.
+     * The layout, which is used to show the bottom sheet's title.
      */
     private ViewGroup titleContainer;
 
     /**
-     * The text view, which is used to show the title of the bottom sheet.
+     * The text view, which is used to show the bottom sheet's title.
      */
     private TextView titleTextView;
 
     /**
-     * The parent view of the custom view, which is shown by the bottom sheet.
+     * The layout, which is used to show the bottom sheet's content.
      */
     private ViewGroup contentContainer;
 
     /**
      * The grid view, which is used to show the bottom sheet's items.
      */
-    private DividableGridView gridView;
+    private GridView gridView;
 
     /**
      * The adapter, which is used to manage the bottom sheet's items.
@@ -1217,10 +903,50 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     /**
      * The style, which is used to display the bottom sheet's items.
      */
-    private Style style;
+    private Style style = Style.LIST;
 
     /**
-     * True, if the bottom sheet should be maximized immediatiely after it has been shown, false
+     * The title of the bottom sheet.
+     */
+    private CharSequence title;
+
+    /**
+     * The icon of the bottom sheet.
+     */
+    private Drawable icon;
+
+    /**
+     * The color of the title of the bottom sheet.
+     */
+    private int titleColor = -1;
+
+    /**
+     * The background of the bottom sheet.
+     */
+    private Drawable background;
+
+    /**
+     * The custom content view of the bottom sheet.
+     */
+    private View customView;
+
+    /**
+     * The resource id of the custom content view of the bottom sheet.
+     */
+    private int customViewId = -1;
+
+    /**
+     * The custom title view of the bottom sheet.
+     */
+    private View customTitleView;
+
+    /**
+     * The resource id of the custom title view of the bottom sheet.
+     */
+    private int customTitleViewId = -1;
+
+    /**
+     * True, if the bottom sheet should be maximized immediately after it has been shown, false
      * otherwise.
      */
     private boolean maximize;
@@ -1273,35 +999,14 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
 
     /**
      * Initializes the bottom sheet.
-     *
-     * @param items
-     *         A collection, which contains the items, which should be added to the bottom sheet, as
-     *         an instance of the type {@link Collection} or null, if a custom view should be shown
-     *         instead
-     * @param style
-     *         The style, which should be used to display the bottom sheet's items, as a value of
-     *         the enum {@link Style}. The style may either be <code>LIST</code>,
-     *         <code>LIST_COLUMNS</code> or <code>GRID</code>
-     * @param width
-     *         The width of the bottom sheet in pixels as an {@link Integer} value
      */
-    private void initialize(@Nullable final Collection<AbstractItem> items,
-                            @NonNull final Style style, final int width) {
-        this.style = style;
-        this.width = width;
-        this.maximize = false;
+    private void initialize() {
+        width = getContext().getResources().getDimensionPixelSize(R.dimen.default_width);
+        maximize = false;
+        adapter = new DividableGridAdapter(getContext(), style, width);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             super.setOnShowListener(createOnShowListener());
-        }
-
-        if (items != null) {
-            adapter = new DividableGridAdapter(getContext(), style, width);
-            adapter.setWidth(width);
-
-            for (AbstractItem item : items) {
-                adapter.add(item);
-            }
         }
     }
 
@@ -1316,6 +1021,256 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
         layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
         return layoutParams;
+    }
+
+    /**
+     * Creates and returns the layout params, which should be used to show the bottom sheet's
+     * content.
+     *
+     * @return The layout params, which have been created, as an instance of the class {@link
+     * android.widget.FrameLayout.LayoutParams }
+     */
+    private FrameLayout.LayoutParams createContentLayoutParams() {
+        FrameLayout.LayoutParams layoutParams =
+                new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT);
+        layoutParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+        return layoutParams;
+    }
+
+    /**
+     * Inflates the bottom sheet's layout.
+     */
+    private void inflateLayout() {
+        rootView = (DraggableView) View.inflate(getContext(), R.layout.bottom_sheet, null);
+    }
+
+    /**
+     * Inflates the layout, which is used to show the bottom sheet's title. The layout may either be
+     * the default one or a custom view, if one has been set before.
+     */
+    private void inflateTitleView() {
+        titleContainer = (ViewGroup) rootView.findViewById(R.id.title_container);
+        titleContainer.removeAllViews();
+
+        if (customTitleView != null) {
+            titleContainer.addView(customTitleView, ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+        } else if (customTitleViewId != -1) {
+            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+            View view = layoutInflater.inflate(customTitleViewId, titleContainer, false);
+            titleContainer.addView(view, ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+        } else {
+            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+            View view = layoutInflater.inflate(R.layout.bottom_sheet_title, titleContainer, false);
+            titleContainer.addView(view, ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        View titleView = titleContainer.findViewById(android.R.id.title);
+        titleTextView = titleView instanceof TextView ? (TextView) titleView : null;
+    }
+
+    /**
+     * Inflates the layout, which is used to show the bottom sheet's content. The layout may either
+     * be the default one or a custom view, if one has been set before.
+     */
+    private void inflateContentView() {
+        contentContainer = (ViewGroup) rootView.findViewById(R.id.content_container);
+        contentContainer.removeAllViews();
+
+        if (customView != null) {
+            contentContainer.setVisibility(View.VISIBLE);
+            contentContainer.addView(customView, ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+        } else if (customViewId != -1) {
+            contentContainer.setVisibility(View.VISIBLE);
+            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+            View view = layoutInflater.inflate(customViewId, contentContainer, false);
+            contentContainer.addView(view, ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+        } else {
+            LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+            View view = layoutInflater
+                    .inflate(R.layout.bottom_sheet_grid_view, contentContainer, false);
+            contentContainer.addView(view, ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        showGridView();
+    }
+
+    /**
+     * Shows the grid view, which is used to show the bottom sheet's items.
+     */
+    private void showGridView() {
+        gridView = (GridView) contentContainer.findViewById(R.id.bottom_sheet_grid_view);
+
+        if (!adapter.isEmpty() && gridView != null) {
+            contentContainer.setVisibility(View.VISIBLE);
+
+            if (style == Style.GRID) {
+                int horizontalPadding = getContext().getResources()
+                        .getDimensionPixelSize(R.dimen.bottom_sheet_grid_item_horizontal_padding);
+                int paddingBottom = getContext().getResources()
+                        .getDimensionPixelSize(R.dimen.bottom_sheet_grid_padding_bottom);
+                gridView.setPadding(horizontalPadding, 0, horizontalPadding, paddingBottom);
+                gridView.setNumColumns(GridView.AUTO_FIT);
+                gridView.setColumnWidth(getContext().getResources()
+                        .getDimensionPixelSize(R.dimen.bottom_sheet_grid_item_size));
+            } else {
+                int paddingBottom = getContext().getResources()
+                        .getDimensionPixelSize(R.dimen.bottom_sheet_list_padding_bottom);
+                gridView.setPadding(0, 0, 0, paddingBottom);
+                gridView.setNumColumns(style == Style.LIST_COLUMNS &&
+                        (getDeviceType(getContext()) == DeviceType.TABLET ||
+                                getOrientation(getContext()) == Orientation.LANDSCAPE) ? 2 : 1);
+            }
+
+            gridView.setOnItemClickListener(createItemClickListener());
+            gridView.setOnItemLongClickListener(createItemLongClickListener());
+            gridView.setAdapter(adapter);
+            adaptGridViewHeight();
+        }
+    }
+
+    /**
+     * Adapts the view, which is used to show the dialog's content.
+     */
+    private void adaptContentView() {
+        if (contentContainer != null) {
+            inflateContentView();
+        }
+    }
+
+    /**
+     * Adapts the view, which is used to show the dialog's title.
+     */
+    private void adaptTitleView() {
+        if (titleContainer != null) {
+            inflateTitleView();
+            adaptTitle();
+            adaptTitleColor();
+            adaptIcon();
+        }
+    }
+
+    /**
+     * Adapts the style, which is used to show the bottom sheet's items.
+     */
+    private void adaptStyle() {
+        adapter.setStyle(style);
+        adaptGridViewHeight();
+
+        if (rootView != null) {
+            if (style == Style.LIST) {
+                int paddingTop = getContext().getResources()
+                        .getDimensionPixelSize(R.dimen.bottom_sheet_list_padding_top);
+                rootView.setPadding(0, paddingTop, 0, 0);
+            } else {
+                int paddingTop = getContext().getResources()
+                        .getDimensionPixelSize(R.dimen.bottom_sheet_grid_padding_top);
+                rootView.setPadding(0, paddingTop, 0, 0);
+            }
+        }
+
+        if (titleContainer != null) {
+            if (style == Style.LIST) {
+                int padding = getContext().getResources()
+                        .getDimensionPixelSize(R.dimen.bottom_sheet_list_item_horizontal_padding);
+                titleContainer.setPadding(padding, 0, padding, 0);
+            } else {
+                int padding = getContext().getResources()
+                        .getDimensionPixelSize(R.dimen.bottom_sheet_grid_item_horizontal_padding);
+                titleContainer.setPadding(padding, 0, padding, 0);
+            }
+        }
+    }
+
+    /**
+     * Adapts the color of the bottom sheet's title.
+     */
+    private void adaptTitleColor() {
+        if (titleTextView != null && titleColor != -1) {
+            titleTextView.setTextColor(titleColor);
+        }
+    }
+
+    /**
+     * Adapts the bottom sheet's title.
+     */
+    private void adaptTitle() {
+        if (titleTextView != null) {
+            titleTextView.setText(title);
+        }
+
+        adaptTitleContainerVisibility();
+    }
+
+    /**
+     * Adapts the bottom sheet's icon.
+     */
+    private void adaptIcon() {
+        if (titleTextView != null) {
+            titleTextView.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
+        }
+
+        adaptTitleContainerVisibility();
+    }
+
+    /**
+     * Adapts the visibility of the layout, which is used to show the bottom sheet's title.
+     */
+    private void adaptTitleContainerVisibility() {
+        if (titleContainer != null) {
+            if (customTitleView == null && customTitleViewId == -1) {
+                titleContainer.setVisibility(
+                        !TextUtils.isEmpty(title) || icon != null ? View.VISIBLE : View.GONE);
+            } else {
+                titleContainer.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    /**
+     * Adapts the bottom sheet's background.
+     */
+    @SuppressWarnings("deprecation")
+    private void adaptBackground() {
+        if (rootView != null && background != null) {
+            rootView.setBackgroundDrawable(background);
+        }
+    }
+
+    /**
+     * Adapts the bottom sheet's drag sensitivity.
+     */
+    private void adaptDragSensitivity() {
+        if (rootView != null) {
+            rootView.setDragSensitivity(calculateDragSensitivity());
+        }
+    }
+
+    /**
+     * Adapts the width of the bottom sheet.
+     */
+    private void adaptWidth() {
+        adapter.setWidth(width);
+
+        if (rootView != null) {
+            rootView.setWidth(width);
+            rootView.requestLayout();
+        }
+    }
+
+    /**
+     * Adapts the height of the grid view, which is used to show the bottom sheet's items.
+     */
+    private void adaptGridViewHeight() {
+        if (gridView instanceof DividableGridView) {
+            ((DividableGridView) gridView).adaptHeightToChildren();
+        }
     }
 
     /**
@@ -1510,56 +1465,13 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * @param context
      *         The context, which should be used by the bottom sheet, as an instance of the class
      *         {@link Context}. The context may not be null
-     * @param items
-     *         A collection, which contains the items, which should be added to the bottom sheet, as
-     *         an instance of the type {@link Collection} or null, if a custom view should be shown
-     *         instead
-     * @param style
-     *         The style, which should be used to display the bottom sheet's items, as a value of
-     *         the enum {@link Style}. The style may either be <code>LIST</code>,
-     *         <code>LIST_COLUMNS</code> or <code>GRID</code>
-     * @param width
-     *         The width of the bottom sheet in pixels as an {@link Integer} value. The width must
-     *         be at least 1
-     */
-    protected BottomSheet(@NonNull final Context context,
-                          @Nullable final Collection<AbstractItem> items,
-                          @NonNull final Style style, final int width) {
-        super(context);
-        ensureNotNull(style, "The style may not be null");
-        ensureAtLeast(width, 1, "The width must be at least 1");
-        initialize(items, style, width);
-    }
-
-    /**
-     * Creates a bottom sheet, which is designed according to Android 5's Material Design guidelines
-     * even on pre-Lollipop devices.
-     *
-     * @param context
-     *         The context, which should be used by the bottom sheet, as an instance of the class
-     *         {@link Context}. The context may not be null
      * @param themeResourceId
      *         The resource id of the theme, which should be used by the bottom sheet, as an {@link
      *         Integer} value. The resource id must correspond to a valid theme
-     * @param items
-     *         A collection, which contains the items, which should be added to the bottom sheet, as
-     *         an instance of the type {@link Collection} or null, if a custom view should be shown
-     *         instead
-     * @param style
-     *         The style, which should be used to display the bottom sheet's items, as a value of
-     *         the enum {@link Style}. The style may either be <code>LIST</code>,
-     *         <code>LIST_COLUMNS</code> or <code>GRID</code>
-     * @param width
-     *         The width of the bottom sheet in pixels as an {@link Integer} value. The width must
-     *         be at least 1
      */
-    protected BottomSheet(@NonNull final Context context, @StyleRes final int themeResourceId,
-                          @Nullable final Collection<AbstractItem> items,
-                          @NonNull final Style style, final int width) {
+    protected BottomSheet(@NonNull final Context context, @StyleRes final int themeResourceId) {
         super(context, themeResourceId);
-        ensureNotNull(style, "The style may not be null");
-        ensureAtLeast(width, 1, "The width must be at least 1");
-        initialize(items, style, width);
+        initialize();
     }
 
     /**
@@ -1612,21 +1524,20 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * Returns the adapter of the grid view, which is contained by the bottom sheet.
      *
      * @return The adapter of the grid view, which is contained by the bottom sheet, as an instance
-     * of the type {@link ListAdapter} or null, if the bottom sheet does not show any items or has
-     * not been shown yet
+     * of the type {@link ListAdapter}
      */
     public final ListAdapter getListAdapter() {
-        return getGridView() != null ? getGridView().getAdapter() : null;
+        return adapter;
     }
 
     /**
      * Returns the icon of the bottom sheet.
      *
      * @return The icon of the bottom sheet, as an instance of the class {@link Drawable} or null,
-     * if no icon is shown or if the bottom sheet has not been shown yet
+     * if no icon has been set
      */
     public final Drawable getIcon() {
-        return titleTextView != null ? titleTextView.getCompoundDrawables()[0] : null;
+        return icon;
     }
 
     /**
@@ -1636,16 +1547,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         The icon, which should be set, as an instance of the class {@link Drawable} or null,
      *         if no icon should be shown
      */
-    public final void setIcon(final Drawable icon) {
-        if (titleTextView != null) {
-            titleTextView.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-        }
-
-        if (titleContainer != null) {
-            titleContainer.setVisibility(
-                    (!TextUtils.isEmpty(getTitle()) || getIcon() != null) ? View.VISIBLE :
-                            View.GONE);
-        }
+    public final void setIcon(@Nullable final Drawable icon) {
+        this.icon = icon;
+        adaptIcon();
     }
 
     /**
@@ -1655,9 +1559,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         The resource id of the icon, which should be set, as an {@link Integer} value. The
      *         resource id must correspond to a valid drawable resource
      */
-    @SuppressWarnings("deprecation")
     public final void setIcon(@DrawableRes final int resourceId) {
-        setIcon(getContext().getResources().getDrawable(resourceId));
+        setIcon(ContextCompat.getDrawable(getContext(), resourceId));
     }
 
     /**
@@ -1677,10 +1580,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * Returns the color of the title of the bottom sheet.
      *
      * @return The color of the title of the bottom sheet as an {@link Integer} value or -1, if no
-     * title is shown or if the bottom sheet has not been shown yet
+     * custom color has been set
      */
     public final int getTitleColor() {
-        return !TextUtils.isEmpty(getTitle()) ? titleTextView.getCurrentTextColor() : -1;
+        return titleColor;
     }
 
     /**
@@ -1690,24 +1593,18 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         The color, which should be set, as an {@link Integer} value
      */
     public final void setTitleColor(@ColorInt final int color) {
-        if (titleTextView != null) {
-            titleTextView.setTextColor(color);
-        }
+        titleColor = color;
+        adaptTitleColor();
     }
 
     /**
      * Returns the color of the items of the bottom sheet.
      *
-     * @return The color of the items of the bottom sheet as an {@link Integer} value or -1, if the
-     * bottom sheet does not show any items or has not been shown yet or if no custom color has been
-     * set
+     * @return The color of the items of the bottom sheet as an {@link Integer} value or -1, if no
+     * custom color has been set
      */
     public final int getItemColor() {
-        if (adapter != null) {
-            return adapter.getItemColor();
-        }
-
-        return -1;
+        return adapter.getItemColor();
     }
 
     /**
@@ -1718,24 +1615,18 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         should be set
      */
     public final void setItemColor(@ColorInt final int color) {
-        if (adapter != null) {
-            adapter.setItemColor(color);
-        }
+        adapter.setItemColor(color);
+        adapter.notifyDataSetChanged();
     }
 
     /**
      * Returns the color of the dividers of the bottom sheet.
      *
      * @return The color of the dividers of the bottom sheet as an {@link Integer} value or -1, if
-     * the bottom sheet does not show any items or has not been shown yet or if no custom color has
-     * been set
+     * no custom color has been set
      */
     public final int getDividerColor() {
-        if (adapter != null) {
-            return adapter.getDividerColor();
-        }
-
-        return -1;
+        return adapter.getDividerColor();
     }
 
     /**
@@ -1746,19 +1637,18 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         should be set
      */
     public final void setDividerColor(@ColorInt final int color) {
-        if (adapter != null) {
-            adapter.setDividerColor(color);
-        }
+        adapter.setDividerColor(color);
+        adapter.notifyDataSetChanged();
     }
 
     /**
      * Returns the background of the bottom sheet.
      *
      * @return The background of the bottom sheet as an instance of the class {@link Drawable} or
-     * null, if no custom background is set or if the bottom sheet has not been shown yet
+     * null, if no custom background has been set
      */
     public final Drawable getBackground() {
-        return rootView != null ? rootView.getBackground() : null;
+        return background;
     }
 
     /**
@@ -1768,11 +1658,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         The background, which should be set, as an instance of the class {@link Drawable} or
      *         null, if no custom background should be set
      */
-    @SuppressWarnings("deprecation")
     public final void setBackground(@Nullable final Drawable background) {
-        if (rootView != null) {
-            rootView.setBackgroundDrawable(background);
-        }
+        this.background = background;
+        adaptBackground();
     }
 
     /**
@@ -1782,9 +1670,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         The resource id of the background, which should be set, as an {@link Integer} value.
      *         The resource id must correspond to a valid drawable resource
      */
-    @SuppressWarnings("deprecation")
     public final void setBackground(@DrawableRes final int resourceId) {
-        setBackground(getContext().getResources().getDrawable(resourceId));
+        setBackground(ContextCompat.getDrawable(getContext(), resourceId));
     }
 
     /**
@@ -1806,38 +1693,22 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         no custom view should be used to show the title
      */
     public final void setCustomTitle(@Nullable final View view) {
-        if (titleContainer != null) {
-            CharSequence title = getTitle();
-            Drawable icon = getIcon();
-            int titleColor = getTitleColor();
-            titleContainer.removeAllViews();
+        customTitleView = view;
+        customTitleViewId = -1;
+        adaptTitleView();
+    }
 
-            if (view != null) {
-                titleContainer.setVisibility(View.VISIBLE);
-                titleContainer.addView(view, ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT);
-            } else {
-                View.inflate(getContext(), R.layout.bottom_sheet_title, titleContainer);
-            }
-
-            View titleView = titleContainer.findViewById(android.R.id.title);
-
-            if (titleView instanceof TextView) {
-                titleTextView = (TextView) titleView;
-                titleTextView.setTextColor(titleColor);
-
-                if (!TextUtils.isEmpty(title) || icon != null) {
-                    titleContainer.setVisibility(View.VISIBLE);
-                    titleTextView.setText(title);
-
-                    if (icon != null) {
-                        titleTextView
-                                .setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-                    }
-
-                }
-            }
-        }
+    /**
+     * Sets the custom view, which should be used to show the title of the bottom sheet.
+     *
+     * @param resourceId
+     *         The resource id of the view, which should be set, as an {@link Integer} value. The
+     *         resource id must correspond to a valid layout resource
+     */
+    public final void setCustomTitle(@LayoutRes final int resourceId) {
+        customTitleView = null;
+        customTitleViewId = resourceId;
+        adaptTitleView();
     }
 
     /**
@@ -1848,21 +1719,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         no custom view should be shown
      */
     public final void setView(@Nullable final View view) {
-        if (contentContainer != null) {
-            contentContainer.removeAllViews();
-            LinearLayout.LayoutParams titleLayoutParams =
-                    (LinearLayout.LayoutParams) titleContainer.getLayoutParams();
-
-            if (view != null) {
-                contentContainer.setVisibility(View.VISIBLE);
-                contentContainer.addView(view, ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT);
-            } else {
-                contentContainer.setVisibility(View.GONE);
-            }
-
-            titleContainer.setLayoutParams(titleLayoutParams);
-        }
+        customView = view;
+        customViewId = -1;
+        adaptContentView();
     }
 
     /**
@@ -1873,7 +1732,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         resource id must correspond to a valid layout resource
      */
     public final void setView(@LayoutRes final int resourceId) {
-        setView(View.inflate(getContext(), resourceId, null));
+        customView = null;
+        customViewId = resourceId;
+        adaptContentView();
     }
 
     /**
@@ -1899,10 +1760,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         ensureAtLeast(dragSensitivity, 0, "The drag sensitivity must be at least 0");
         ensureAtMaximum(dragSensitivity, 1, "The drag sensitivity must be at maximum 1");
         this.dragSensitivity = dragSensitivity;
-
-        if (rootView != null) {
-            rootView.setDragSensitivity(calculateDragSensitivity());
-        }
+        adaptDragSensitivity();
     }
 
     /**
@@ -1950,11 +1808,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     public final void setWidth(final int width) {
         ensureAtLeast(width, 1, "The width must be at least 1");
         this.width = width;
-        adapter.setWidth(width);
-
-        if (rootView != null) {
-            rootView.setWidth(width);
-        }
+        adaptWidth();
     }
 
     /**
@@ -1965,14 +1819,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         CharSequence}. The title may neither be null, nor empty
      */
     public final void addItem(@NonNull final CharSequence title) {
-        if (adapter != null) {
-            Item item = new Item(title);
-            adapter.add(item);
-
-            if (gridView != null) {
-                gridView.adaptHeightToChildren();
-            }
-        }
+        Item item = new Item(title);
+        adapter.add(item);
+        adaptGridViewHeight();
     }
 
     /**
@@ -1986,15 +1835,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         Drawable}, or null, if no item should be used
      */
     public final void addItem(@NonNull final CharSequence title, @Nullable final Drawable icon) {
-        if (adapter != null) {
-            Item item = new Item(title);
-            item.setIcon(icon);
-            adapter.add(item);
-
-            if (gridView != null) {
-                gridView.adaptHeightToChildren();
-            }
-        }
+        Item item = new Item(title);
+        item.setIcon(icon);
+        adapter.add(item);
+        adaptGridViewHeight();
     }
 
     /**
@@ -2005,14 +1849,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         Integer} value. The resource id must correspond to a valid string resource
      */
     public final void addItem(@StringRes final int titleId) {
-        if (adapter != null) {
-            Item item = new Item(getContext(), titleId);
-            adapter.add(item);
-
-            if (gridView != null) {
-                gridView.adaptHeightToChildren();
-            }
-        }
+        Item item = new Item(getContext(), titleId);
+        adapter.add(item);
+        adaptGridViewHeight();
     }
 
     /**
@@ -2026,15 +1865,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         value. The resource id must correspond to a valid drawable resource
      */
     public final void addItem(@StringRes final int titleId, @DrawableRes final int iconId) {
-        if (adapter != null) {
-            Item item = new Item(getContext(), titleId);
-            item.setIcon(getContext(), iconId);
-            adapter.add(item);
-
-            if (gridView != null) {
-                gridView.adaptHeightToChildren();
-            }
-        }
+        Item item = new Item(getContext(), titleId);
+        item.setIcon(getContext(), iconId);
+        adapter.add(item);
+        adaptGridViewHeight();
     }
 
     /**
@@ -2047,14 +1881,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         CharSequence}. The title may neither be null, nor empty
      */
     public final void setItem(final int index, @NonNull final CharSequence title) {
-        if (adapter != null) {
-            Item item = new Item(title);
-            adapter.set(index, item);
-
-            if (gridView != null) {
-                gridView.adaptHeightToChildren();
-            }
-        }
+        Item item = new Item(title);
+        adapter.set(index, item);
+        adaptGridViewHeight();
     }
 
     /**
@@ -2071,15 +1900,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      */
     public final void setItem(final int index, @NonNull final CharSequence title,
                               @Nullable final Drawable icon) {
-        if (adapter != null) {
-            Item item = new Item(title);
-            item.setIcon(icon);
-            adapter.set(index, item);
-
-            if (gridView != null) {
-                gridView.adaptHeightToChildren();
-            }
-        }
+        Item item = new Item(title);
+        item.setIcon(icon);
+        adapter.set(index, item);
+        adaptGridViewHeight();
     }
 
     /**
@@ -2092,14 +1916,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         Integer} value. The resource id must correspond to a valid string resource
      */
     public final void setItem(final int index, @StringRes final int titleId) {
-        if (adapter != null) {
-            Item item = new Item(getContext(), titleId);
-            adapter.set(index, item);
-
-            if (gridView != null) {
-                gridView.adaptHeightToChildren();
-            }
-        }
+        Item item = new Item(getContext(), titleId);
+        adapter.set(index, item);
+        adaptGridViewHeight();
     }
 
     /**
@@ -2116,28 +1935,18 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      */
     public final void setItem(final int index, @StringRes final int titleId,
                               @DrawableRes final int iconId) {
-        if (adapter != null) {
-            Item item = new Item(getContext(), titleId);
-            item.setIcon(getContext(), iconId);
-            adapter.set(index, item);
-
-            if (gridView != null) {
-                gridView.adaptHeightToChildren();
-            }
-        }
+        Item item = new Item(getContext(), titleId);
+        item.setIcon(getContext(), iconId);
+        adapter.set(index, item);
+        adaptGridViewHeight();
     }
 
     /**
      * Adds a new divider to the bottom sheet.
      */
     public final void addDivider() {
-        if (adapter != null) {
-            adapter.add(new Divider());
-
-            if (gridView != null) {
-                gridView.adaptHeightToChildren();
-            }
-        }
+        adapter.add(new Divider());
+        adaptGridViewHeight();
     }
 
     /**
@@ -2148,15 +1957,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         CharSequence}, or null, if no title should be used
      */
     public final void addDivider(@Nullable final CharSequence title) {
-        if (adapter != null) {
-            Divider divider = new Divider();
-            divider.setTitle(title);
-            adapter.add(divider);
-
-            if (gridView != null) {
-                gridView.adaptHeightToChildren();
-            }
-        }
+        Divider divider = new Divider();
+        divider.setTitle(title);
+        adapter.add(divider);
+        adaptGridViewHeight();
     }
 
     /**
@@ -2167,15 +1971,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         Integer} value. The resource id must correspond to a valid string resource
      */
     public final void addDivider(@StringRes final int titleId) {
-        if (adapter != null) {
-            Divider divider = new Divider();
-            divider.setTitle(getContext(), titleId);
-            adapter.add(divider);
-
-            if (gridView != null) {
-                gridView.adaptHeightToChildren();
-            }
-        }
+        Divider divider = new Divider();
+        divider.setTitle(getContext(), titleId);
+        adapter.add(divider);
+        adaptGridViewHeight();
     }
 
     /**
@@ -2185,14 +1984,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         The index of the item, which should be replaced, as an {@link Integer} value
      */
     public final void setDivider(final int index) {
-        if (adapter != null) {
-            Divider divider = new Divider();
-            adapter.set(index, divider);
-
-            if (gridView != null) {
-                gridView.adaptHeightToChildren();
-            }
-        }
+        Divider divider = new Divider();
+        adapter.set(index, divider);
+        adaptGridViewHeight();
     }
 
     /**
@@ -2205,15 +1999,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         CharSequence}, or null, if no title should be used
      */
     public final void setDivider(final int index, @Nullable final CharSequence title) {
-        if (adapter != null) {
-            Divider divider = new Divider();
-            divider.setTitle(title);
-            adapter.set(index, divider);
-
-            if (gridView != null) {
-                gridView.adaptHeightToChildren();
-            }
-        }
+        Divider divider = new Divider();
+        divider.setTitle(title);
+        adapter.set(index, divider);
+        adaptGridViewHeight();
     }
 
     /**
@@ -2226,15 +2015,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         Integer} value. The resource id must correspond to a valid string resource
      */
     public final void setDivider(final int index, @StringRes final int titleId) {
-        if (adapter != null) {
-            Divider divider = new Divider();
-            divider.setTitle(getContext(), titleId);
-            adapter.set(index, divider);
-
-            if (gridView != null) {
-                gridView.adaptHeightToChildren();
-            }
-        }
+        Divider divider = new Divider();
+        divider.setTitle(getContext(), titleId);
+        adapter.set(index, divider);
+        adaptGridViewHeight();
     }
 
     /**
@@ -2244,26 +2028,25 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         The index of the item, which should be removed, as an {@link Integer} value
      */
     public final void removeItem(final int index) {
-        if (adapter != null) {
-            adapter.remove(index);
-
-            if (gridView != null) {
-                gridView.adaptHeightToChildren();
-            }
-        }
+        adapter.remove(index);
+        adaptGridViewHeight();
     }
 
     /**
      * Removes all items from the bottom sheet.
      */
     public final void removeAllItems() {
-        if (adapter != null) {
-            adapter.clear();
+        adapter.clear();
+        adaptGridViewHeight();
+    }
 
-            if (gridView != null) {
-                gridView.adaptHeightToChildren();
-            }
-        }
+    /**
+     * Returns, whether the bottom sheet contains any items, or not.
+     *
+     * @return True, if the bottom sheet contains any items, false otherwise
+     */
+    public final boolean isEmpty() {
+        return adapter.isEmpty();
     }
 
     /**
@@ -2273,11 +2056,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * Integer} value or -1, if the bottom sheet does not show any items or has not been shown yet
      */
     public final int getItemCount() {
-        if (adapter != null) {
-            return adapter.getItemCount();
-        }
-
-        return -1;
+        return adapter.getItemCount();
     }
 
     /**
@@ -2288,7 +2067,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * @return True, if the item is enabled, false otherwise
      */
     public final boolean isItemEnabled(final int index) {
-        return adapter != null && adapter.isItemEnabled(index);
+        return adapter.isItemEnabled(index);
     }
 
     /**
@@ -2300,9 +2079,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         True, if the item should be enabled, false otherwise
      */
     public final void setItemEnabled(final int index, final boolean enabled) {
-        if (adapter != null) {
-            adapter.setItemEnabled(index, enabled);
-        }
+        adapter.setItemEnabled(index, enabled);
     }
 
     /**
@@ -2319,20 +2096,16 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     public final void setIntent(@NonNull final Activity activity, @NonNull final Intent intent) {
         ensureNotNull(activity, "The activity may not be null");
         ensureNotNull(intent, "The intent may not be null");
+        removeAllItems();
+        PackageManager packageManager = activity.getPackageManager();
+        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent, 0);
 
-        if (adapter != null) {
-            removeAllItems();
-            PackageManager packageManager = activity.getPackageManager();
-            List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent, 0);
-
-            for (ResolveInfo resolveInfo : resolveInfos) {
-                addItem(resolveInfo.loadLabel(packageManager),
-                        resolveInfo.loadIcon(packageManager));
-            }
-
-            setOnItemClickListener(
-                    createIntentClickListener(activity, (Intent) intent.clone(), resolveInfos));
+        for (ResolveInfo resolveInfo : resolveInfos) {
+            addItem(resolveInfo.loadLabel(packageManager), resolveInfo.loadIcon(packageManager));
         }
+
+        setOnItemClickListener(
+                createIntentClickListener(activity, (Intent) intent.clone(), resolveInfos));
     }
 
     /**
@@ -2340,9 +2113,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * the bottom sheet, when its items have been changed.
      */
     public final void invalidate() {
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -2354,9 +2125,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         been changed, false otherwise
      */
     public final void invalidateOnChange(final boolean invalidateOnChange) {
-        if (adapter != null) {
-            adapter.notifyOnChange(invalidateOnChange);
-        }
+        adapter.notifyOnChange(invalidateOnChange);
     }
 
     /**
@@ -2384,6 +2153,19 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     }
 
     /**
+     * Sets the style, which should be used to display the bottom sheet's items.
+     *
+     * @param style
+     *         The style, which should be set, as a value of the enum {@link Style}. The style may
+     *         either be <code>LIST</code>, <code>LIST_COLUMNS</code> or <code>GRID</code>
+     */
+    public final void setStyle(@NonNull final Style style) {
+        ensureNotNull(style, "The style may not be null");
+        this.style = style;
+        adaptStyle();
+    }
+
+    /**
      * Returns the style, which is used to display the bottom sheet's items.
      *
      * @return style The style, which is used to display the bottom sheet's items, as a value of the
@@ -2397,25 +2179,17 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * Returns the title of the bottom sheet.
      *
      * @return The title of the bottom sheet as an instance of the type {@link CharSequence} or
-     * null, if no title is shown or if the bottom sheet has not been shown yet
+     * null, if no title has been set
      */
     public final CharSequence getTitle() {
-        return titleTextView != null ? titleTextView.getText() : null;
+        return title;
     }
 
     @Override
     public final void setTitle(@Nullable final CharSequence title) {
         super.setTitle(title);
-
-        if (titleTextView != null) {
-            titleTextView.setText(title);
-        }
-
-        if (titleContainer != null) {
-            titleContainer.setVisibility(
-                    (!TextUtils.isEmpty(getTitle()) || getIcon() != null) ? View.VISIBLE :
-                            View.GONE);
-        }
+        this.title = title;
+        adaptTitle();
     }
 
     @Override
@@ -2468,23 +2242,34 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     public final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setAttributes(createLayoutParams());
+        View view = new View(getContext());
+        view.setBackgroundColor(Color.WHITE);
+        setContentView(view);
+        /*
         getWindow().getDecorView().setOnTouchListener(createCancelOnTouchListener());
-        rootView = (DraggableView) findViewById(R.id.root);
-        rootView.setDragSensitivity(calculateDragSensitivity());
-        rootView.setWidth(width);
+        inflateLayout();
+        inflateTitleView();
+        inflateContentView();
         rootView.setCallback(this);
-        titleContainer = (ViewGroup) findViewById(R.id.title_container);
-        View titleView = findViewById(android.R.id.title);
-        contentContainer = (ViewGroup) findViewById(R.id.content_container);
-        titleTextView = (titleView instanceof TextView) ? (TextView) titleView : null;
-        gridView = (DividableGridView) findViewById(R.id.bottom_sheet_grid_view);
+        setContentView(rootView, createContentLayoutParams());
+        adaptStyle();
+        adaptTitle();
+        adaptTitleColor();
+        adaptIcon();
+        adaptBackground();
+        adaptDragSensitivity();
+        adaptWidth();
+        */
+    }
 
-        if (gridView != null) {
-            gridView.setOnItemClickListener(createItemClickListener());
-            gridView.setOnItemLongClickListener(createItemLongClickListener());
-            gridView.setAdapter(adapter);
-            gridView.adaptHeightToChildren();
-        }
+    @Override
+    public final void onStop() {
+        super.onStop();
+        rootView = null;
+        titleContainer = null;
+        titleTextView = null;
+        contentContainer = null;
+        gridView = null;
     }
 
 }

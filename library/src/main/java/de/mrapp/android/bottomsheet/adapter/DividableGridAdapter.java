@@ -116,7 +116,7 @@ public class DividableGridAdapter extends BaseAdapter {
     /**
      * The style, which is used to display the adapter's items.
      */
-    private final Style style;
+    private Style style;
 
     /**
      * The number of columns, which are displayed by the adapter.
@@ -370,6 +370,31 @@ public class DividableGridAdapter extends BaseAdapter {
     }
 
     /**
+     * Returns the style, which is used to display the adapter's items.
+     *
+     * @return The style, which is used to display the adapter's items, as a value of the enum
+     * {@link Style}. The style may either be <code>LIST</code>, <code>LIST_COLUMNS</code> or
+     * <code>GRID</code>
+     */
+    public final Style getStyle() {
+        return style;
+    }
+
+    /**
+     * Sets the style, which should be used to display the adapter's items.
+     *
+     * @param style
+     *         The style, which should be set, as a value of the enum {@link Style}. The style may
+     *         either be <code>LIST</code>, <code>LIST_COLUMNS</code> or <code>GRID</code>
+     */
+    public final void setStyle(@NonNull final Style style) {
+        ensureNotNull(style, "The style may not be null");
+        this.style = style;
+        this.rawItems = null;
+        notifyDataSetChanged();
+    }
+
+    /**
      * Sets the width of the bottom sheet, the items, which are displayed by the adapter, belong
      * to.
      *
@@ -405,17 +430,6 @@ public class DividableGridAdapter extends BaseAdapter {
      */
     public final boolean containsDividers() {
         return dividerCount > 0;
-    }
-
-    /**
-     * Returns the style, which is used to display the adapter's items.
-     *
-     * @return The style, which is used to display the adapter's items, as a value of the enum
-     * {@link Style}. The style may either be <code>LIST</code>, <code>LIST_COLUMNS</code> or
-     * <code>GRID</code>
-     */
-    public final Style getStyle() {
-        return style;
     }
 
     /**

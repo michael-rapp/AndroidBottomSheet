@@ -16,15 +16,29 @@ License.
 <resources>
 
     <style name="LightTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">#ffd64937</item>
-        <item name="colorPrimaryDark">#ffbb4030</item>
-        <item name="colorAccent">#ffd64937</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
+        <item name="android:alertDialogTheme">@style/LightDialogTheme</item>
     </style>
 
     <style name="DarkTheme" parent="Theme.AppCompat">
-        <item name="colorPrimary">#ffd64937</item>
-        <item name="colorPrimaryDark">#ffbb4030</item>
-        <item name="colorAccent">#ffd64937</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
+        <item name="android:alertDialogTheme">@style/DarkDialogTheme</item>
+    </style>
+
+    <style name="LightDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
+    </style>
+
+    <style name="DarkDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
     </style>
 
 </resources>
