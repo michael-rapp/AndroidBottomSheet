@@ -1092,14 +1092,12 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
 
         if (customView != null) {
             contentContainer.setVisibility(View.VISIBLE);
-            contentContainer.addView(customView, ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            contentContainer.addView(customView);
         } else if (customViewId != -1) {
             contentContainer.setVisibility(View.VISIBLE);
             LayoutInflater layoutInflater = LayoutInflater.from(getContext());
             View view = layoutInflater.inflate(customViewId, contentContainer, false);
-            contentContainer.addView(view, ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            contentContainer.addView(view);
         } else {
             LayoutInflater layoutInflater = LayoutInflater.from(getContext());
             View view = layoutInflater
@@ -1117,7 +1115,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     private void showGridView() {
         gridView = (GridView) contentContainer.findViewById(R.id.bottom_sheet_grid_view);
 
-        if (!adapter.isEmpty() && gridView != null) {
+        if (gridView != null) {
             contentContainer.setVisibility(View.VISIBLE);
 
             if (style == Style.GRID) {
