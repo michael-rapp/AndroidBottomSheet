@@ -609,7 +609,8 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
                     titleContainer.getVisibility() == View.VISIBLE ? titleContainer.getHeight() : 0;
             int contentContainerHeight = contentContainer.getVisibility() == View.VISIBLE ?
                     contentContainer.getHeight() : 0;
-            minMargin = parentHeight - (titleContainerHeight + contentContainerHeight);
+            int padding = getPaddingTop() + getPaddingBottom();
+            minMargin = parentHeight - titleContainerHeight - contentContainerHeight - padding;
             initialMargin = Math.max(Math.round(parentHeight - initialHeight), minMargin);
             int animationDuration = getResources().getInteger(R.integer.animation_duration);
             animationSpeed = initialHeight / (float) animationDuration;
