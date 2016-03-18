@@ -27,7 +27,6 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
@@ -117,32 +116,22 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             bottomSheet.requestWindowFeature(Window.FEATURE_NO_TITLE);
             bottomSheet.setCanceledOnTouchOutside(true);
             bottomSheet.setCancelable(true);
-            bottomSheet.setContentView(inflateLayout(), createLayoutParams());
+            bottomSheet.setContentView(createContentView(),
+                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT));
             obtainStyledAttributes(themeId);
         }
 
         /**
-         * Inflates the bottom sheet's layout.
+         * Creates and returns the bottom sheetview stub, which allows to inflate the bottom sheet's
+         * layout when shown.
          *
-         * @return The view, which has been inflated, as an instance of the class {@link View}
+         * @return The view stub, which has been created
          */
-        private View inflateLayout() {
-            return View.inflate(getContext(), R.layout.bottom_sheet, null);
-        }
-
-        /**
-         * Creates and returns the layout params, which should be used to show the bottom sheet's
-         * layout.
-         *
-         * @return The layout params, which have been created, as an instance of the class {@link
-         * android.widget.FrameLayout.LayoutParams }
-         */
-        private FrameLayout.LayoutParams createLayoutParams() {
-            FrameLayout.LayoutParams layoutParams =
-                    new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                            FrameLayout.LayoutParams.MATCH_PARENT);
-            layoutParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
-            return layoutParams;
+        private View createContentView() {
+            FrameLayout contentView = new FrameLayout(getContext());
+            contentView.setId(android.R.id.content);
+            return contentView;
         }
 
         /**
@@ -1043,11 +1032,31 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     }
 
     /**
+     * Creates and returns the layout params, which should be used to show the bottom sheet's root
+     * view.
+     *
+     * @return The layout params, which have been created, as an instance of the class {@link
+     * android.widget.FrameLayout.LayoutParams }
+     */
+    private FrameLayout.LayoutParams createRootViewLayoutParams() {
+        FrameLayout.LayoutParams layoutParams =
+                new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT);
+        layoutParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+        return layoutParams;
+    }
+
+    /**
      * Initializes the bottom sheet's root view.
      */
-    private void initializeRootView() {
-        rootView = (DraggableView) findViewById(R.id.root);
+    private void inflateRootView() {
+        ViewGroup contentView = (ViewGroup) findViewById(android.R.id.content);
+        contentView.removeAllViews();
+        LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+        rootView =
+                (DraggableView) layoutInflater.inflate(R.layout.bottom_sheet, contentView, false);
         rootView.setCallback(this);
+        contentView.addView(rootView, createRootViewLayoutParams());
     }
 
     /**
@@ -2236,11 +2245,11 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     }
 
     @Override
-    public final void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public final void onStart() {
+        super.onStart();
         getWindow().setAttributes(createLayoutParams());
         getWindow().getDecorView().setOnTouchListener(createCancelOnTouchListener());
-        initializeRootView();
+        inflateRootView();
         adaptRootView();
         inflateTitleView();
         inflateContentView();
