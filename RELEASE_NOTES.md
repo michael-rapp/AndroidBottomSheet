@@ -1,5 +1,13 @@
 # AndroidBottomSheet - RELEASE NOTES
 
+## Version 1.1.0 (Mar. 18th 2016)
+
+A feature release, which introduces the following changes:
+
+- A `BottomSheet`'s getter and setter methods can now also be used when the bottom sheet has not been shown yet.
+- Updated dependency "AndroidUtil" to version 1.4.5.
+- Updated AppCompat support library to version 23.2.1.
+
 ## Version 1.0.1 (Feb. 25th 2016)
 
 A minor release, which introduces the following changes:
