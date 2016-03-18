@@ -21,7 +21,7 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:23.2.1'
-    compile 'com.github.michael-rapp:android-util:1.4.4'
+    compile 'com.github.michael-rapp:android-util:1.4.5'
 }
 
 apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
