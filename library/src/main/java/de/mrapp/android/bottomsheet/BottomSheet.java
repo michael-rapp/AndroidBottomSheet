@@ -24,7 +24,6 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -118,7 +117,32 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             bottomSheet.requestWindowFeature(Window.FEATURE_NO_TITLE);
             bottomSheet.setCanceledOnTouchOutside(true);
             bottomSheet.setCancelable(true);
+            bottomSheet.setContentView(inflateLayout(), createLayoutParams());
             obtainStyledAttributes(themeId);
+        }
+
+        /**
+         * Inflates the bottom sheet's layout.
+         *
+         * @return The view, which has been inflated, as an instance of the class {@link View}
+         */
+        private View inflateLayout() {
+            return View.inflate(getContext(), R.layout.bottom_sheet, null);
+        }
+
+        /**
+         * Creates and returns the layout params, which should be used to show the bottom sheet's
+         * layout.
+         *
+         * @return The layout params, which have been created, as an instance of the class {@link
+         * android.widget.FrameLayout.LayoutParams }
+         */
+        private FrameLayout.LayoutParams createLayoutParams() {
+            FrameLayout.LayoutParams layoutParams =
+                    new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                            FrameLayout.LayoutParams.MATCH_PARENT);
+            layoutParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
+            return layoutParams;
         }
 
         /**
@@ -1024,25 +1048,11 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     }
 
     /**
-     * Creates and returns the layout params, which should be used to show the bottom sheet's
-     * content.
-     *
-     * @return The layout params, which have been created, as an instance of the class {@link
-     * android.widget.FrameLayout.LayoutParams }
+     * Initializes the bottom sheet's root view.
      */
-    private FrameLayout.LayoutParams createContentLayoutParams() {
-        FrameLayout.LayoutParams layoutParams =
-                new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                        FrameLayout.LayoutParams.MATCH_PARENT);
-        layoutParams.gravity = Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL;
-        return layoutParams;
-    }
-
-    /**
-     * Inflates the bottom sheet's layout.
-     */
-    private void inflateLayout() {
-        rootView = (DraggableView) View.inflate(getContext(), R.layout.bottom_sheet, null);
+    private void initializeRootView() {
+        rootView = (DraggableView) findViewById(R.id.root);
+        rootView.setCallback(this);
     }
 
     /**
@@ -2242,16 +2252,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     public final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setAttributes(createLayoutParams());
-        View view = new View(getContext());
-        view.setBackgroundColor(Color.WHITE);
-        setContentView(view);
-        /*
         getWindow().getDecorView().setOnTouchListener(createCancelOnTouchListener());
-        inflateLayout();
+        initializeRootView();
         inflateTitleView();
         inflateContentView();
-        rootView.setCallback(this);
-        setContentView(rootView, createContentLayoutParams());
         adaptStyle();
         adaptTitle();
         adaptTitleColor();
@@ -2259,7 +2263,6 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         adaptBackground();
         adaptDragSensitivity();
         adaptWidth();
-        */
     }
 
     @Override
