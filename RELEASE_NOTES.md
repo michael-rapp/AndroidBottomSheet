@@ -1,5 +1,11 @@
 # AndroidBottomSheet - RELEASE NOTES
 
+## Version 1.1.1 (Mar. 18th 2016)
+
+A bugfix release, which fixes the following issues:
+
+- https://github.com/michael-rapp/AndroidBottomSheet/issues/4
+
 ## Version 1.1.0 (Mar. 18th 2016)
 
 A feature release, which introduces the following changes:
