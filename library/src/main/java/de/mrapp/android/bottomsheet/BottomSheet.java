@@ -63,6 +63,7 @@ import de.mrapp.android.bottomsheet.model.Item;
 import de.mrapp.android.bottomsheet.view.DividableGridView;
 import de.mrapp.android.bottomsheet.view.DraggableView;
 import de.mrapp.android.util.DisplayUtil;
+import de.mrapp.android.util.ViewUtil;
 
 import static de.mrapp.android.util.Condition.ensureAtLeast;
 import static de.mrapp.android.util.Condition.ensureAtMaximum;
@@ -1229,10 +1230,9 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     /**
      * Adapts the bottom sheet's background.
      */
-    @SuppressWarnings("deprecation")
     private void adaptBackground() {
         if (rootView != null && background != null) {
-            rootView.setBackgroundDrawable(background);
+            ViewUtil.setBackground(rootView, background);
         }
     }
 
