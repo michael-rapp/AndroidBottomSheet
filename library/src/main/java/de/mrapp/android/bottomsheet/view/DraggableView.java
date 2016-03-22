@@ -51,6 +51,81 @@ import static de.mrapp.android.util.DisplayUtil.getDeviceType;
 public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGlobalLayoutListener {
 
     /**
+     * Creates a new root view of a {@link BottomSheet}, which can be dragged by the user.
+     *
+     * @param context
+     *         The context, which should be used by the view, as an instance of the class {@link
+     *         Context}. The context may not be null
+     */
+    public DraggableView(@NonNull final Context context) {
+        super(context);
+        initialize();
+    }
+
+    /**
+     * Creates a new root view of a {@link BottomSheet}, which can be dragged by the user.
+     *
+     * @param context
+     *         The context, which should be used by the view, as an instance of the class {@link
+     *         Context}. The context may not be null
+     * @param attributeSet
+     *         The attribute set, the view's attributes should be obtained from, as an instance of
+     *         the type {@link AttributeSet} or null, if no attributes should be obtained
+     */
+    public DraggableView(@NonNull final Context context,
+                         @Nullable final AttributeSet attributeSet) {
+        super(context, attributeSet);
+        initialize();
+    }
+
+    /**
+     * Creates a new root view of a {@link BottomSheet}, which can be dragged by the user.
+     *
+     * @param context
+     *         The context, which should be used by the view, as an instance of the class {@link
+     *         Context}. The context may not be null
+     * @param attributeSet
+     *         The attribute set, the view's attributes should be obtained from, as an instance of
+     *         the type {@link AttributeSet} or null, if no attributes should be obtained
+     * @param defaultStyle
+     *         The default style to apply to this view. If 0, no style will be applied (beyond what
+     *         is included in the theme). This may either be an attribute resource, whose value will
+     *         be retrieved from the current theme, or an explicit style resource
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public DraggableView(@NonNull final Context context, @Nullable final AttributeSet attributeSet,
+                         @StyleRes final int defaultStyle) {
+        super(context, attributeSet, defaultStyle);
+        initialize();
+    }
+
+    /**
+     * Creates a new root view of a {@link BottomSheet}, which can be dragged by the user.
+     *
+     * @param context
+     *         The context, which should be used by the view, as an instance of the class {@link
+     *         Context}. The context may not be null
+     * @param attributeSet
+     *         The attribute set, the view's attributes should be obtained from, as an instance of
+     *         the type {@link AttributeSet} or null, if no attributes should be obtained
+     * @param defaultStyle
+     *         The default style to apply to this view. If 0, no style will be applied (beyond what
+     *         is included in the theme). This may either be an attribute resource, whose value will
+     *         be retrieved from the current theme, or an explicit style resource
+     * @param defaultStyleResource
+     *         A resource identifier of a style resource that supplies default values for the view,
+     *         used only if the default style is 0 or can not be found in the theme. Can be 0 to not
+     *         look for defaults
+     */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public DraggableView(@NonNull final Context context, @Nullable final AttributeSet attributeSet,
+                         @StyleRes final int defaultStyle,
+                         @StyleRes final int defaultStyleResource) {
+        super(context, attributeSet, defaultStyle, defaultStyleResource);
+        initialize();
+    }
+
+    /**
      * Defines the interface, a class, which should be notified about the view's state, must
      * implement.
      */
@@ -378,81 +453,6 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
         if (callback != null) {
             callback.onHidden(canceled);
         }
-    }
-
-    /**
-     * Creates a new root view of a {@link BottomSheet}, which can be dragged by the user.
-     *
-     * @param context
-     *         The context, which should be used by the view, as an instance of the class {@link
-     *         Context}. The context may not be null
-     */
-    public DraggableView(@NonNull final Context context) {
-        super(context);
-        initialize();
-    }
-
-    /**
-     * Creates a new root view of a {@link BottomSheet}, which can be dragged by the user.
-     *
-     * @param context
-     *         The context, which should be used by the view, as an instance of the class {@link
-     *         Context}. The context may not be null
-     * @param attributeSet
-     *         The attribute set, the view's attributes should be obtained from, as an instance of
-     *         the type {@link AttributeSet} or null, if no attributes should be obtained
-     */
-    public DraggableView(@NonNull final Context context,
-                         @Nullable final AttributeSet attributeSet) {
-        super(context, attributeSet);
-        initialize();
-    }
-
-    /**
-     * Creates a new root view of a {@link BottomSheet}, which can be dragged by the user.
-     *
-     * @param context
-     *         The context, which should be used by the view, as an instance of the class {@link
-     *         Context}. The context may not be null
-     * @param attributeSet
-     *         The attribute set, the view's attributes should be obtained from, as an instance of
-     *         the type {@link AttributeSet} or null, if no attributes should be obtained
-     * @param defaultStyle
-     *         The default style to apply to this view. If 0, no style will be applied (beyond what
-     *         is included in the theme). This may either be an attribute resource, whose value will
-     *         be retrieved from the current theme, or an explicit style resource
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public DraggableView(@NonNull final Context context, @Nullable final AttributeSet attributeSet,
-                         @StyleRes final int defaultStyle) {
-        super(context, attributeSet, defaultStyle);
-        initialize();
-    }
-
-    /**
-     * Creates a new root view of a {@link BottomSheet}, which can be dragged by the user.
-     *
-     * @param context
-     *         The context, which should be used by the view, as an instance of the class {@link
-     *         Context}. The context may not be null
-     * @param attributeSet
-     *         The attribute set, the view's attributes should be obtained from, as an instance of
-     *         the type {@link AttributeSet} or null, if no attributes should be obtained
-     * @param defaultStyle
-     *         The default style to apply to this view. If 0, no style will be applied (beyond what
-     *         is included in the theme). This may either be an attribute resource, whose value will
-     *         be retrieved from the current theme, or an explicit style resource
-     * @param defaultStyleResource
-     *         A resource identifier of a style resource that supplies default values for the view,
-     *         used only if the default style is 0 or can not be found in the theme. Can be 0 to not
-     *         look for defaults
-     */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public DraggableView(@NonNull final Context context, @Nullable final AttributeSet attributeSet,
-                         @StyleRes final int defaultStyle,
-                         @StyleRes final int defaultStyleResource) {
-        super(context, attributeSet, defaultStyle, defaultStyleResource);
-        initialize();
     }
 
     /**

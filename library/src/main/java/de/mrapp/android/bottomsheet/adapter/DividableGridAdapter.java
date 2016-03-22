@@ -55,6 +55,36 @@ import static de.mrapp.android.util.DisplayUtil.getOrientation;
 public class DividableGridAdapter extends BaseAdapter {
 
     /**
+     * Creates a new adapter, which manages the items of a {@link BottomSheet}.
+     *
+     * @param context
+     *         The context, which should be used by the adapter, as an instance of the class {@link
+     *         Context}. The context may not be null
+     * @param style
+     *         The style, which should be used to display the adapter's items, as a value of the
+     *         enum {@link Style}. The style may either be <code>LIST</code>,
+     *         <code>LIST_COLUMNS</code> or <code>GRID</code>
+     * @param width
+     *         The width of the bottom sheet, the items, which are displayed by the adapter, belong
+     *         to, as an {@link Integer} value
+     */
+    public DividableGridAdapter(@NonNull final Context context, final Style style,
+                                final int width) {
+        ensureNotNull(context, "The context may not be null");
+        ensureNotNull(style, "The style may not be null");
+        this.context = context;
+        this.style = style;
+        this.items = new ArrayList<>();
+        this.rawItems = null;
+        this.iconCount = 0;
+        this.dividerCount = 0;
+        this.notifyOnChange = true;
+        this.itemColor = -1;
+        this.dividerColor = -1;
+        setWidth(width);
+    }
+
+    /**
      * The view holder, which is used to visualize items.
      */
     private static class ItemViewHolder {
@@ -337,36 +367,6 @@ public class DividableGridAdapter extends BaseAdapter {
             viewHolder.leftDivider.setBackgroundColor(dividerColor);
             viewHolder.rightDivider.setBackgroundColor(dividerColor);
         }
-    }
-
-    /**
-     * Creates a new adapter, which manages the items of a {@link BottomSheet}.
-     *
-     * @param context
-     *         The context, which should be used by the adapter, as an instance of the class {@link
-     *         Context}. The context may not be null
-     * @param style
-     *         The style, which should be used to display the adapter's items, as a value of the
-     *         enum {@link Style}. The style may either be <code>LIST</code>,
-     *         <code>LIST_COLUMNS</code> or <code>GRID</code>
-     * @param width
-     *         The width of the bottom sheet, the items, which are displayed by the adapter, belong
-     *         to, as an {@link Integer} value
-     */
-    public DividableGridAdapter(@NonNull final Context context, final Style style,
-                                final int width) {
-        ensureNotNull(context, "The context may not be null");
-        ensureNotNull(style, "The style may not be null");
-        this.context = context;
-        this.style = style;
-        this.items = new ArrayList<>();
-        this.rawItems = null;
-        this.iconCount = 0;
-        this.dividerCount = 0;
-        this.notifyOnChange = true;
-        this.itemColor = -1;
-        this.dividerColor = -1;
-        setWidth(width);
     }
 
     /**
