@@ -32,14 +32,14 @@
 
                 <div class="code-block">BottomSheet.Builder builder = <strong><font color='#7f0055'>new</font></strong> BottomSheet.Builder(<strong><font color='#7f0055'>this</font></strong>);
 <br/>builder.setTitle(R.string.bottom_sheet_title);
-<br/>builder.addItem(R.string.item1_title, R.drawable.item1_icon);
-<br/>builder.addItem(R.string.item2_title, R.drawable.item2_icon);
+<br/>builder.addItem(0, R.string.item1_title, R.drawable.item1_icon);
+<br/>builder.addItem(1, R.string.item2_title, R.drawable.item2_icon);
 <br/>builder.addDivider();
-<br/>builder.addItem(R.string.item3_title, R.drawable.item3_icon);
-<br/>builder.addItem(R.string.item4_title, R.drawable.item4_icon);
+<br/>builder.addItem(2, R.string.item3_title, R.drawable.item3_icon);
+<br/>builder.addItem(3, R.string.item4_title, R.drawable.item4_icon);
 <br/>builder.addDivider(R.string.divider_title);
-<br/>builder.addItem(R.string.item5_title, R.drawable.item5_icon);
-<br/>builder.addItem(R.string.item6_title, R.drawable.item6_icon);
+<br/>builder.addItem(4, R.string.item5_title, R.drawable.item5_icon);
+<br/>builder.addItem(5, R.string.item6_title, R.drawable.item6_icon);
 <br/>BottomSheet bottomSheet = builder.create();
 <br/>bottomSheet.show();</div>
 
