@@ -14,6 +14,7 @@
 package de.mrapp.android.bottomsheet.model;
 
 import android.support.annotation.CallSuper;
+import android.support.annotation.Nullable;
 
 import java.io.Serializable;
 
@@ -42,7 +43,7 @@ public abstract class AbstractItem implements Serializable, Cloneable {
      *         The item's title as an instance of the type {@link CharSequence} or null, if no title
      *         should be set
      */
-    public AbstractItem(final CharSequence title) {
+    public AbstractItem(@Nullable final CharSequence title) {
         this.title = title;
     }
 
@@ -64,7 +65,7 @@ public abstract class AbstractItem implements Serializable, Cloneable {
      *         null, of no title should be set
      */
     @CallSuper
-    public void setTitle(final CharSequence title) {
+    public void setTitle(@Nullable  final CharSequence title) {
         this.title = title;
     }
 
