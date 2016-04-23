@@ -65,7 +65,7 @@ public abstract class AbstractItem implements Serializable, Cloneable {
      *         null, of no title should be set
      */
     @CallSuper
-    public void setTitle(@Nullable  final CharSequence title) {
+    public void setTitle(@Nullable final CharSequence title) {
         this.title = title;
     }
 
