@@ -1,5 +1,11 @@
 # AndroidBottomSheet - RELEASE NOTES
 
+## Version 1.2.0 (Apr. 23th 2016)
+
+A feature release, which introduces the following changes:
+
+- Each item of a `BottomSheet` is now associated with an id. This allows to reference individual items regardless of their current position. The id of an item is passed to the registered `OnItemClickListener` when it is clicked.
+
 ## Version 1.1.1 (Mar. 18th 2016)
 
 A bugfix release, which fixes the following issues:
