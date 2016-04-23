@@ -1415,7 +1415,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
                         }
                     }
 
-                    return itemLongClickListener.onItemLongClick(parent, view, index, id);
+                    return itemLongClickListener
+                            .onItemLongClick(parent, view, index, getId(position));
                 }
 
                 return false;
