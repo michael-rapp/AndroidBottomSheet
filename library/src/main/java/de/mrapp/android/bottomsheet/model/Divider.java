@@ -26,6 +26,11 @@ import android.support.annotation.StringRes;
 public class Divider extends AbstractItem {
 
     /**
+     * The id of dividers.
+     */
+    public static final int DIVIDER_ID = -1;
+
+    /**
      * The constant serial version UID.
      */
     private static final long serialVersionUID = 1L;
@@ -34,7 +39,7 @@ public class Divider extends AbstractItem {
      * Creates a new divider.
      */
     public Divider() {
-        super(null);
+        super(DIVIDER_ID, null);
     }
 
     /**
@@ -51,6 +56,7 @@ public class Divider extends AbstractItem {
         setTitle(context.getText(resourceId));
     }
 
+    @SuppressWarnings("CloneDoesntCallSuperClone")
     @Override
     public final Divider clone() {
         Divider clonedDivider = new Divider();

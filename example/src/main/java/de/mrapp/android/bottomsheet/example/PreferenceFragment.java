@@ -224,7 +224,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
                                     R.drawable.list_item) : null;
                 }
 
-                builder.addItem(title, icon);
+                builder.addItem(i * dividerCount + j, title, icon);
 
                 if (disableItems) {
                     builder.setItemEnabled(index, false);

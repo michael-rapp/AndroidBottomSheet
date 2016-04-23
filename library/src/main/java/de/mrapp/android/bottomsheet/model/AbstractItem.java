@@ -32,6 +32,11 @@ public abstract class AbstractItem implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * The item's id.
+     */
+    private final int id;
+
+    /**
      * The item's title.
      */
     private CharSequence title;
@@ -39,12 +44,24 @@ public abstract class AbstractItem implements Serializable, Cloneable {
     /**
      * Creates a new item.
      *
+     * @param id
+     *         The item's id as an {@link Integer} value
      * @param title
      *         The item's title as an instance of the type {@link CharSequence} or null, if no title
      *         should be set
      */
-    public AbstractItem(@Nullable final CharSequence title) {
+    public AbstractItem(final int id, @Nullable final CharSequence title) {
+        this.id = id;
         this.title = title;
+    }
+
+    /**
+     * Returns the item's id.
+     *
+     * @return The item's id as an {@link Integer} value
+     */
+    public final int getId() {
+        return id;
     }
 
     /**
@@ -65,7 +82,7 @@ public abstract class AbstractItem implements Serializable, Cloneable {
      *         null, of no title should be set
      */
     @CallSuper
-    public void setTitle(@Nullable final CharSequence title) {
+    public void setTitle(final CharSequence title) {
         this.title = title;
     }
 
@@ -74,6 +91,7 @@ public abstract class AbstractItem implements Serializable, Cloneable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + id;
         result = prime * result + ((title == null) ? 0 : title.hashCode());
         return result;
     }
@@ -88,6 +106,8 @@ public abstract class AbstractItem implements Serializable, Cloneable {
         if (getClass() != obj.getClass())
             return false;
         AbstractItem other = (AbstractItem) obj;
+        if (id != other.id)
+            return false;
         if (title == null) {
             if (other.title != null)
                 return false;

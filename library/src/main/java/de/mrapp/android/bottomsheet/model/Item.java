@@ -21,6 +21,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 
+import static de.mrapp.android.util.Condition.ensureAtLeast;
 import static de.mrapp.android.util.Condition.ensureNotEmpty;
 import static de.mrapp.android.util.Condition.ensureNotNull;
 
@@ -50,12 +51,15 @@ public class Item extends AbstractItem {
     /**
      * Creates a new item.
      *
+     * @param id
+     *         The item's id as an {@link Integer} value. The id must be at least 0
      * @param title
      *         The item's title as an instance of the type {@link CharSequence}. The title may
      *         neither be null, nor empty
      */
-    public Item(@NonNull final CharSequence title) {
-        super(title);
+    public Item(final int id, @NonNull final CharSequence title) {
+        super(id, title);
+        ensureAtLeast(id, 0, "The id must be at least 0");
         ensureNotNull(title, "The title may not be null");
         ensureNotEmpty(title, "The title may not be empty");
         this.icon = null;
@@ -68,12 +72,14 @@ public class Item extends AbstractItem {
      * @param context
      *         The context, which should be used, as an instance of the class {@link Context}. The
      *         context may not be null
+     * @param id
+     *         The item's id as an {@link Integer} value
      * @param resourceId
      *         The resource id of the item's title as an {@link Integer} value. The resource id must
      *         correspond to a valid string resource
      */
-    public Item(@NonNull final Context context, @StringRes final int resourceId) {
-        this(context.getText(resourceId));
+    public Item(@NonNull final Context context, final int id, @StringRes final int resourceId) {
+        this(id, context.getText(resourceId));
     }
 
     /**
@@ -151,9 +157,10 @@ public class Item extends AbstractItem {
         super.setTitle(title);
     }
 
+    @SuppressWarnings("CloneDoesntCallSuperClone")
     @Override
     public final Item clone() {
-        Item clonedItem = new Item(getTitle());
+        Item clonedItem = new Item(getId(), getTitle());
         clonedItem.setIcon(getIcon());
         clonedItem.setEnabled(isEnabled());
         return clonedItem;
@@ -161,7 +168,7 @@ public class Item extends AbstractItem {
 
     @Override
     public final String toString() {
-        return "Item [title=" + getTitle() + ", icon=" + getIcon() +
+        return "Item [id=" + getId() + ", title=" + getTitle() + ", icon=" + getIcon() +
                 ", enabled=" + isEnabled() + "]";
     }
 
