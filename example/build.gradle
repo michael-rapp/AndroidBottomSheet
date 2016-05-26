@@ -8,8 +8,9 @@ android {
         applicationId "de.mrapp.android.bottomsheet.example"
         minSdkVersion 11
         targetSdkVersion 23
-        versionCode versionCode
-        versionName version
+        versionName project.VERSION_NAME
+        versionCode project.VERSION_CODE.toInteger()
+
     }
     buildTypes {
         release {
