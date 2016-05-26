@@ -28,7 +28,7 @@ Alternatively, the library can be added to your Android app as a Gradle dependen
 
 ```groovy
 dependencies {
-    compile 'com.github.michael-rapp:android-bottom-sheet:1.2.0'
+    compile 'com.github.michael-rapp:android-bottom-sheet:1.3.0'
 }
 ```
 
