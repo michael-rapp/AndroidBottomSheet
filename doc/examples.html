@@ -59,6 +59,17 @@
                 <p>By default the bottom sheet uses a light theme, which can be referenced by using the resource id <tt>R.style.BottomSheet_Light</tt>. If a dark theme should be used instead, the resource id <tt>R.style.BottomSheet</tt> has to be passed to the builder's constructor like shown below.</p>
 
                 <div class="code-block">BottomSheet.Builder builder = <strong><font color='#7f0055'>new</font></strong> BottomSheet.Builder(<strong><font color='#7f0055'>this</font></strong>, R.style.BottomSheet);</div>
+                
+                <div>Alternatively, the default theme, which is used by all bottom sheets by default, can be changed globally by using the theme attribute <tt>bottomSheetTheme</tt>. The attribute has to be included in the app's theme, which is defined in the <tt>res/values/styles.xml</tt> file, like it is shown below:</div>
+                
+                <div class="xml-block"><font color='#3f7f5f'>&lt;resources&gt;</font>
+<br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;<font color='#3f7f5f'>&lt;style</font>&nbsp;name=<font color='#2a00ff'>"AppTheme"</font>&nbsp;parent=<font color='#2a00ff'>"@style/Theme.AppCompat.Light.DarkActionBar"</font><font color='#3f7f5f'>&gt;</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color='#3f7f5f'>&lt;item</font>&nbsp;name=<font color='#2a00ff'>"colorPrimary"</font><font color='#3f7f5f'>&gt;</font><font color='#000000'>@color/color_primary</font><font color='#3f7f5f'>&lt;/item&gt;</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color='#3f7f5f'>&lt;item</font>&nbsp;name=<font color='#2a00ff'>"colorPrimaryDark"</font><font color='#3f7f5f'>&gt;</font><font color='#000000'>@color/color_primary_dark</font><font color='#3f7f5f'>&lt;/item&gt;</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color='#3f7f5f'>&lt;item</font>&nbsp;name=<font color='#2a00ff'>"colorAccent"</font><font color='#3f7f5f'>&gt;</font><font color='#000000'>@color/color_accent</font><font color='#3f7f5f'>&lt;/item&gt;</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color='#3f7f5f'>&lt;item</font>&nbsp;name=<font color='#2a00ff'>"bottomSheetTheme"</font><font color='#3f7f5f'>&gt;</font><font color='#000000'>@style/BottomSheet</font><font color='#3f7f5f'>&lt;/item&gt;</font>
+<br/>&nbsp;&nbsp;&nbsp;&nbsp;<font color='#3f7f5f'>&lt;/style&gt;</font>
+<br/><br/><font color='#3f7f5f'>&lt;/resources&gt;</font></div>
 
             <div class="copyright">
                 &#169; Copyright 2016, Michael Rapp. All rights reserved.
