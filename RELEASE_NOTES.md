@@ -1,5 +1,12 @@
 # AndroidBottomSheet - RELEASE NOTES
 
+## Version 1.3.0 (May 26th 2016)
+
+A feature release, which introduces the following changes:
+
+- It is now possible to globally change the theme, which is used by a `BottomSheet` by the default, by using the theme attribute `bottomSheetTheme`.
+- Updated AppCompat v7 support library to version 23.4.0.
+
 ## Version 1.2.0 (Apr. 23th 2016)
 
 A feature release, which introduces the following changes:
