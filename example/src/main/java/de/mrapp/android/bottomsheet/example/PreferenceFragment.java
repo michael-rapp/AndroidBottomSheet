@@ -172,8 +172,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
      * BottomSheet.Builder}
      */
     private BottomSheet.Builder createBottomSheetBuilder() {
-        BottomSheet.Builder builder = new BottomSheet.Builder(getActivity(),
-                isDarkThemeSet() ? R.style.BottomSheet : R.style.BottomSheet_Light);
+        BottomSheet.Builder builder = new BottomSheet.Builder(getActivity());
         builder.setStyle(getStyle());
 
         if (shouldTitleBeShown()) {

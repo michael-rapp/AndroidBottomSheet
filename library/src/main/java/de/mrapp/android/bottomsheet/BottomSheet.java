@@ -37,6 +37,7 @@ import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -112,7 +113,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          */
         private void initialize(@NonNull final Context context,
                                 @StyleRes final int themeResourceId) {
-            int themeId = themeResourceId != -1 ? themeResourceId : R.style.BottomSheet_Light;
+            TypedValue typedValue = new TypedValue();
+            context.getTheme().resolveAttribute(R.attr.bottomSheetTheme, typedValue, true);
+            int themeId = typedValue.resourceId;
+            themeId = themeId != 0 ? themeId : R.style.BottomSheet_Light;
             bottomSheet = new BottomSheet(context, themeId);
             bottomSheet.requestWindowFeature(Window.FEATURE_NO_TITLE);
             bottomSheet.setCanceledOnTouchOutside(true);

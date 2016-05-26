@@ -15,6 +15,7 @@ License.
 -->
 <resources>
 
+    <attr name="bottomSheetTheme" format="reference"/>
     <attr name="bottomSheetBackground" format="color|reference"/>
     <attr name="bottomSheetTitleColor" format="color"/>
     <attr name="bottomSheetItemColor" format="color"/>
