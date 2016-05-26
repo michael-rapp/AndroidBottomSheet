@@ -76,6 +76,21 @@ By default the bottom sheet uses a light theme, which can be referenced by using
 BottomSheet.Builder builder = new BottomSheet.Builder(this, R.style.BottomSheet);
 ```
 
+Alternatively, the default theme, which is used by all bottom sheets by default, can be changed globally by using the theme attribute `bottomSheetTheme`. The attribute has to be included in the app's theme, which is defined in the `res/values/styles.xml` file, like it is shown below:
+
+```xml
+<resources>
+
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
+        <item name="bottomSheetTheme">@style/BottomSheet</item>
+    </style>
+
+</resources>
+```
+
 The following screenshot shows the appearance of a bottom sheet using the dark theme.
 
 ![](doc/images/example-dark.png)
