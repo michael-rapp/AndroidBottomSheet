@@ -37,9 +37,85 @@ import de.mrapp.android.bottomsheet.BottomSheet.Style;
 public class PreferenceFragment extends android.preference.PreferenceFragment {
 
     /**
+     * The name of the extra, which is used to store the state of the regular bottom sheet within a
+     * bundle.
+     */
+    private static final String BOTTOM_SHEET_STATE_EXTRA =
+            PreferenceFragment.class.getSimpleName() + "::bottomSheetState";
+
+    /**
+     * The name of the extra, which is used to store the state of the custom bottom sheet within a
+     * bundle.
+     */
+    private static final String CUSTOM_BOTTOM_SHEET_STATE_EXTRA =
+            PreferenceFragment.class.getSimpleName() + "::customBottomSheetState";
+
+    /**
+     * The name of the extra, which is used to store the state of the intent bottom sheet within a
+     * bundle.
+     */
+    private static final String INTENT_BOTTOM_SHEET_STATE_EXTRA =
+            PreferenceFragment.class.getSimpleName() + "::intentBottomSheetState";
+
+    /**
+     * A regular bottom sheet containing list items.
+     */
+    private BottomSheet bottomSheet;
+
+    /**
+     * A bottom sheet containing a custom view.
+     */
+    private BottomSheet customBottomSheet;
+
+    /**
+     * A bottom sheet containing possible receivers for an intent.
+     */
+    private BottomSheet intentBottomSheet;
+
+    /**
      * The toast, which is used to indicate, when a bottom sheet's item has been clicked.
      */
     private Toast toast;
+
+    /**
+     * Initializes the bottom sheets.
+     */
+    private void initializeBottomSheets() {
+        initializeBottomSheet();
+        initializeCustomBottomSheet();
+        initializeIntentBottomSheet();
+    }
+
+    /**
+     * Initializes the regular bottom sheet containing list items.
+     */
+    private void initializeBottomSheet() {
+        BottomSheet.Builder builder = createBottomSheetBuilder();
+        addItems(builder);
+        bottomSheet = builder.create();
+    }
+
+    /**
+     * Initializes the bottom sheet containing a custom view.
+     */
+    private void initializeCustomBottomSheet() {
+        BottomSheet.Builder builder = createBottomSheetBuilder();
+        builder.setView(R.layout.custom_view);
+        customBottomSheet = builder.create();
+    }
+
+    /**
+     * Initializes the bottom sheet containing possible receivers for an intent.
+     */
+    private void initializeIntentBottomSheet() {
+        BottomSheet.Builder builder = createBottomSheetBuilder();
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+        intent.setType("text/plain");
+        builder.setIntent(getActivity(), intent);
+        intentBottomSheet = builder.create();
+    }
 
     /**
      * Initializes the preference, which allows to change the app's theme.
@@ -74,8 +150,16 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
     private void initializeShowBottomSheetPreference() {
         Preference showBottomSheetPreference =
                 findPreference(getString(R.string.show_bottom_sheet_preference_key));
-        showBottomSheetPreference
-                .setOnPreferenceClickListener(createShowBottomSheetPreferenceListener());
+        showBottomSheetPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+
+            @Override
+            public boolean onPreferenceClick(final Preference preference) {
+                initializeBottomSheet();
+                bottomSheet.show();
+                return true;
+            }
+
+        });
     }
 
     /**
@@ -85,7 +169,16 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
         Preference showCustomBottomSheetPreference =
                 findPreference(getString(R.string.show_custom_bottom_sheet_preference_key));
         showCustomBottomSheetPreference
-                .setOnPreferenceClickListener(createShowCustomBottomSheetPreferenceListener());
+                .setOnPreferenceClickListener(new OnPreferenceClickListener() {
+
+                    @Override
+                    public boolean onPreferenceClick(final Preference preference) {
+                        initializeCustomBottomSheet();
+                        customBottomSheet.show();
+                        return true;
+                    }
+
+                });
     }
 
     /**
@@ -96,72 +189,16 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
         Preference showIntentBottomSheetPreference =
                 findPreference(getString(R.string.show_intent_bottom_sheet_preference_key));
         showIntentBottomSheetPreference
-                .setOnPreferenceClickListener(createShowIntentBottomSheetPreferenceListener());
-    }
+                .setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
-    /**
-     * Creates and returns a listener, which allows to show a bottom sheet.
-     *
-     * @return The listener, which has been created, as an instance of the type {@link
-     * OnPreferenceClickListener}
-     */
-    private OnPreferenceClickListener createShowBottomSheetPreferenceListener() {
-        return new OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        initializeIntentBottomSheet();
+                        intentBottomSheet.show();
+                        return true;
+                    }
 
-            @Override
-            public boolean onPreferenceClick(final Preference preference) {
-                BottomSheet.Builder builder = createBottomSheetBuilder();
-                addItems(builder);
-                builder.show();
-                return true;
-            }
-
-        };
-    }
-
-    /**
-     * Creates and returns a listener, which allows to show a bottom sheet, which displays the
-     * application, which are suited for handling an intent.
-     *
-     * @return The listener, which has been created, as an instance of the type {@link
-     * OnPreferenceClickListener}
-     */
-    private OnPreferenceClickListener createShowIntentBottomSheetPreferenceListener() {
-        return new OnPreferenceClickListener() {
-
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                BottomSheet.Builder builder = createBottomSheetBuilder();
-                Intent intent = new Intent();
-                intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
-                intent.setType("text/plain");
-                builder.setIntent(getActivity(), intent);
-                builder.show();
-                return true;
-            }
-
-        };
-    }
-
-    /**
-     * Creates and returns a listener, which allows to show a bottom sheet with custom content.
-     *
-     * @return The listener, which has been created, as an instance of the type {@link
-     * OnPreferenceClickListener}
-     */
-    private OnPreferenceClickListener createShowCustomBottomSheetPreferenceListener() {
-        return new OnPreferenceClickListener() {
-
-            @Override
-            public boolean onPreferenceClick(final Preference preference) {
-                BottomSheet.Builder builder = createBottomSheetBuilder();
-                builder.setView(R.layout.custom_view);
-                builder.show();
-                return true;
-            }
-
-        };
+                });
     }
 
     /**
@@ -410,11 +447,42 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
     @Override
     public final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initializeBottomSheets();
         addPreferencesFromResource(R.xml.preferences);
         initializeThemePreference();
         initializeShowBottomSheetPreference();
         initializeShowCustomBottomSheetPreference();
         initializeShowIntentBottmSheetPreference();
+
+        if (savedInstanceState != null) {
+            Bundle bottomSheetState = savedInstanceState.getBundle(BOTTOM_SHEET_STATE_EXTRA);
+            Bundle customBottomSheetState =
+                    savedInstanceState.getBundle(CUSTOM_BOTTOM_SHEET_STATE_EXTRA);
+            Bundle intentBottomSheetState =
+                    savedInstanceState.getBundle(INTENT_BOTTOM_SHEET_STATE_EXTRA);
+
+            if (bottomSheetState != null) {
+                bottomSheet.onRestoreInstanceState(bottomSheetState);
+            }
+
+            if (customBottomSheetState != null) {
+                customBottomSheet.onRestoreInstanceState(customBottomSheetState);
+            }
+
+            if (intentBottomSheetState != null) {
+                intentBottomSheet.onRestoreInstanceState(intentBottomSheetState);
+            }
+        }
+    }
+
+    @Override
+    public final void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBundle(BOTTOM_SHEET_STATE_EXTRA, bottomSheet.onSaveInstanceState());
+        outState.putBundle(CUSTOM_BOTTOM_SHEET_STATE_EXTRA,
+                customBottomSheet.onSaveInstanceState());
+        outState.putBundle(INTENT_BOTTOM_SHEET_STATE_EXTRA,
+                intentBottomSheet.onSaveInstanceState());
     }
 
 }

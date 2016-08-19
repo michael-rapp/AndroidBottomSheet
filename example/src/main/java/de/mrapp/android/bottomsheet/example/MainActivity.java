@@ -28,17 +28,12 @@ import android.support.v7.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
     /**
-     * Shows the preference fragment, which contains the activity's content.
+     * The tag, which is used to show the activity's fragment.
      */
-    private void showPreferenceFragment() {
-        Fragment fragment = Fragment.instantiate(this, PreferenceFragment.class.getName());
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment, fragment);
-        transaction.commit();
-    }
+    private static final String FRAGMENT_TAG = MainActivity.class.getSimpleName() + "::fragmentTag";
 
     @Override
-    public final void setTheme(final int resid) {
+    public final void setTheme(final int resourceId) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String key = getString(R.string.theme_preference_key);
         String defaultValue = getString(R.string.theme_preference_default_value);
@@ -55,7 +50,13 @@ public class MainActivity extends AppCompatActivity {
     protected final void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        showPreferenceFragment();
+
+        if (getFragmentManager().findFragmentByTag(FRAGMENT_TAG) == null) {
+            Fragment fragment = Fragment.instantiate(this, PreferenceFragment.class.getName());
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment, fragment, FRAGMENT_TAG);
+            transaction.commit();
+        }
     }
 
 }
