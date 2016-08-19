@@ -217,8 +217,7 @@ public class PreferenceFragment extends android.preference.PreferenceFragment {
         }
 
         if (shouldIconBeShown()) {
-            builder.setIcon(
-                    ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_dialog_alert));
+            builder.setIcon(android.R.drawable.ic_dialog_alert);
         }
 
         return builder;

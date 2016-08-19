@@ -24,9 +24,12 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
@@ -467,12 +470,12 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Sets the background of the bottom sheet, which is created by the builder.
          *
          * @param background
-         *         The background, which should be set, as an instance of the class {@link Drawable}
+         *         The background, which should be set, as an instance of the class {@link Bitmap}
          *         or null, if no custom background should be set
          * @return The builder, the method has been called upon, as an instance of the class {@link
          * Builder}
          */
-        public final Builder setBackground(@Nullable final Drawable background) {
+        public final Builder setBackground(@Nullable final Bitmap background) {
             bottomSheet.setBackground(background);
             return this;
         }
@@ -537,12 +540,12 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * Sets the icon of the bottom sheet, which is created by the builder.
          *
          * @param icon
-         *         The icon, which should be set, as an instance of the class {@link Drawable} or
+         *         The icon, which should be set, as an instance of the class {@link Bitmap} or
          *         null, if no icon should be shown
          * @return The builder, the method has been called upon, as an instance of the class {@link
          * Builder}
          */
-        public final Builder setIcon(@Nullable final Drawable icon) {
+        public final Builder setIcon(@Nullable final Bitmap icon) {
             bottomSheet.setIcon(icon);
             return this;
         }
@@ -890,6 +893,90 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     }
 
     /**
+     * The name of the extra, which is used to store the title of the bottom sheet within a bundle.
+     */
+    private static final String TITLE_EXTRA = BottomSheet.class.getSimpleName() + "::title";
+
+    /**
+     * The name of the extra, which is used to store the bitmap of the icon of the bottom sheet
+     * within a bundle.
+     */
+    private static final String ICON_BITMAP_EXTRA =
+            BottomSheet.class.getSimpleName() + "::iconBitmap";
+
+    /**
+     * The name of the extra, which is used to store the resource id of the icon of the bottom sheet
+     * within a bundle.
+     */
+    private static final String ICON_ID_EXTRA = BottomSheet.class.getSimpleName() + "::iconId";
+
+    /**
+     * The name of the extra, which is used to store the attribute id of the icon of the bottom
+     * sheet within a bundle.
+     */
+    private static final String ICON_ATTRIBUTE_ID_EXTRA =
+            BottomSheet.class.getSimpleName() + "::iconAttributeId";
+
+    /**
+     * The name of the extra, which is used to store the color of the title of the bottom sheet
+     * within a bundle.
+     */
+    private static final String TITLE_COLOR_EXTRA =
+            BottomSheet.class.getSimpleName() + "::titleColor";
+
+    /**
+     * The name of the extra, which is used to store the bitmap of the background of the bottom
+     * sheet within a bundle.
+     */
+    private static final String BACKGROUND_BITMAP_EXTRA =
+            BottomSheet.class.getSimpleName() + "::backgroundBitmap";
+
+    /**
+     * The name of the extra, which is used to store the resource id of the background of the bottom
+     * sheet within a bundle.
+     */
+    private static final String BACKGROUND_ID_EXTRA =
+            BottomSheet.class.getSimpleName() + "::backgroundId";
+
+    /**
+     * The name of the extra, which is used to store the color of the background of the bottom sheet
+     * within a bundle.
+     */
+    private static final String BACKGROUND_COLOR_EXTRA =
+            BottomSheet.class.getSimpleName() + "::backgroundColor";
+
+    /**
+     * The name of the extra, which is used to store, whether the bottom sheet is cancelable, or
+     * not, within a bundle.
+     */
+    private static final String CANCELABLE_EXTRA =
+            BottomSheet.class.getSimpleName() + "::cancelable";
+
+    /**
+     * The name of the extra, which is used to store, whether the bottom sheet is canceled when it
+     * is clicked outside, or not, within a bundle.
+     */
+    private static final String CANCELED_ON_TOUCH_OUTSIDE_EXTRA =
+            BottomSheet.class.getSimpleName() + "::canceledOnTouchOutside";
+
+    /**
+     * The name of the extra, which is used to store the drag sensitivity within a bundle.
+     */
+    private static final String DRAG_SENSITIVITY_EXTRA =
+            BottomSheet.class.getSimpleName() + "::dragSensitivity";
+
+    /**
+     * The name of the extra, which is used to store the dim amount within a bundle.
+     */
+    private static final String DIM_AMOUNT_EXTRA =
+            BottomSheet.class.getSimpleName() + "::dimAmount";
+
+    /**
+     * The name of the extra, which is used to store the width of the bottom sheet within a bundle.
+     */
+    private static final String WIDTH_EXTRA = BottomSheet.class.getSimpleName() + "::width";
+
+    /**
      * The minimum value of the internal value range, which specifies after which distance dragging
      * has an effect on the bottom sheet.
      */
@@ -942,6 +1029,21 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     private Drawable icon;
 
     /**
+     * The bitmap of the icon of the bottom sheet.
+     */
+    private Bitmap iconBitmap;
+
+    /**
+     * The resource id of the icon of the bottom sheet.
+     */
+    private int iconId = -1;
+
+    /**
+     * The attribute id of the icon of the bottom sheet.
+     */
+    private int iconAttributeId = -1;
+
+    /**
      * The color of the title of the bottom sheet.
      */
     private int titleColor = -1;
@@ -952,50 +1054,19 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     private Drawable background;
 
     /**
-     * The custom content view of the bottom sheet.
+     * The bitmap of the background of the bottom sheet.
      */
-    private View customView;
+    private Bitmap backgroundBitmap;
 
     /**
-     * The resource id of the custom content view of the bottom sheet.
+     * The resource id of the background of the bottom sheet.
      */
-    private int customViewId = -1;
+    private int backgroundId = -1;
 
     /**
-     * The custom title view of the bottom sheet.
+     * The color of the background of the bottom sheet.
      */
-    private View customTitleView;
-
-    /**
-     * The resource id of the custom title view of the bottom sheet.
-     */
-    private int customTitleViewId = -1;
-
-    /**
-     * True, if the bottom sheet should be maximized immediately after it has been shown, false
-     * otherwise.
-     */
-    private boolean maximize;
-
-    /**
-     * The listener, which is notified, when the bottom sheet has been shown.
-     */
-    private OnShowListener onShowListener;
-
-    /**
-     * The listener, which is notified, when an item of the bottom sheet has been clicked.
-     */
-    private OnItemClickListener itemClickListener;
-
-    /**
-     * The listener, which is notified, when an item of the bottom sheet has been long-clicked.
-     */
-    private OnItemLongClickListener itemLongClickListener;
-
-    /**
-     * The listener, which is notified, when the bottom sheet is maximized.
-     */
-    private OnMaximizeListener maximizeListener;
+    private int backgroundColor = -1;
 
     /**
      * True, if the bottom sheet is cancelable, false otherwise.
@@ -1022,6 +1093,52 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * The width of the bottom sheet in pixels.
      */
     private int width;
+
+    /**
+     * The custom content view of the bottom sheet.
+     */
+    private View customView;
+
+    /**
+     * The resource id of the custom content view of the bottom sheet.
+     */
+    private int customViewId = -1;
+
+    /**
+     * The custom title view of the bottom sheet.
+     */
+    private View customTitleView;
+
+    /**
+     * The resource id of the custom title view of the bottom sheet.
+     */
+    private int customTitleViewId = -1;
+
+    /**
+     * The listener, which is notified, when the bottom sheet has been shown.
+     */
+    private OnShowListener onShowListener;
+
+    /**
+     * The listener, which is notified, when an item of the bottom sheet has been clicked.
+     */
+    private OnItemClickListener itemClickListener;
+
+    /**
+     * The listener, which is notified, when an item of the bottom sheet has been long-clicked.
+     */
+    private OnItemLongClickListener itemLongClickListener;
+
+    /**
+     * The listener, which is notified, when the bottom sheet is maximized.
+     */
+    private OnMaximizeListener maximizeListener;
+
+    /**
+     * True, if the bottom sheet should be maximized immediately after it has been shown, false
+     * otherwise.
+     */
+    private boolean maximize;
 
     /**
      * Initializes the bottom sheet.
@@ -1564,11 +1681,14 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * Sets the icon of the bottom sheet.
      *
      * @param icon
-     *         The icon, which should be set, as an instance of the class {@link Drawable} or null,
-     *         if no icon should be shown
+     *         The icon, which should be set, as an instance of the class {@link Bitmap} or null, if
+     *         no icon should be shown
      */
-    public final void setIcon(@Nullable final Drawable icon) {
-        this.icon = icon;
+    public final void setIcon(@Nullable final Bitmap icon) {
+        this.icon = new BitmapDrawable(getContext().getResources(), icon);
+        this.iconBitmap = icon;
+        this.iconId = -1;
+        this.iconAttributeId = -1;
         adaptIcon();
     }
 
@@ -1580,7 +1700,11 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         resource id must correspond to a valid drawable resource
      */
     public final void setIcon(@DrawableRes final int resourceId) {
-        setIcon(ContextCompat.getDrawable(getContext(), resourceId));
+        this.icon = ContextCompat.getDrawable(getContext(), resourceId);
+        this.iconBitmap = null;
+        this.iconId = resourceId;
+        this.iconAttributeId = -1;
+        adaptIcon();
     }
 
     /**
@@ -1593,7 +1717,11 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     public final void setIconAttribute(@AttrRes final int attributeId) {
         TypedArray typedArray =
                 getContext().getTheme().obtainStyledAttributes(new int[]{attributeId});
-        setIcon(typedArray.getDrawable(0));
+        this.icon = typedArray.getDrawable(0);
+        this.iconBitmap = null;
+        this.iconId = -1;
+        this.iconAttributeId = attributeId;
+        adaptIcon();
     }
 
     /**
@@ -1675,11 +1803,14 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * Sets the background of the bottom sheet.
      *
      * @param background
-     *         The background, which should be set, as an instance of the class {@link Drawable} or
+     *         The background, which should be set, as an instance of the class {@link Bitmap} or
      *         null, if no custom background should be set
      */
-    public final void setBackground(@Nullable final Drawable background) {
-        this.background = background;
+    public final void setBackground(@Nullable final Bitmap background) {
+        this.background = new BitmapDrawable(getContext().getResources(), background);
+        this.backgroundBitmap = background;
+        this.backgroundId = -1;
+        this.backgroundColor = -1;
         adaptBackground();
     }
 
@@ -1691,7 +1822,11 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         The resource id must correspond to a valid drawable resource
      */
     public final void setBackground(@DrawableRes final int resourceId) {
-        setBackground(ContextCompat.getDrawable(getContext(), resourceId));
+        this.background = ContextCompat.getDrawable(getContext(), resourceId);
+        this.backgroundBitmap = null;
+        this.backgroundId = -1;
+        this.backgroundColor = -1;
+        adaptBackground();
     }
 
     /**
@@ -1702,7 +1837,11 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         custom background color should be set
      */
     public final void setBackgroundColor(@ColorInt final int color) {
-        setBackground(color != -1 ? new ColorDrawable(color) : null);
+        this.background = new ColorDrawable(color);
+        this.backgroundBitmap = null;
+        this.backgroundId = -1;
+        this.backgroundColor = color;
+        adaptBackground();
     }
 
     /**
@@ -2350,6 +2489,64 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         titleTextView = null;
         contentContainer = null;
         gridView = null;
+    }
+
+    @Override
+    public final Bundle onSaveInstanceState() {
+        Bundle outState = super.onSaveInstanceState();
+
+        outState.putCharSequence(TITLE_EXTRA, title);
+        outState.putInt(TITLE_COLOR_EXTRA, titleColor);
+        outState.putBoolean(CANCELABLE_EXTRA, cancelable);
+        outState.putBoolean(CANCELED_ON_TOUCH_OUTSIDE_EXTRA, canceledOnTouchOutside);
+        outState.putFloat(DRAG_SENSITIVITY_EXTRA, dragSensitivity);
+        outState.putFloat(DIM_AMOUNT_EXTRA, dimAmount);
+        outState.putInt(WIDTH_EXTRA, width);
+
+        if (iconBitmap != null) {
+            outState.putParcelable(ICON_BITMAP_EXTRA, iconBitmap);
+        } else if (iconId != -1) {
+            outState.putInt(ICON_ID_EXTRA, iconId);
+        }
+
+        if (backgroundBitmap != null) {
+            outState.putParcelable(BACKGROUND_BITMAP_EXTRA, backgroundBitmap);
+        } else if (backgroundId != -1) {
+            outState.putInt(BACKGROUND_ID_EXTRA, backgroundId);
+        } else if (backgroundColor != -1) {
+            outState.putInt(BACKGROUND_COLOR_EXTRA, backgroundColor);
+        }
+
+        return outState;
+    }
+
+    @Override
+    public final void onRestoreInstanceState(final Bundle savedInstanceState) {
+        setTitle(savedInstanceState.getCharSequence(TITLE_EXTRA));
+        setTitleColor(savedInstanceState.getInt(TITLE_COLOR_EXTRA));
+        setCancelable(savedInstanceState.getBoolean(CANCELABLE_EXTRA));
+        setCanceledOnTouchOutside(savedInstanceState.getBoolean(CANCELED_ON_TOUCH_OUTSIDE_EXTRA));
+        setDragSensitivity(savedInstanceState.getFloat(DRAG_SENSITIVITY_EXTRA));
+        setDimAmount(savedInstanceState.getFloat(DIM_AMOUNT_EXTRA));
+        setWidth(savedInstanceState.getInt(WIDTH_EXTRA));
+
+        if (savedInstanceState.containsKey(ICON_BITMAP_EXTRA)) {
+            setIcon((Bitmap) savedInstanceState.getParcelable(ICON_BITMAP_EXTRA));
+        } else if (savedInstanceState.containsKey(ICON_ID_EXTRA)) {
+            setIcon(savedInstanceState.getInt(ICON_ID_EXTRA));
+        } else if (savedInstanceState.containsKey(ICON_ATTRIBUTE_ID_EXTRA)) {
+            setIconAttribute(savedInstanceState.getInt(ICON_ATTRIBUTE_ID_EXTRA));
+        }
+
+        if (savedInstanceState.containsKey(BACKGROUND_BITMAP_EXTRA)) {
+            setBackground((Bitmap) savedInstanceState.getParcelable(BACKGROUND_BITMAP_EXTRA));
+        } else if (savedInstanceState.containsKey(BACKGROUND_ID_EXTRA)) {
+            setBackground(savedInstanceState.getInt(BACKGROUND_ID_EXTRA));
+        } else if (savedInstanceState.containsKey(BACKGROUND_COLOR_EXTRA)) {
+            setBackgroundColor(savedInstanceState.getInt(BACKGROUND_COLOR_EXTRA));
+        }
+
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
 }
