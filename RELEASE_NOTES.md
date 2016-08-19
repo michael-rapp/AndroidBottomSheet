@@ -1,5 +1,12 @@
 # AndroidBottomSheet - RELEASE NOTES
 
+## Version 1.4.0 (Aug. 19th 2016)
+
+A feature release, which introduces the following changes:
+
+- The properties of a `BottomSheet` are now stored/restored in its `onSaveInstanceState`- and `onRestoreInstanceState`-method. This does not include properties, which are not serializable, e.g. listeners.
+- Updated dependency "AndroidUtil" to version 1.11.0.
+
 ## Version 1.3.0 (May 26th 2016)
 
 A feature release, which introduces the following changes:
