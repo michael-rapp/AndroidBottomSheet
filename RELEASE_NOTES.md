@@ -1,5 +1,11 @@
 # AndroidBottomSheet - RELEASE NOTES
 
+## Version 1.4.2 (Sep. 13th 2016)
+
+A bugfix release, which fixes the following issue:
+
+- Increased `minSdkVersion` to 9 as this is required by the AppCompat v7 support library 24.2.0.
+
 ## Version 1.4.1 (Sep. 12th 2016)
 
 A minor release, which introduces the following changes:
