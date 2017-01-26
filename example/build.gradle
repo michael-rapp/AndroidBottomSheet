@@ -5,7 +5,7 @@ android {
     buildToolsVersion project.BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion project.MIN_SDK_VERSION.toInteger()
+        minSdkVersion 11
         targetSdkVersion project.TARGET_SDK_VERSION.toInteger()
         versionName project.VERSION_NAME
         versionCode project.VERSION_CODE.toInteger()
