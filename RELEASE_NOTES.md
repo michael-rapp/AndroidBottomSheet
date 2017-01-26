@@ -1,5 +1,13 @@
 # AndroidBottomSheet - RELEASE NOTES
 
+## Version 1.4.3 (Jan. 26th 2017)
+
+A minor release, which introduces the following changes:
+
+- Updated `targetSdkVersion` to API level 25 (Android 7.1).
+- Updated AppCompat v7 support library to version 25.1.0.
+- Updated dependency "AndroidUtil" to version 1.12.3.
+
 ## Version 1.4.2 (Sep. 13th 2016)
 
 A bugfix release, which fixes the following issue:
