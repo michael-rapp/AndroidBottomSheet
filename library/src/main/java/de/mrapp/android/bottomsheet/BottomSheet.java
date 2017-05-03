@@ -88,7 +88,23 @@ import static de.mrapp.android.util.DisplayUtil.getOrientation;
  * @author Michael Rapp
  * @since 1.0.0
  */
-public class BottomSheet extends Dialog implements DialogInterface, DraggableView.Callback {
+    public class BottomSheet extends Dialog implements DialogInterface, DraggableView.Callback {
+
+    /**
+     * Creates a bottom sheet, which is designed according to Android 5's Material Design guidelines
+     * even on pre-Lollipop devices.
+     *
+     * @param context
+     *         The context, which should be used by the bottom sheet, as an instance of the class
+     *         {@link Context}. The context may not be null
+     * @param themeResourceId
+     *         The resource id of the theme, which should be used by the bottom sheet, as an {@link
+     *         Integer} value. The resource id must correspond to a valid theme
+     */
+    protected BottomSheet(@NonNull final Context context, @StyleRes final int themeResourceId) {
+        super(context, themeResourceId);
+        initialize();
+    }
 
     /**
      * A builder, which allows to create and show bottom sheets, which are designed according to
@@ -103,6 +119,33 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * The bottom sheet, which is created by the builder.
          */
         private BottomSheet bottomSheet;
+
+        /**
+         * Creates a new builder, which allows to create bottom sheets, which are designed according
+         * to Android 5's Material Design guidelines even on pre-Lollipop devices.
+         *
+         * @param context
+         *         The context, which should be used by the builder, as an instance of the class
+         *         {@link Context}. The context may not be null
+         */
+        public Builder(@NonNull final Context context) {
+            this(context, -1);
+        }
+
+        /**
+         * Creates a new builder, which allows to create bottom sheets, which are designed according
+         * to Android 5's Material Design guidelines even on pre-Lollipop devices.
+         *
+         * @param context
+         *         The context, which should be used by the builder, as an instance of the class
+         *         {@link Context}. The context may not be null
+         * @param themeResourceId
+         *         The resource id of the theme, which should be used by the bottom sheet, as an
+         *         {@link Integer} value. The resource id must correspond to a valid theme
+         */
+        public Builder(@NonNull final Context context, @StyleRes final int themeResourceId) {
+            initialize(context, themeResourceId);
+        }
 
         /**
          * Initializes the builder.
@@ -260,33 +303,6 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             if (dragSensitivity != -1) {
                 setDragSensitivity(dragSensitivity);
             }
-        }
-
-        /**
-         * Creates a new builder, which allows to create bottom sheets, which are designed according
-         * to Android 5's Material Design guidelines even on pre-Lollipop devices.
-         *
-         * @param context
-         *         The context, which should be used by the builder, as an instance of the class
-         *         {@link Context}. The context may not be null
-         */
-        public Builder(@NonNull final Context context) {
-            this(context, -1);
-        }
-
-        /**
-         * Creates a new builder, which allows to create bottom sheets, which are designed according
-         * to Android 5's Material Design guidelines even on pre-Lollipop devices.
-         *
-         * @param context
-         *         The context, which should be used by the builder, as an instance of the class
-         *         {@link Context}. The context may not be null
-         * @param themeResourceId
-         *         The resource id of the theme, which should be used by the bottom sheet, as an
-         *         {@link Integer} value. The resource id must correspond to a valid theme
-         */
-        public Builder(@NonNull final Context context, @StyleRes final int themeResourceId) {
-            initialize(context, themeResourceId);
         }
 
         /**
@@ -1593,22 +1609,6 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         if (maximizeListener != null) {
             maximizeListener.onMaximize(this);
         }
-    }
-
-    /**
-     * Creates a bottom sheet, which is designed according to Android 5's Material Design guidelines
-     * even on pre-Lollipop devices.
-     *
-     * @param context
-     *         The context, which should be used by the bottom sheet, as an instance of the class
-     *         {@link Context}. The context may not be null
-     * @param themeResourceId
-     *         The resource id of the theme, which should be used by the bottom sheet, as an {@link
-     *         Integer} value. The resource id must correspond to a valid theme
-     */
-    protected BottomSheet(@NonNull final Context context, @StyleRes final int themeResourceId) {
-        super(context, themeResourceId);
-        initialize();
     }
 
     /**
