@@ -1,6 +1,6 @@
 # AndroidBottomSheet - README
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=X75YSLEJV3DWE)
+[![API-Level](https://img.shields.io/badge/API-9%2B-orange.svg)](https://android-arsenal.com/api?level=9) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=X75YSLEJV3DWE)
 
 "AndroidBottomSheet" is an Android-library, which provides a bottom sheet as a proposed by Android's Material design guidelines (see [here](http://www.google.com/design/spec/components/bottom-sheets.html) for further details), which even works on pre-Lollipop devices. A bottom sheet is supposed to contain menu items, which can be clicked by the user. By default only a few items are shown, but by dragging the bottom sheet, it can be expanded to display all items. The following screenshot shows the appearance of a bottom sheet, which has been created by using the library:
 
