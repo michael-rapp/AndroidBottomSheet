@@ -1448,6 +1448,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
             public boolean onTouch(final View v, final MotionEvent event) {
                 if (cancelable && canceledOnTouchOutside) {
                     cancel();
+                    v.performClick();
                     return true;
                 }
 
