@@ -36,6 +36,8 @@ dependencies {
 
 ## Examples
 
+The following examples illustrate the use of the library. In addition to these examples, a more detailed documentation is contained in the project's Wiki. Furthermore generated javadoc files are available.
+
 The code below shows how to create and show a bottom sheet by using the library's `BottomSheet.Builder`. The bottom sheet contains a title as well as multiple items and dividers. The `this` parameter, which is passed to the builder's constructor in the example below, must be a `Context`, e.g. an `Activity`. By calling the builder's `setOnItemClickListener`-method, a listener can be registered to be notified, when one of the bottom sheet's items has been clicked.
 
 ```java
