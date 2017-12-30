@@ -14,14 +14,13 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.github.michael-rapp:android-util:1.12.3'
+    compile 'com.android.support:appcompat-v7:27.0.2'
+    compile 'com.github.michael-rapp:android-util:1.18.3'
 }
 
 apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
