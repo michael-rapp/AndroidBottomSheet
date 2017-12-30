@@ -20,7 +20,6 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -174,7 +173,7 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
             for (int i = 0; i < viewGroup.getChildCount(); i++) {
                 View view = viewGroup.getChildAt(i);
 
-                if (ViewCompat.canScrollVertically(view, -1)) {
+                if (view.canScrollVertically(-1)) {
                     return true;
                 } else if (view instanceof ViewGroup) {
                     return isScrollUpEvent(x, y, (ViewGroup) view);
@@ -193,8 +192,8 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     private boolean handleDrag() {
         if (!isAnimationRunning()) {
             if (dragHelper.hasThresholdBeenReached()) {
-                int margin = Math.round(isMaximized() ? dragHelper.getDistance() :
-                        initialMargin + dragHelper.getDistance());
+                int margin = Math.round(isMaximized() ? dragHelper.getDragDistance() :
+                        initialMargin + dragHelper.getDragDistance());
                 margin = Math.max(Math.max(margin, minMargin), 0);
                 setTopMargin(margin);
             }
@@ -212,7 +211,7 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
         float speed = Math.max(dragHelper.getDragSpeed(), animationSpeed);
 
         if (getTopMargin() > initialMargin ||
-                (dragHelper.getDragSpeed() > animationSpeed && dragHelper.getDistance() > 0) ||
+                (dragHelper.getDragSpeed() > animationSpeed && dragHelper.getDragDistance() > 0) ||
                 (getDeviceType(getContext()) == DeviceType.TABLET && isMaximized() &&
                         getTopMargin() > minMargin)) {
             animateHideView(parentHeight - getTopMargin(), speed, new DecelerateInterpolator(),
@@ -506,7 +505,7 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
      * otherwise
      */
     public final boolean isDragging() {
-        return !dragHelper.isReseted() && dragHelper.hasThresholdBeenReached();
+        return !dragHelper.isReset() && dragHelper.hasThresholdBeenReached();
     }
 
     /**
@@ -546,7 +545,7 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
             case MotionEvent.ACTION_MOVE:
                 dragHelper.update(event.getRawY());
 
-                if (isMaximized() && (event.getRawY() - dragHelper.getStartPosition() < 0 ||
+                if (isMaximized() && (event.getRawY() - dragHelper.getDragStartPosition() < 0 ||
                         isScrollUpEvent(event.getRawX(), event.getRawY()))) {
                     dragHelper.reset();
                     break;
