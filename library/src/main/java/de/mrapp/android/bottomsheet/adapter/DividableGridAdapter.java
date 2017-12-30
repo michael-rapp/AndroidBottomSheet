@@ -229,8 +229,8 @@ public class DividableGridAdapter extends BaseAdapter {
                 .inflate(style == Style.GRID ? R.layout.grid_item : R.layout.list_item, parent,
                         false);
         ItemViewHolder viewHolder = new ItemViewHolder();
-        viewHolder.iconImageView = (ImageView) view.findViewById(android.R.id.icon);
-        viewHolder.titleTextView = (TextView) view.findViewById(android.R.id.title);
+        viewHolder.iconImageView = view.findViewById(android.R.id.icon);
+        viewHolder.titleTextView = view.findViewById(android.R.id.title);
         view.setTag(viewHolder);
         return view;
     }
@@ -298,7 +298,7 @@ public class DividableGridAdapter extends BaseAdapter {
         DividerViewHolder viewHolder = new DividerViewHolder();
         viewHolder.leftDivider = view.findViewById(R.id.left_divider);
         viewHolder.rightDivider = view.findViewById(R.id.right_divider);
-        viewHolder.titleTextView = (TextView) view.findViewById(android.R.id.title);
+        viewHolder.titleTextView = view.findViewById(android.R.id.title);
         view.setTag(viewHolder);
 
         if (!TextUtils.isEmpty(divider.getTitle()) || (position % columnCount > 0 && !TextUtils

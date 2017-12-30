@@ -621,8 +621,8 @@ public class DraggableView extends LinearLayout implements ViewTreeObserver.OnGl
     @Override
     protected final void onAttachedToWindow() {
         super.onAttachedToWindow();
-        titleContainer = (ViewGroup) findViewById(R.id.title_container);
-        contentContainer = (ViewGroup) findViewById(R.id.content_container);
+        titleContainer = findViewById(R.id.title_container);
+        contentContainer = findViewById(R.id.content_container);
     }
 
     @Override

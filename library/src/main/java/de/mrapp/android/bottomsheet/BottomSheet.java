@@ -69,6 +69,7 @@ import de.mrapp.android.bottomsheet.view.DraggableView;
 import de.mrapp.android.util.DisplayUtil;
 import de.mrapp.android.util.ViewUtil;
 
+import static android.os.Build.*;
 import static de.mrapp.android.util.Condition.ensureAtLeast;
 import static de.mrapp.android.util.Condition.ensureAtMaximum;
 import static de.mrapp.android.util.Condition.ensureNotNull;
@@ -861,7 +862,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
          * @return The bottom sheet, which has been created, as an instance of the class {@link
          * BottomSheet}
          */
-        @TargetApi(Build.VERSION_CODES.FROYO)
+        @TargetApi(VERSION_CODES.FROYO)
         public final BottomSheet maximize() {
             bottomSheet.maximize();
             return bottomSheet;
@@ -1147,10 +1148,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         width = getContext().getResources().getDimensionPixelSize(R.dimen.default_width);
         maximize = false;
         adapter = new DividableGridAdapter(getContext(), Style.LIST, width);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
-            super.setOnShowListener(createOnShowListener());
-        }
+        super.setOnShowListener(createOnShowListener());
     }
 
     /**
@@ -1185,7 +1183,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * Initializes the bottom sheet's root view.
      */
     private void inflateRootView() {
-        ViewGroup contentView = (ViewGroup) findViewById(android.R.id.content);
+        ViewGroup contentView = findViewById(android.R.id.content);
         contentView.removeAllViews();
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         rootView =
@@ -1199,7 +1197,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * the default one or a custom view, if one has been set before.
      */
     private void inflateTitleView() {
-        titleContainer = (ViewGroup) rootView.findViewById(R.id.title_container);
+        titleContainer = rootView.findViewById(R.id.title_container);
         titleContainer.removeAllViews();
 
         if (customTitleView != null) {
@@ -1233,7 +1231,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * be the default one or a custom view, if one has been set before.
      */
     private void inflateContentView() {
-        contentContainer = (ViewGroup) rootView.findViewById(R.id.content_container);
+        contentContainer = rootView.findViewById(R.id.content_container);
         contentContainer.removeAllViews();
 
         if (customView != null) {
@@ -1258,7 +1256,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * Shows the grid view, which is used to show the bottom sheet's items.
      */
     private void showGridView() {
-        gridView = (GridView) contentContainer.findViewById(R.id.bottom_sheet_grid_view);
+        gridView = contentContainer.findViewById(R.id.bottom_sheet_grid_view);
 
         if (gridView != null) {
             contentContainer.setVisibility(View.VISIBLE);
@@ -1417,7 +1415,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * @return The listener, which has been created, as an instance of the type {@link
      * OnShowListener}
      */
-    @TargetApi(Build.VERSION_CODES.FROYO)
+    @TargetApi(VERSION_CODES.FROYO)
     private OnShowListener createOnShowListener() {
         return new OnShowListener() {
 
@@ -2362,7 +2360,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     /**
      * Maximizes the bottom sheet.
      */
-    @TargetApi(Build.VERSION_CODES.FROYO)
+    @TargetApi(VERSION_CODES.FROYO)
     public final void maximize() {
         if (!isMaximized()) {
             if (!isShowing()) {
@@ -2443,7 +2441,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         this.canceledOnTouchOutside = canceledOnTouchOutside;
     }
 
-    @TargetApi(Build.VERSION_CODES.FROYO)
+    @TargetApi(VERSION_CODES.FROYO)
     @Override
     public final void setOnShowListener(@Nullable final OnShowListener listener) {
         this.onShowListener = listener;
@@ -2491,6 +2489,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         gridView = null;
     }
 
+    @NonNull
     @Override
     public final Bundle onSaveInstanceState() {
         Bundle outState = super.onSaveInstanceState();
@@ -2521,7 +2520,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
     }
 
     @Override
-    public final void onRestoreInstanceState(final Bundle savedInstanceState) {
+    public final void onRestoreInstanceState(@NonNull final Bundle savedInstanceState) {
         setTitle(savedInstanceState.getCharSequence(TITLE_EXTRA));
         setTitleColor(savedInstanceState.getInt(TITLE_COLOR_EXTRA));
         setCancelable(savedInstanceState.getBoolean(CANCELABLE_EXTRA));

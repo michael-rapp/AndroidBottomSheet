@@ -195,9 +195,7 @@ public class Item extends AbstractItem {
                 return false;
         } else if (!icon.equals(other.icon))
             return false;
-        if (enabled != other.enabled)
-            return false;
-        return true;
+        return enabled == other.enabled;
     }
 
 }
