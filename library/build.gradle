@@ -20,7 +20,7 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:27.0.2'
-    compile 'com.github.michael-rapp:android-util:1.18.3'
+    compile 'com.github.michael-rapp:android-util:1.19.0'
 }
 
 apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
