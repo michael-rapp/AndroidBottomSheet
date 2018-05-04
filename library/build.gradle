@@ -19,8 +19,8 @@ android {
 }
 
 dependencies {
-    api 'com.android.support:appcompat-v7:27.0.2'
-    api 'com.github.michael-rapp:android-util:1.19.0'
+    api 'com.android.support:appcompat-v7:27.1.1'
+    api 'com.github.michael-rapp:android-util:1.20.2'
 }
 
 apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
