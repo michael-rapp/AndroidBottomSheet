@@ -1,5 +1,13 @@
 # AndroidBottomSheet - RELEASE NOTES
 
+## Version 1.4.6 (May 5th 2018)
+
+A minor release, which introduces the following changes:
+
+- Updated AppCompat v7 support library to version 27.1.1.
+- Updated dependency "AndroidUtil" to version 1.20.2.
+
+
 ## Version 1.4.5 (Jan. 26th 2018)
 
 A minor release, which introduces the following changes:
