@@ -17,9 +17,11 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
-import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,8 +42,8 @@ import de.mrapp.android.bottomsheet.model.Divider;
 import de.mrapp.android.bottomsheet.model.Item;
 import de.mrapp.android.util.DisplayUtil.DeviceType;
 import de.mrapp.android.util.DisplayUtil.Orientation;
+import de.mrapp.util.Condition;
 
-import static de.mrapp.android.util.Condition.ensureNotNull;
 import static de.mrapp.android.util.DisplayUtil.getDeviceType;
 import static de.mrapp.android.util.DisplayUtil.getOrientation;
 
@@ -355,8 +357,8 @@ public class DividableGridAdapter extends BaseAdapter {
      */
     public DividableGridAdapter(@NonNull final Context context, final Style style,
                                 final int width) {
-        ensureNotNull(context, "The context may not be null");
-        ensureNotNull(style, "The style may not be null");
+        Condition.INSTANCE.ensureNotNull(context, "The context may not be null");
+        Condition.INSTANCE.ensureNotNull(style, "The style may not be null");
         this.context = context;
         this.style = style;
         this.items = new ArrayList<>();
@@ -388,7 +390,7 @@ public class DividableGridAdapter extends BaseAdapter {
      *         either be <code>LIST</code>, <code>LIST_COLUMNS</code> or <code>GRID</code>
      */
     public final void setStyle(@NonNull final Style style) {
-        ensureNotNull(style, "The style may not be null");
+        Condition.INSTANCE.ensureNotNull(style, "The style may not be null");
         this.style = style;
         this.rawItems = null;
         notifyDataSetChanged();
@@ -491,7 +493,7 @@ public class DividableGridAdapter extends BaseAdapter {
      *         The item may not be null
      */
     public final void add(@NonNull final AbstractItem item) {
-        ensureNotNull(item, "The item may not be null");
+        Condition.INSTANCE.ensureNotNull(item, "The item may not be null");
         items.add(item);
 
         if (item instanceof Item && ((Item) item).getIcon() != null) {
@@ -514,7 +516,7 @@ public class DividableGridAdapter extends BaseAdapter {
      *         item may not be null
      */
     public final void set(final int index, @NonNull final AbstractItem item) {
-        ensureNotNull(item, "The item may not be null");
+        Condition.INSTANCE.ensureNotNull(item, "The item may not be null");
         AbstractItem replacedItem = items.set(index, item);
 
         if (replacedItem instanceof Item && ((Item) replacedItem).getIcon() != null) {

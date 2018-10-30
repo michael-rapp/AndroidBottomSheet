@@ -13,14 +13,13 @@
  */
 package de.mrapp.android.bottomsheet.animation;
 
-import android.support.annotation.NonNull;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
 import de.mrapp.android.bottomsheet.view.DraggableView;
-
-import static de.mrapp.android.util.Condition.ensureNotNull;
+import de.mrapp.util.Condition;
 
 /**
  * An animation, which allows to show or hide a {@link DraggableView}.
@@ -64,8 +63,8 @@ public class DraggableViewAnimation extends Animation {
      */
     public DraggableViewAnimation(@NonNull final DraggableView view, final int diff,
                                   final long duration, @NonNull final AnimationListener listener) {
-        ensureNotNull(view, "The view may not be null");
-        ensureNotNull(listener, "The animation listener may not be null");
+        Condition.INSTANCE.ensureNotNull(view, "The view may not be null");
+        Condition.INSTANCE.ensureNotNull(listener, "The animation listener may not be null");
         this.view = view;
         this.initialMargin = ((FrameLayout.LayoutParams) view.getLayoutParams()).topMargin;
         this.diff = diff;

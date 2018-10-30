@@ -14,8 +14,8 @@
 package de.mrapp.android.bottomsheet.model;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 
 /**
  * Represents a divider, which can be shown in a bottom sheet.

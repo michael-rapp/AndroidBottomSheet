@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'
 
 android {
     compileSdkVersion project.TARGET_SDK_VERSION.toInteger()
@@ -19,8 +20,6 @@ android {
 }
 
 dependencies {
-    api 'com.android.support:appcompat-v7:27.1.1'
-    api 'com.github.michael-rapp:android-util:1.20.2'
+    api 'androidx.appcompat:appcompat:1.0.0'
+    api 'com.github.michael-rapp:android-util:2.0.0'
 }
-
-apply from: 'https://raw.github.com/chrisbanes/gradle-mvn-push/master/gradle-mvn-push.gradle'

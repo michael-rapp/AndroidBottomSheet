@@ -15,15 +15,13 @@ package de.mrapp.android.bottomsheet.model;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.v4.content.ContextCompat;
 
-import static de.mrapp.android.util.Condition.ensureAtLeast;
-import static de.mrapp.android.util.Condition.ensureNotEmpty;
-import static de.mrapp.android.util.Condition.ensureNotNull;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
+import de.mrapp.util.Condition;
 
 /**
  * Represents a item, which can be shown in a bottom sheet.
@@ -59,9 +57,9 @@ public class Item extends AbstractItem {
      */
     public Item(final int id, @NonNull final CharSequence title) {
         super(id, title);
-        ensureAtLeast(id, 0, "The id must be at least 0");
-        ensureNotNull(title, "The title may not be null");
-        ensureNotEmpty(title, "The title may not be empty");
+        Condition.INSTANCE.ensureAtLeast(id, 0, "The id must be at least 0");
+        Condition.INSTANCE.ensureNotNull(title, "The title may not be null");
+        Condition.INSTANCE.ensureNotEmpty(title, "The title may not be empty");
         this.icon = null;
         this.enabled = true;
     }
@@ -146,14 +144,14 @@ public class Item extends AbstractItem {
      *         resource id must correspond to a valid string resource
      */
     public final void setTitle(@NonNull final Context context, @StringRes final int resourceId) {
-        ensureNotNull(context, "The context may not be null");
+        Condition.INSTANCE.ensureNotNull(context, "The context may not be null");
         setTitle(context.getText(resourceId));
     }
 
     @Override
     public final void setTitle(@NonNull final CharSequence title) {
-        ensureNotNull(title, "The title may not be null");
-        ensureNotEmpty(title, "The title may not be empty");
+        Condition.INSTANCE.ensureNotNull(title, "The title may not be null");
+        Condition.INSTANCE.ensureNotEmpty(title, "The title may not be empty");
         super.setTitle(title);
     }
 

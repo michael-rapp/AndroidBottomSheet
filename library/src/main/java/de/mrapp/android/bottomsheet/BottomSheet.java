@@ -28,17 +28,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.AttrRes;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.annotation.StyleRes;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -60,6 +50,15 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import androidx.annotation.AttrRes;
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.annotation.StyleRes;
+import androidx.core.content.ContextCompat;
 import de.mrapp.android.bottomsheet.adapter.DividableGridAdapter;
 import de.mrapp.android.bottomsheet.model.AbstractItem;
 import de.mrapp.android.bottomsheet.model.Divider;
@@ -68,11 +67,9 @@ import de.mrapp.android.bottomsheet.view.DividableGridView;
 import de.mrapp.android.bottomsheet.view.DraggableView;
 import de.mrapp.android.util.DisplayUtil;
 import de.mrapp.android.util.ViewUtil;
+import de.mrapp.util.Condition;
 
-import static android.os.Build.*;
-import static de.mrapp.android.util.Condition.ensureAtLeast;
-import static de.mrapp.android.util.Condition.ensureAtMaximum;
-import static de.mrapp.android.util.Condition.ensureNotNull;
+import static android.os.Build.VERSION_CODES;
 import static de.mrapp.android.util.DisplayUtil.getDeviceType;
 import static de.mrapp.android.util.DisplayUtil.getOrientation;
 
@@ -81,7 +78,7 @@ import static de.mrapp.android.util.DisplayUtil.getOrientation;
  * pre-Lollipop devices. Such a bottom sheet appears at the bottom of the window and consists of a
  * title and multiple items. It is possible to customize the appearance of the bottom sheet or to
  * replace its title and items with custom views.
- *
+ * <p>
  * For creating or showing such bottom sheets, the methods {@link Builder#create()} or {@link
  * Builder#show()} of the builder {@link de.mrapp.android.bottomsheet.BottomSheet.Builder} can be
  * used.
@@ -378,7 +375,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
         /**
          * Sets the listener, which should be notified, when the bottom sheet, which is created by
          * the builder, is canceled.
-         *
+         * <p>
          * If you are interested in listening for all cases where the bottom sheet is dismissed and
          * not just when it is canceled, see {@link #setOnDismissListener(android.content.DialogInterface.OnDismissListener)
          * setOnDismissListener}.
@@ -1916,8 +1913,10 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         sensitivity must be at lest 0 and at maximum 1
      */
     public final void setDragSensitivity(final float dragSensitivity) {
-        ensureAtLeast(dragSensitivity, 0, "The drag sensitivity must be at least 0");
-        ensureAtMaximum(dragSensitivity, 1, "The drag sensitivity must be at maximum 1");
+        Condition.INSTANCE
+                .ensureAtLeast(dragSensitivity, 0, "The drag sensitivity must be at least 0");
+        Condition.INSTANCE
+                .ensureAtMaximum(dragSensitivity, 1, "The drag sensitivity must be at maximum 1");
         this.dragSensitivity = dragSensitivity;
         adaptDragSensitivity();
     }
@@ -1940,8 +1939,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         at least 0 (fully transparent) and at maximum 1 (fully opaque)
      */
     public final void setDimAmount(final float dimAmount) {
-        ensureAtLeast(dimAmount, 0, "The dim amount must be at least 0");
-        ensureAtMaximum(dimAmount, 1, "The dim amount must be at maximum 1");
+        Condition.INSTANCE.ensureAtLeast(dimAmount, 0, "The dim amount must be at least 0");
+        Condition.INSTANCE.ensureAtMaximum(dimAmount, 1, "The dim amount must be at maximum 1");
         this.dimAmount = dimAmount;
         getWindow().getAttributes().dimAmount = dimAmount;
     }
@@ -1965,7 +1964,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         be at least 1
      */
     public final void setWidth(final int width) {
-        ensureAtLeast(width, 1, "The width must be at least 1");
+        Condition.INSTANCE.ensureAtLeast(width, 1, "The width must be at least 1");
         this.width = width;
         adaptWidth();
     }
@@ -2254,7 +2253,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      * corresponds to the given id, is contained by the bottom sheet
      */
     public final int indexOf(final int id) {
-        ensureAtLeast(id, 0, "The id must be at least 0");
+        Condition.INSTANCE.ensureAtLeast(id, 0, "The id must be at least 0");
 
         for (int i = 0; i < getItemCount(); i++) {
             AbstractItem item = adapter.getItem(i);
@@ -2314,8 +2313,8 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         The intent as an instance of the class {@link Intent}. The intent may not be null
      */
     public final void setIntent(@NonNull final Activity activity, @NonNull final Intent intent) {
-        ensureNotNull(activity, "The activity may not be null");
-        ensureNotNull(intent, "The intent may not be null");
+        Condition.INSTANCE.ensureNotNull(activity, "The activity may not be null");
+        Condition.INSTANCE.ensureNotNull(intent, "The intent may not be null");
         removeAllItems();
         PackageManager packageManager = activity.getPackageManager();
         List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent, 0);
@@ -2391,7 +2390,7 @@ public class BottomSheet extends Dialog implements DialogInterface, DraggableVie
      *         either be <code>LIST</code>, <code>LIST_COLUMNS</code> or <code>GRID</code>
      */
     public final void setStyle(@NonNull final Style style) {
-        ensureNotNull(style, "The style may not be null");
+        Condition.INSTANCE.ensureNotNull(style, "The style may not be null");
         adapter.setStyle(style);
         adaptRootView();
         adaptTitleView();

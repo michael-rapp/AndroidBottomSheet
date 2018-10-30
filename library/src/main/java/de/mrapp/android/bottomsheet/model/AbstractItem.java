@@ -13,8 +13,8 @@
  */
 package de.mrapp.android.bottomsheet.model;
 
-import android.support.annotation.CallSuper;
-import android.support.annotation.Nullable;
+import androidx.annotation.CallSuper;
+import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 
